@@ -1,0 +1,1262 @@
+[
+  {
+    "name": "EditorialCard",
+    "slug": "editorial-card",
+    "category": "cards",
+    "description": "An editorial cover with a shifting geometric composition."
+  },
+  {
+    "name": "StackedCard",
+    "slug": "stacked-card",
+    "category": "cards",
+    "description": "A tactile deck that fans out to reveal the next idea."
+  },
+  {
+    "name": "TicketCard",
+    "slug": "ticket-card",
+    "category": "cards",
+    "description": "A collectible ticket with a punch-out spine and expanding details."
+  },
+  {
+    "name": "FlipCard",
+    "slug": "flip-card",
+    "category": "cards",
+    "description": "A two-sided note that rotates between summary and detail."
+  },
+  {
+    "name": "FoldCard",
+    "slug": "fold-card",
+    "category": "cards",
+    "description": "A book-like card with a hinged cover and hidden reading note."
+  },
+  {
+    "name": "ProfileCard",
+    "slug": "profile-card",
+    "category": "cards",
+    "description": "A profile card with an expanding follow state."
+  },
+  {
+    "name": "ImageCard",
+    "slug": "image-card",
+    "category": "cards",
+    "description": "A full-bleed image card with a sliding caption."
+  },
+  {
+    "name": "QuoteCard",
+    "slug": "quote-card",
+    "category": "cards",
+    "description": "A typographic quote with an oversized animated quotation mark."
+  },
+  {
+    "name": "MetricCard",
+    "slug": "metric-card",
+    "category": "cards",
+    "description": "A metric card with an expandable breakdown and living bar chart."
+  },
+  {
+    "name": "EventCard",
+    "slug": "event-card",
+    "category": "cards",
+    "description": "A date-first event card with a persistent RSVP control."
+  },
+  {
+    "name": "AudioCard",
+    "slug": "audio-card",
+    "category": "cards",
+    "description": "An audio release card with a play state and moving waveform."
+  },
+  {
+    "name": "FileCard",
+    "slug": "file-card",
+    "category": "cards",
+    "description": "A file card that reveals metadata before its download action."
+  },
+  {
+    "name": "ProjectCard",
+    "slug": "project-card",
+    "category": "cards",
+    "description": "A project brief with a three-step animated status selector."
+  },
+  {
+    "name": "ArticleCard",
+    "slug": "article-card",
+    "category": "cards",
+    "description": "A bookmarkable article with a sliding abstract thumbnail."
+  },
+  {
+    "name": "TaskCard",
+    "slug": "task-card",
+    "category": "cards",
+    "description": "A progress card with an interactive checklist and computed completion."
+  },
+  {
+    "name": "ArrowButton",
+    "slug": "arrow-button",
+    "category": "buttons",
+    "description": "A solid pill with a sliding arrow capsule."
+  },
+  {
+    "name": "RollingButton",
+    "slug": "rolling-button",
+    "category": "buttons",
+    "description": "A button whose label rolls upward on interaction."
+  },
+  {
+    "name": "OrbitButton",
+    "slug": "orbit-button",
+    "category": "buttons",
+    "description": "A circular launch control with orbiting decorative text."
+  },
+  {
+    "name": "KeycapButton",
+    "slug": "keycap-button",
+    "category": "buttons",
+    "description": "A raised keycap with physical travel on press."
+  },
+  {
+    "name": "SplitButton",
+    "slug": "split-button",
+    "category": "buttons",
+    "description": "A two-part control that reveals additional actions."
+  },
+  {
+    "name": "BookmarkButton",
+    "slug": "bookmark-button",
+    "category": "buttons",
+    "description": "A high-contrast bookmark toggle that blooms on selection."
+  },
+  {
+    "name": "LikeButton",
+    "slug": "like-button",
+    "category": "buttons",
+    "description": "A like control with a bouncing counter."
+  },
+  {
+    "name": "CopyButton",
+    "slug": "copy-button",
+    "category": "buttons",
+    "description": "A copy control with honest success and failure feedback."
+  },
+  {
+    "name": "HoldButton",
+    "slug": "hold-button",
+    "category": "buttons",
+    "description": "A press-and-hold confirmation with keyboard support."
+  },
+  {
+    "name": "DownloadButton",
+    "slug": "download-button",
+    "category": "buttons",
+    "description": "A download action with externally controlled progress."
+  },
+  {
+    "name": "SoundButton",
+    "slug": "sound-button",
+    "category": "buttons",
+    "description": "A compact stateful audio toggle."
+  },
+  {
+    "name": "SegmentButton",
+    "slug": "segment-button",
+    "category": "buttons",
+    "description": "A three-position segmented control with a traveling background."
+  },
+  {
+    "name": "ConfirmButton",
+    "slug": "confirm-button",
+    "category": "buttons",
+    "description": "A pill that replaces its text with a confirmation check."
+  },
+  {
+    "name": "FloatingButton",
+    "slug": "floating-button",
+    "category": "buttons",
+    "description": "A floating action button that unfolds a labeled action cluster."
+  },
+  {
+    "name": "InvertButton",
+    "slug": "invert-button",
+    "category": "buttons",
+    "description": "A rotating two-mode switch with a full surface inversion."
+  },
+  {
+    "name": "FloatingInput",
+    "slug": "floating-input",
+    "category": "inputs",
+    "description": "A floating-label text input on a filled, borderless surface."
+  },
+  {
+    "name": "SearchInput",
+    "slug": "search-input",
+    "category": "inputs",
+    "description": "A command-like search field with clear and submit controls."
+  },
+  {
+    "name": "PasswordInput",
+    "slug": "password-input",
+    "category": "inputs",
+    "description": "A password input with a working visibility control and strength indicator."
+  },
+  {
+    "name": "OtpInput",
+    "slug": "otp-input",
+    "category": "inputs",
+    "description": "A four-digit verification input that supports paste and arrow navigation."
+  },
+  {
+    "name": "ToggleInput",
+    "slug": "toggle-input",
+    "category": "inputs",
+    "description": "A switch with a traveling thumb and clear on/off labeling."
+  },
+  {
+    "name": "CheckboxTile",
+    "slug": "checkbox-tile",
+    "category": "inputs",
+    "description": "An oversized checkbox tile that fills on selection."
+  },
+  {
+    "name": "RadioCards",
+    "slug": "radio-cards",
+    "category": "inputs",
+    "description": "A card-style radio group with a moving selection indicator."
+  },
+  {
+    "name": "RangeInput",
+    "slug": "range-input",
+    "category": "inputs",
+    "description": "A continuous range input with a live numeric readout."
+  },
+  {
+    "name": "NumberStepper",
+    "slug": "number-stepper",
+    "category": "inputs",
+    "description": "A constrained number stepper with spring-like button feedback."
+  },
+  {
+    "name": "SelectInput",
+    "slug": "select-input",
+    "category": "inputs",
+    "description": "A native select framed as an editorial answer field."
+  },
+  {
+    "name": "NoteInput",
+    "slug": "note-input",
+    "category": "inputs",
+    "description": "A growing note field with a remaining-character counter."
+  },
+  {
+    "name": "TagInput",
+    "slug": "tag-input",
+    "category": "inputs",
+    "description": "A tag editor with enter-to-add and keyboard-friendly removal."
+  },
+  {
+    "name": "FileDropzone",
+    "slug": "file-dropzone",
+    "category": "inputs",
+    "description": "A file dropzone with native browsing and real file selection."
+  },
+  {
+    "name": "DateInput",
+    "slug": "date-input",
+    "category": "inputs",
+    "description": "A native date picker with a large day readout."
+  },
+  {
+    "name": "RatingInput",
+    "slug": "rating-input",
+    "category": "inputs",
+    "description": "A star rating with explicit values and a live caption."
+  },
+  {
+    "name": "PillTabs",
+    "slug": "pill-tabs",
+    "category": "navigation",
+    "description": "Floating tab pills with keyboard arrow navigation."
+  },
+  {
+    "name": "IconDock",
+    "slug": "icon-dock",
+    "category": "navigation",
+    "description": "A compact dock with magnifying icons and persistent selection."
+  },
+  {
+    "name": "BreadcrumbTrail",
+    "slug": "breadcrumb-trail",
+    "category": "navigation",
+    "description": "An editorial breadcrumb trail with animated separators."
+  },
+  {
+    "name": "PageStepper",
+    "slug": "page-stepper",
+    "category": "navigation",
+    "description": "A numeric pagination strip with working previous and next actions."
+  },
+  {
+    "name": "ChapterRail",
+    "slug": "chapter-rail",
+    "category": "navigation",
+    "description": "A vertical numbered chapter rail that tracks selection."
+  },
+  {
+    "name": "CompactHeader",
+    "slug": "compact-header",
+    "category": "navigation",
+    "description": "A condensed header with a functional expanding mobile menu."
+  },
+  {
+    "name": "ProgressSteps",
+    "slug": "progress-steps",
+    "category": "navigation",
+    "description": "A horizontal process navigation with completed step markers."
+  },
+  {
+    "name": "TreeNavigation",
+    "slug": "tree-navigation",
+    "category": "navigation",
+    "description": "A collapsible directory with animated nested links."
+  },
+  {
+    "name": "BottomBar",
+    "slug": "bottom-bar",
+    "category": "navigation",
+    "description": "A bottom navigation bar with a sliding label expansion."
+  },
+  {
+    "name": "IndexMenu",
+    "slug": "index-menu",
+    "category": "navigation",
+    "description": "A large stacked index that reveals a contextual description."
+  },
+  {
+    "name": "FilterChips",
+    "slug": "filter-chips",
+    "category": "navigation",
+    "description": "A filter navigation with independently selectable chips."
+  },
+  {
+    "name": "SectionNavigator",
+    "slug": "section-navigator",
+    "category": "navigation",
+    "description": "A section switcher with a large current index and next control."
+  },
+  {
+    "name": "WorkspaceSwitcher",
+    "slug": "workspace-switcher",
+    "category": "navigation",
+    "description": "A workspace selector with a current workspace badge."
+  },
+  {
+    "name": "AlphabetIndex",
+    "slug": "alphabet-index",
+    "category": "navigation",
+    "description": "A jump list for alphabetically indexed collections."
+  },
+  {
+    "name": "StoryPager",
+    "slug": "story-pager",
+    "category": "navigation",
+    "description": "A back-and-forward story pager with distinct destination labels."
+  },
+  {
+    "name": "WordReveal",
+    "slug": "word-reveal",
+    "category": "typography",
+    "description": "A staggered word reveal that replays on demand."
+  },
+  {
+    "name": "MarqueeText",
+    "slug": "marquee-text",
+    "category": "typography",
+    "description": "A looping typographic band with a pause-on-hover affordance."
+  },
+  {
+    "name": "MonumentNumber",
+    "slug": "monument-number",
+    "category": "typography",
+    "description": "A monumental numeral with a small editorial annotation."
+  },
+  {
+    "name": "RotatingWord",
+    "slug": "rotating-word",
+    "category": "typography",
+    "description": "A sentence whose emphasized word changes when pressed."
+  },
+  {
+    "name": "InkHeadline",
+    "slug": "ink-headline",
+    "category": "typography",
+    "description": "An outlined headline that fills with ink on hover or focus."
+  },
+  {
+    "name": "TypewriterText",
+    "slug": "typewriter-text",
+    "category": "typography",
+    "description": "A monospace typewriter reveal with a replay button."
+  },
+  {
+    "name": "SectionHeading",
+    "slug": "section-heading",
+    "category": "typography",
+    "description": "A compact editorial heading with a numbered eyebrow."
+  },
+  {
+    "name": "DropcapText",
+    "slug": "dropcap-text",
+    "category": "typography",
+    "description": "An oversized opening letter that anchors a reading excerpt."
+  },
+  {
+    "name": "HighlightText",
+    "slug": "highlight-text",
+    "category": "typography",
+    "description": "A solid marker highlight that sweeps underneath a phrase."
+  },
+  {
+    "name": "CircularText",
+    "slug": "circular-text",
+    "category": "typography",
+    "description": "A circular text seal rendered as responsive vector type."
+  },
+  {
+    "name": "SplitStatement",
+    "slug": "split-statement",
+    "category": "typography",
+    "description": "An editorial text pair split into bold and soft columns."
+  },
+  {
+    "name": "StatusText",
+    "slug": "status-text",
+    "category": "typography",
+    "description": "An animated status word paired with an active indicator."
+  },
+  {
+    "name": "CaptionStrip",
+    "slug": "caption-strip",
+    "category": "typography",
+    "description": "A caption strip with its own tiny reading progress motif."
+  },
+  {
+    "name": "LetterScatter",
+    "slug": "letter-scatter",
+    "category": "typography",
+    "description": "A staggered letter composition with a playful raised character."
+  },
+  {
+    "name": "ReadMoreText",
+    "slug": "read-more-text",
+    "category": "typography",
+    "description": "A text disclosure that smoothly reveals a longer explanation."
+  },
+  {
+    "name": "AnnouncementBanner",
+    "slug": "announcement-banner",
+    "category": "feedback",
+    "description": "A dismissible announcement that slides away when acknowledged."
+  },
+  {
+    "name": "SuccessNotice",
+    "slug": "success-notice",
+    "category": "feedback",
+    "description": "A success message with a drawn check and acknowledgment action."
+  },
+  {
+    "name": "ErrorNotice",
+    "slug": "error-notice",
+    "category": "feedback",
+    "description": "An error message with a retry action delegated to the host."
+  },
+  {
+    "name": "WarningNotice",
+    "slug": "warning-notice",
+    "category": "feedback",
+    "description": "A friendly warning with explicit confirm and dismiss actions."
+  },
+  {
+    "name": "SkeletonCard",
+    "slug": "skeleton-card",
+    "category": "feedback",
+    "description": "A quiet loading skeleton with a wide traveling wash."
+  },
+  {
+    "name": "DotLoader",
+    "slug": "dot-loader",
+    "category": "feedback",
+    "description": "Three bouncing dots for compact waiting states."
+  },
+  {
+    "name": "BlockLoader",
+    "slug": "block-loader",
+    "category": "feedback",
+    "description": "A morphing four-square loader for larger loading surfaces."
+  },
+  {
+    "name": "ProgressMeter",
+    "slug": "progress-meter",
+    "category": "feedback",
+    "description": "A large numeric progress meter with an accessible native track."
+  },
+  {
+    "name": "RingProgress",
+    "slug": "ring-progress",
+    "category": "feedback",
+    "description": "A circular gauge whose solid arc tracks a supplied value."
+  },
+  {
+    "name": "EmptyCollection",
+    "slug": "empty-collection",
+    "category": "feedback",
+    "description": "An empty collection state with an inviting first action."
+  },
+  {
+    "name": "NoResults",
+    "slug": "no-results",
+    "category": "feedback",
+    "description": "A no-results state that exposes a clear-filters action."
+  },
+  {
+    "name": "SaveIndicator",
+    "slug": "save-indicator",
+    "category": "feedback",
+    "description": "A save status chip with controlled or local workflow states."
+  },
+  {
+    "name": "ConnectionStatus",
+    "slug": "connection-status",
+    "category": "feedback",
+    "description": "A connection indicator with a reconnect callback."
+  },
+  {
+    "name": "InboxNotice",
+    "slug": "inbox-notice",
+    "category": "feedback",
+    "description": "A stacked notification preview with an unread counter."
+  },
+  {
+    "name": "MilestoneNotice",
+    "slug": "milestone-notice",
+    "category": "feedback",
+    "description": "A celebratory milestone with a bounded burst of confetti."
+  },
+  {
+    "name": "CommandPalette",
+    "slug": "command-palette",
+    "category": "overlays",
+    "description": "A searchable command dialog with keyboard-native result buttons."
+  },
+  {
+    "name": "SideDrawer",
+    "slug": "side-drawer",
+    "category": "overlays",
+    "description": "A side drawer for contextual project information."
+  },
+  {
+    "name": "ConfirmDialog",
+    "slug": "confirm-dialog",
+    "category": "overlays",
+    "description": "A destructive-action dialog requiring an explicit decision."
+  },
+  {
+    "name": "SpotlightSearch",
+    "slug": "spotlight-search",
+    "category": "overlays",
+    "description": "A centered search overlay with grouped visual results."
+  },
+  {
+    "name": "ImageLightbox",
+    "slug": "image-lightbox",
+    "category": "overlays",
+    "description": "A zoomable image lightbox with a native modal focus trap."
+  },
+  {
+    "name": "QuickView",
+    "slug": "quick-view",
+    "category": "overlays",
+    "description": "A product quick-view dialog with an adjustable quantity."
+  },
+  {
+    "name": "ContextMenu",
+    "slug": "context-menu",
+    "category": "overlays",
+    "description": "A right-click context surface with an accessible button alternative."
+  },
+  {
+    "name": "PopoverMenu",
+    "slug": "popover-menu",
+    "category": "overlays",
+    "description": "A compact action popover built on native disclosure semantics."
+  },
+  {
+    "name": "TooltipBubble",
+    "slug": "tooltip-bubble",
+    "category": "overlays",
+    "description": "A contextual tooltip available on hover, focus, and click."
+  },
+  {
+    "name": "HelpPanel",
+    "slug": "help-panel",
+    "category": "overlays",
+    "description": "A help drawer with expandable answers."
+  },
+  {
+    "name": "ToastStack",
+    "slug": "toast-stack",
+    "category": "overlays",
+    "description": "A notification stack with individual dismiss and add controls."
+  },
+  {
+    "name": "SpotlightTour",
+    "slug": "spotlight-tour",
+    "category": "overlays",
+    "description": "A guided introduction with next, back, and finish actions."
+  },
+  {
+    "name": "NotificationCenter",
+    "slug": "notification-center",
+    "category": "overlays",
+    "description": "An inbox dialog with mark-all-read state."
+  },
+  {
+    "name": "ShareDialog",
+    "slug": "share-dialog",
+    "category": "overlays",
+    "description": "A sharing dialog that copies a caller-supplied link."
+  },
+  {
+    "name": "FullscreenMenu",
+    "slug": "fullscreen-menu",
+    "category": "overlays",
+    "description": "A full-screen typographic navigation takeover."
+  },
+  {
+    "name": "BarChart",
+    "slug": "bar-chart",
+    "category": "data",
+    "description": "A column chart with selectable bars and exact value readouts."
+  },
+  {
+    "name": "LineChart",
+    "slug": "line-chart",
+    "category": "data",
+    "description": "A line chart drawn on entry with a clear textual data summary."
+  },
+  {
+    "name": "DonutChart",
+    "slug": "donut-chart",
+    "category": "data",
+    "description": "A donut chart with a selectable category legend."
+  },
+  {
+    "name": "Heatmap",
+    "slug": "heatmap",
+    "category": "data",
+    "description": "A contribution calendar with inspectable day values."
+  },
+  {
+    "name": "SortableTable",
+    "slug": "sortable-table",
+    "category": "data",
+    "description": "A sortable two-column table with clear sort direction."
+  },
+  {
+    "name": "Leaderboard",
+    "slug": "leaderboard",
+    "category": "data",
+    "description": "A compact ranked list with proportional filled bars."
+  },
+  {
+    "name": "AllocationBar",
+    "slug": "allocation-bar",
+    "category": "data",
+    "description": "A horizontal distribution strip that exposes each allocation."
+  },
+  {
+    "name": "ComparisonTable",
+    "slug": "comparison-table",
+    "category": "data",
+    "description": "A side-by-side comparison with highlighted differences."
+  },
+  {
+    "name": "StatsRow",
+    "slug": "stats-row",
+    "category": "data",
+    "description": "A statistic triptych with animated numeric emphasis."
+  },
+  {
+    "name": "GoalGauge",
+    "slug": "goal-gauge",
+    "category": "data",
+    "description": "A radial goal meter paired with a target-setting input."
+  },
+  {
+    "name": "WaterfallChart",
+    "slug": "waterfall-chart",
+    "category": "data",
+    "description": "A waterfall chart showing positive and negative contributions."
+  },
+  {
+    "name": "FunnelChart",
+    "slug": "funnel-chart",
+    "category": "data",
+    "description": "A funnel visualization with selectable conversion stages."
+  },
+  {
+    "name": "JsonInspector",
+    "slug": "json-inspector",
+    "category": "data",
+    "description": "A data inspector that reveals the object behind a summary."
+  },
+  {
+    "name": "TimelineChart",
+    "slug": "timeline-chart",
+    "category": "data",
+    "description": "A bounded timeline chart with a selected period readout."
+  },
+  {
+    "name": "TrendTicker",
+    "slug": "trend-ticker",
+    "category": "data",
+    "description": "A compact ticker displaying trends without pretending to be live data."
+  },
+  {
+    "name": "ImageAccordion",
+    "slug": "image-accordion",
+    "category": "media",
+    "description": "A horizontal image accordion with explicit panel selection."
+  },
+  {
+    "name": "Filmstrip",
+    "slug": "filmstrip",
+    "category": "media",
+    "description": "A horizontally scrollable filmstrip with previous and next controls."
+  },
+  {
+    "name": "ImageCompare",
+    "slug": "image-compare",
+    "category": "media",
+    "description": "A before-and-after comparison controlled by a labeled native slider."
+  },
+  {
+    "name": "ZoomCanvas",
+    "slug": "zoom-canvas",
+    "category": "media",
+    "description": "A zoomable canvas with bounded zoom and reset controls."
+  },
+  {
+    "name": "GalleryGrid",
+    "slug": "gallery-grid",
+    "category": "media",
+    "description": "A four-up gallery with a focused item caption."
+  },
+  {
+    "name": "Polaroid",
+    "slug": "polaroid",
+    "category": "media",
+    "description": "A tilting instant-photo frame with an editable handwritten caption."
+  },
+  {
+    "name": "VideoFrame",
+    "slug": "video-frame",
+    "category": "media",
+    "description": "A video frame that uses native playback when a source is provided."
+  },
+  {
+    "name": "AudioPlayer",
+    "slug": "audio-player",
+    "category": "media",
+    "description": "A minimal native audio player in a sleeve-like frame."
+  },
+  {
+    "name": "AvatarStack",
+    "slug": "avatar-stack",
+    "category": "media",
+    "description": "Overlapping avatars that expand into individually labeled people."
+  },
+  {
+    "name": "CoverArt",
+    "slug": "cover-art",
+    "category": "media",
+    "description": "A record-sleeve composition that slips its disc out on interaction."
+  },
+  {
+    "name": "PosterFrame",
+    "slug": "poster-frame",
+    "category": "media",
+    "description": "A gallery-style poster with oversized typographic artwork."
+  },
+  {
+    "name": "Carousel",
+    "slug": "carousel",
+    "category": "media",
+    "description": "A single-slide carousel with bounded controls and accessible status."
+  },
+  {
+    "name": "LogoWall",
+    "slug": "logo-wall",
+    "category": "media",
+    "description": "A monochrome wordmark wall with staggered hover movement."
+  },
+  {
+    "name": "MediaCaption",
+    "slug": "media-caption",
+    "category": "media",
+    "description": "A media caption with expandable technical metadata."
+  },
+  {
+    "name": "MosaicGallery",
+    "slug": "mosaic-gallery",
+    "category": "media",
+    "description": "An asymmetric image mosaic with caption overlays and actionable tiles."
+  },
+  {
+    "name": "BentoGrid",
+    "slug": "bento-grid",
+    "category": "layout",
+    "description": "A purpose-built asymmetric feature grid with actionable cells."
+  },
+  {
+    "name": "SplitPanel",
+    "slug": "split-panel",
+    "category": "layout",
+    "description": "An editorial split layout with an independent visual panel."
+  },
+  {
+    "name": "AccordionPanel",
+    "slug": "accordion-panel",
+    "category": "layout",
+    "description": "An accessible accordion with native, independently open sections."
+  },
+  {
+    "name": "TabbedPanel",
+    "slug": "tabbed-panel",
+    "category": "layout",
+    "description": "A tabbed workspace with a large document surface and local selection."
+  },
+  {
+    "name": "ResizablePanel",
+    "slug": "resizable-panel",
+    "category": "layout",
+    "description": "Two panels with a keyboard-accessible width adjustment."
+  },
+  {
+    "name": "CollapsibleSidebar",
+    "slug": "collapsible-sidebar",
+    "category": "layout",
+    "description": "A collapsible workspace sidebar with usable icon-only labels."
+  },
+  {
+    "name": "MasonryBoard",
+    "slug": "masonry-board",
+    "category": "layout",
+    "description": "A staggered research board that keeps each item in reading order."
+  },
+  {
+    "name": "StickyNote",
+    "slug": "sticky-note",
+    "category": "layout",
+    "description": "An editable sticky note with a folded paper corner."
+  },
+  {
+    "name": "WindowFrame",
+    "slug": "window-frame",
+    "category": "layout",
+    "description": "A desktop-window frame with a working minimize control."
+  },
+  {
+    "name": "BrowserFrame",
+    "slug": "browser-frame",
+    "category": "layout",
+    "description": "A browser preview frame with a replayable page transition."
+  },
+  {
+    "name": "VerticalTimeline",
+    "slug": "vertical-timeline",
+    "category": "layout",
+    "description": "A vertical milestone layout with animated entry markers."
+  },
+  {
+    "name": "FeatureGrid",
+    "slug": "feature-grid",
+    "category": "layout",
+    "description": "A three-feature grid with large symbolic illustrations."
+  },
+  {
+    "name": "SectionDivider",
+    "slug": "section-divider",
+    "category": "layout",
+    "description": "A solid typographic divider for a new page chapter."
+  },
+  {
+    "name": "PageFooter",
+    "slug": "page-footer",
+    "category": "layout",
+    "description": "A compact editorial footer with working destination callbacks."
+  },
+  {
+    "name": "HeroBlock",
+    "slug": "hero-block",
+    "category": "layout",
+    "description": "A compact hero with oversized type and a moving geometric accent."
+  },
+  {
+    "name": "ProductCard",
+    "slug": "product-card",
+    "category": "commerce",
+    "description": "A product tile with a selectable finish and add-to-cart action."
+  },
+  {
+    "name": "PricingCard",
+    "slug": "pricing-card",
+    "category": "commerce",
+    "description": "A pricing plan with a monthly/annual billing switch."
+  },
+  {
+    "name": "CartItem",
+    "slug": "cart-item",
+    "category": "commerce",
+    "description": "A cart line item with bounded quantity and recalculated subtotal."
+  },
+  {
+    "name": "OrderSummary",
+    "slug": "order-summary",
+    "category": "commerce",
+    "description": "An order summary with a computed total and checkout callback."
+  },
+  {
+    "name": "CouponInput",
+    "slug": "coupon-input",
+    "category": "commerce",
+    "description": "A coupon field that validates against caller-supplied codes."
+  },
+  {
+    "name": "ReceiptCard",
+    "slug": "receipt-card",
+    "category": "commerce",
+    "description": "A receipt-style transaction record with a print callback."
+  },
+  {
+    "name": "ShippingTracker",
+    "slug": "shipping-tracker",
+    "category": "commerce",
+    "description": "A three-stage delivery status with an expandable shipment note."
+  },
+  {
+    "name": "SizeSelector",
+    "slug": "size-selector",
+    "category": "commerce",
+    "description": "A product size selector that exposes a simple fit guide."
+  },
+  {
+    "name": "MaterialSelector",
+    "slug": "material-selector",
+    "category": "commerce",
+    "description": "A textured finish selector with a large material preview."
+  },
+  {
+    "name": "GiftCard",
+    "slug": "gift-card",
+    "category": "commerce",
+    "description": "A gift card that reveals a personal message."
+  },
+  {
+    "name": "MembershipCard",
+    "slug": "membership-card",
+    "category": "commerce",
+    "description": "A membership pass with an expanding benefits panel."
+  },
+  {
+    "name": "BudgetCard",
+    "slug": "budget-card",
+    "category": "commerce",
+    "description": "A spending limit meter with a manage-budget action."
+  },
+  {
+    "name": "BundleBuilder",
+    "slug": "bundle-builder",
+    "category": "commerce",
+    "description": "A configurable bundle picker with a computed combined price."
+  },
+  {
+    "name": "ReviewSummary",
+    "slug": "review-summary",
+    "category": "commerce",
+    "description": "A review summary with a distribution and real rating selection."
+  },
+  {
+    "name": "RestockNotice",
+    "slug": "restock-notice",
+    "category": "commerce",
+    "description": "A restock signup form with email validation and host submission."
+  },
+  {
+    "name": "FollowRow",
+    "slug": "follow-row",
+    "category": "social",
+    "description": "A compact person row with a stateful follow action."
+  },
+  {
+    "name": "CommentThread",
+    "slug": "comment-thread",
+    "category": "social",
+    "description": "A comment thread with inline reply composition."
+  },
+  {
+    "name": "ReactionBar",
+    "slug": "reaction-bar",
+    "category": "social",
+    "description": "A selectable reaction strip with per-reaction counts."
+  },
+  {
+    "name": "ChatPanel",
+    "slug": "chat-panel",
+    "category": "social",
+    "description": "A local message composer that appends sent messages."
+  },
+  {
+    "name": "TestimonialSlider",
+    "slug": "testimonial-slider",
+    "category": "social",
+    "description": "A testimonial carousel with a large quotation and real navigation."
+  },
+  {
+    "name": "ShareBar",
+    "slug": "share-bar",
+    "category": "social",
+    "description": "A share link control with platform callbacks and clipboard feedback."
+  },
+  {
+    "name": "TeamRoster",
+    "slug": "team-roster",
+    "category": "social",
+    "description": "A team roster with selectable roles for each member."
+  },
+  {
+    "name": "InviteForm",
+    "slug": "invite-form",
+    "category": "social",
+    "description": "An invitation form with role selection and email validation."
+  },
+  {
+    "name": "PresenceIndicator",
+    "slug": "presence-indicator",
+    "category": "social",
+    "description": "A presence cluster with a selectable status for the current user."
+  },
+  {
+    "name": "PollCard",
+    "slug": "poll-card",
+    "category": "social",
+    "description": "A poll with one vote per local session and proportional results."
+  },
+  {
+    "name": "CollectionPreview",
+    "slug": "collection-preview",
+    "category": "social",
+    "description": "A bookmark collection with independently saved objects."
+  },
+  {
+    "name": "AuthorByline",
+    "slug": "author-byline",
+    "category": "social",
+    "description": "An author byline with expandable profile details."
+  },
+  {
+    "name": "MentionInput",
+    "slug": "mention-input",
+    "category": "social",
+    "description": "A mention composer that inserts a selected teammate."
+  },
+  {
+    "name": "ContactCard",
+    "slug": "contact-card",
+    "category": "social",
+    "description": "A contact card with an expandable availability note."
+  },
+  {
+    "name": "ActivityFeed",
+    "slug": "activity-feed",
+    "category": "social",
+    "description": "A compact activity feed with a clear-all read state."
+  },
+  {
+    "name": "Checklist",
+    "slug": "checklist",
+    "category": "lists",
+    "description": "A prioritized checklist with computed completion and reset."
+  },
+  {
+    "name": "ReorderList",
+    "slug": "reorder-list",
+    "category": "lists",
+    "description": "A reorderable list with accessible up and down controls."
+  },
+  {
+    "name": "SearchableList",
+    "slug": "searchable-list",
+    "category": "lists",
+    "description": "A searchable directory with an honest empty state."
+  },
+  {
+    "name": "SelectableList",
+    "slug": "selectable-list",
+    "category": "lists",
+    "description": "A multi-select list with select-all and a live selection count."
+  },
+  {
+    "name": "ExpandableRows",
+    "slug": "expandable-rows",
+    "category": "lists",
+    "description": "A compact disclosure list with nested detail content."
+  },
+  {
+    "name": "ChangelogList",
+    "slug": "changelog-list",
+    "category": "lists",
+    "description": "A chronological change log with a category filter."
+  },
+  {
+    "name": "FileList",
+    "slug": "file-list",
+    "category": "lists",
+    "description": "A file directory with selectable preview metadata."
+  },
+  {
+    "name": "DownloadQueue",
+    "slug": "download-queue",
+    "category": "lists",
+    "description": "A cancellable queue driven by supplied per-item progress."
+  },
+  {
+    "name": "KanbanBoard",
+    "slug": "kanban-board",
+    "category": "lists",
+    "description": "A three-column kanban board with explicit move-forward controls."
+  },
+  {
+    "name": "CommandList",
+    "slug": "command-list",
+    "category": "lists",
+    "description": "A compact command list with contextual descriptions."
+  },
+  {
+    "name": "ScheduleList",
+    "slug": "schedule-list",
+    "category": "lists",
+    "description": "A weekly agenda with selectable days and editable appointment state."
+  },
+  {
+    "name": "ContactList",
+    "slug": "contact-list",
+    "category": "lists",
+    "description": "A directory of contacts with expandable details and a contact action."
+  },
+  {
+    "name": "DefinitionList",
+    "slug": "definition-list",
+    "category": "lists",
+    "description": "A definition list with click-to-copy values."
+  },
+  {
+    "name": "NotificationList",
+    "slug": "notification-list",
+    "category": "lists",
+    "description": "A dismissible notification list with a restore action."
+  },
+  {
+    "name": "ReadingList",
+    "slug": "reading-list",
+    "category": "lists",
+    "description": "A saved-reading list with unread and completed filters."
+  },
+  {
+    "name": "TiltSurface",
+    "slug": "tilt-surface",
+    "category": "motion",
+    "description": "A pointer-responsive perspective surface that resets on exit."
+  },
+  {
+    "name": "MagneticField",
+    "slug": "magnetic-field",
+    "category": "motion",
+    "description": "A magnetic action that gently follows a nearby pointer."
+  },
+  {
+    "name": "SpringStack",
+    "slug": "spring-stack",
+    "category": "motion",
+    "description": "A springing stack that cycles a collection with an explicit control."
+  },
+  {
+    "name": "RevealCurtain",
+    "slug": "reveal-curtain",
+    "category": "motion",
+    "description": "A two-panel curtain that opens to reveal supplied content."
+  },
+  {
+    "name": "PerspectiveGrid",
+    "slug": "perspective-grid",
+    "category": "motion",
+    "description": "A perspective grid that flattens into a readable collection."
+  },
+  {
+    "name": "OrbitGallery",
+    "slug": "orbit-gallery",
+    "category": "motion",
+    "description": "A rotating orbit of objects that can be paused independently."
+  },
+  {
+    "name": "ParallaxLayers",
+    "slug": "parallax-layers",
+    "category": "motion",
+    "description": "A layered scene whose depth follows pointer position."
+  },
+  {
+    "name": "KineticRibbon",
+    "slug": "kinetic-ribbon",
+    "category": "motion",
+    "description": "A moving ribbon of actionable labels with a local pause control."
+  },
+  {
+    "name": "StaggerGrid",
+    "slug": "stagger-grid",
+    "category": "motion",
+    "description": "A staggered grid entrance that can be replayed without remounting the page."
+  },
+  {
+    "name": "MorphingShape",
+    "slug": "morphing-shape",
+    "category": "motion",
+    "description": "A continuously morphing solid shape with an adjustable speed."
+  },
+  {
+    "name": "ScrollProgress",
+    "slug": "scroll-progress",
+    "category": "motion",
+    "description": "An overflow reading surface with a real scroll-linked progress bar."
+  },
+  {
+    "name": "DragTrack",
+    "slug": "drag-track",
+    "category": "motion",
+    "description": "A draggable rail with pointer capture and keyboard navigation."
+  },
+  {
+    "name": "SpotlightReveal",
+    "slug": "spotlight-reveal",
+    "category": "motion",
+    "description": "A filled spotlight reveals a patterned surface under the pointer."
+  },
+  {
+    "name": "ElasticSlider",
+    "slug": "elastic-slider",
+    "category": "motion",
+    "description": "An elastic range control with a readout that follows the thumb."
+  },
+  {
+    "name": "SlideSwap",
+    "slug": "slide-swap",
+    "category": "motion",
+    "description": "A direction-aware panel transition with previous and next controls."
+  }
+]
