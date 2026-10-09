@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useState } from "react";
 import { type ProsProps, cx, useModel, Mark, Arrow } from "./core";
 /** A dismissible announcement that slides away when acknowledged. */
@@ -11,11 +12,13 @@ export function AnnouncementBanner(p: ProsProps) {
     >
       {dismissed ? (
         <button type="button" className="p-text-btn" onClick={() => set(false)}>
-          Show announcement ↻
+          Show announcement <Icon name="refresh" />
         </button>
       ) : (
         <aside className="p-announcement" role="status">
-          <span>✳</span>
+          <span>
+            <Icon name="flower" />
+          </span>
           <p>{p.title ?? "Something good just landed."}</p>
           <button
             type="button"
@@ -25,7 +28,7 @@ export function AnnouncementBanner(p: ProsProps) {
               p.onAction?.("dismiss");
             }}
           >
-            ×
+            <Icon name="close" />
           </button>
         </aside>
       )}
@@ -90,7 +93,7 @@ export function WarningNotice(p: ProsProps) {
     >
       {dismissed ? (
         <button type="button" className="p-text-btn" onClick={() => set(false)}>
-          Show reminder ↻
+          Show reminder <Icon name="refresh" />
         </button>
       ) : (
         <>
@@ -243,7 +246,8 @@ export function EmptyCollection(p: ProsProps) {
         className="p-btn"
         onClick={() => p.onAction?.("create")}
       >
-        {p.label ?? "Add something"} +
+        {p.label ?? "Add something"}
+        <Icon name="plus" />
       </button>
     </div>
   );
@@ -256,7 +260,9 @@ export function NoResults(p: ProsProps) {
       className={cx("p-no-results", p.className)}
       style={p.style}
     >
-      <span aria-hidden="true">⌕</span>
+      <span aria-hidden="true">
+        <Icon name="search" />
+      </span>
       <h3>{p.title ?? "Nothing here. Yet."}</h3>
       <p>
         {p.description ?? "Try a different word or give your search more room."}
@@ -266,7 +272,10 @@ export function NoResults(p: ProsProps) {
         className="p-action"
         onClick={() => p.onAction?.("clear")}
       >
-        Clear filters <span>↻</span>
+        Clear filters{" "}
+        <span>
+          <Icon name="refresh" />
+        </span>
       </button>
     </div>
   );
@@ -288,7 +297,9 @@ export function SaveIndicator(p: ProsProps) {
     >
       <i className={value === "Saved" ? "is-saved" : ""} />
       <span aria-live="polite">{value}</span>
-      <small>↻</small>
+      <small>
+        <Icon name="refresh" />
+      </small>
     </button>
   );
 }
@@ -318,7 +329,7 @@ export function ConnectionStatus(p: ProsProps) {
           className="p-action"
           onClick={() => p.onAction?.("reconnect")}
         >
-          Reconnect ↻
+          Reconnect <Icon name="refresh" />
         </button>
       )}
     </div>
@@ -340,7 +351,16 @@ export function InboxNotice(p: ProsProps) {
       }}
     >
       <span className="p-inbox-symbol">
-        ↳<i>{read ? "✓" : (p.value ?? "3")}</i>
+        ↳
+        <i>
+          {read ? (
+            <>
+              <Icon name="check" />
+            </>
+          ) : (
+            (p.value ?? "3")
+          )}
+        </i>
       </span>
       <span>
         <b>{p.title ?? "You are in the loop."}</b>
@@ -368,7 +388,9 @@ export function MilestoneNotice(p: ProsProps) {
           <i key={i} style={{ "--i": i } as React.CSSProperties} />
         ))}
       </div>
-      <span className="p-milestone-star">✳</span>
+      <span className="p-milestone-star">
+        <Icon name="flower" />
+      </span>
       <h3>{p.title ?? "Look how far you came."}</h3>
       <p>{p.description ?? "Your first 100. Here is to the next chapter."}</p>
       <button
@@ -379,7 +401,7 @@ export function MilestoneNotice(p: ProsProps) {
           p.onAction?.("celebrate");
         }}
       >
-        A little celebration ↗
+        A little celebration <Icon name="arrow" />
       </button>
     </div>
   );

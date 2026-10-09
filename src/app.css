@@ -3190,3 +3190,231 @@ select {
     animation: none;
   }
 }
+
+/* Movement follows the whole surface: no perimeter highlights. */
+.site #main {
+  animation: site-page-arrive 0.7s var(--pros-ease) both;
+}
+.site .component-tile {
+  animation: none;
+}
+.site .hero-playground {
+  perspective: 1000px;
+}
+.site .hero-feature-card {
+  translate: var(--drift-x, 0px) var(--drift-y, 0px);
+  transition:
+    transform 0.8s var(--pros-spring),
+    translate 0.7s var(--pros-ease),
+    box-shadow 0.7s;
+}
+.site .hero-background-card {
+  translate: calc(var(--drift-x, 0px) * -0.65) calc(var(--drift-y, 0px) * -0.65);
+  transition: translate 1s var(--pros-ease);
+}
+.site .hero-count {
+  translate: calc(var(--drift-x, 0px) * 1.4) calc(var(--drift-y, 0px) * 1.4);
+  transition: translate 0.85s var(--pros-ease);
+}
+.site :is(.big-action, .header-start, .hero-mini-button) {
+  translate: var(--magnet-x, 0px) var(--magnet-y, 0px);
+  transition:
+    translate 0.45s var(--pros-spring),
+    transform 0.45s var(--pros-spring),
+    background 0.35s,
+    box-shadow 0.35s;
+}
+.site :is(.big-action, .header-start, .hero-mini-button):active {
+  scale: 0.96;
+}
+
+.site .category-symbol .p-icon {
+  width: 20px;
+  height: 20px;
+}
+.site .brand-dot .p-icon {
+  width: 0.9em;
+  height: 0.9em;
+}
+.site .brand:hover .brand-dot {
+  rotate: 90deg;
+}
+.site .brand-dot {
+  transition: rotate 0.8s var(--pros-spring);
+}
+.site .hero-card-arrow .p-icon {
+  width: 22px;
+  height: 22px;
+}
+.site .hero-feature-card:hover .hero-card-arrow .p-icon {
+  animation: site-arrow-loop 0.8s var(--pros-ease);
+}
+.site :is(.big-action, .header-start, .hero-mini-button):hover .p-icon--arrow {
+  animation: site-arrow-loop 0.7s var(--pros-ease);
+}
+.site .hero-handnote > svg {
+  stroke-width: 3;
+}
+.site .tiny-flower {
+  display: inline-flex;
+  animation: site-flower-turn 8s var(--pros-ease) infinite;
+}
+.site .site-header nav a {
+  transition:
+    background 0.4s,
+    transform 0.4s var(--pros-spring);
+}
+.site .site-header nav a:hover {
+  transform: translateY(-3px);
+}
+.site .site-header nav a:active {
+  transform: translateY(0) scale(0.96);
+}
+.site .category-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.site .category-button .p-icon {
+  transition: transform 0.6s var(--pros-spring);
+}
+.site .category-button:hover .p-icon {
+  transform: rotate(-12deg) scale(1.16);
+}
+.site .category-button.is-active .p-icon {
+  animation: site-icon-land 0.6s var(--pros-spring);
+}
+.site .tile-stage {
+  transition:
+    background 0.5s,
+    box-shadow 0.6s,
+    translate 0.6s var(--pros-spring);
+}
+.site .tile-tools > button {
+  display: grid;
+  place-items: center;
+}
+.site .tile-tools > button .p-icon {
+  width: 17px;
+  height: 17px;
+}
+.site .tile-save {
+  transition:
+    transform 0.5s var(--pros-spring),
+    background 0.35s;
+}
+.site .tile-save:hover {
+  transform: rotate(-12deg) scale(1.15);
+}
+.site .tile-save.is-saved .p-icon {
+  animation: site-icon-land 0.55s var(--pros-spring);
+}
+.site .tile-title > b {
+  transition: translate 0.45s var(--pros-spring);
+  display: block;
+}
+.site .tile-title:hover > b {
+  translate: 4px 0;
+}
+.site .hero-love.is-liked .p-icon--heart path,
+.site .tile-save.is-saved .p-icon--heart path,
+.site .detail-save.is-saved .p-icon--heart path {
+  fill-rule: nonzero;
+}
+.site .closing-art {
+  animation: site-closing-float 8s ease-in-out infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .site .component-tile:hover .tile-stage {
+    translate: 0 -5px;
+    box-shadow: 0 18px 35px -24px #17181755;
+  }
+}
+@keyframes site-page-arrive {
+  from {
+    opacity: 0.2;
+    translate: 0 18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes site-arrow-loop {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  38% {
+    transform: translate(9px, -9px);
+    opacity: 0;
+  }
+  39% {
+    transform: translate(-9px, 9px);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+}
+@keyframes site-flower-turn {
+  0%,
+  20% {
+    transform: rotate(0);
+  }
+  40%,
+  70% {
+    transform: rotate(180deg);
+  }
+  90%,
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes site-icon-land {
+  0% {
+    transform: scale(0.65) rotate(-18deg);
+  }
+  65% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+@keyframes site-closing-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: -3deg;
+  }
+  50% {
+    translate: 0 -18px;
+    rotate: 4deg;
+  }
+}
+.site[data-motion="off"]
+  :is(
+    .hero-feature-card,
+    .hero-background-card,
+    .hero-count,
+    .big-action,
+    .header-start,
+    .hero-mini-button
+  ) {
+  translate: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site
+    :is(
+      .hero-feature-card,
+      .hero-background-card,
+      .hero-count,
+      .big-action,
+      .header-start,
+      .hero-mini-button
+    ) {
+    translate: none;
+  }
+}

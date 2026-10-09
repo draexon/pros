@@ -8,6 +8,8 @@ import {
 } from "react";
 import * as Library from "./library";
 import { Mark, Arrow } from "./library/core";
+import { Icon, type ProsIconName } from "./library/icons";
+import { SiteMotion } from "./SiteMotion";
 import catalog from "./catalog.json";
 import type { ProsProps } from "./library";
 
@@ -32,21 +34,21 @@ const categoryNames: Record<string, string> = {
   lists: "Lists",
   motion: "Motion",
 };
-const categoryIcons: Record<string, string> = {
-  cards: "▣",
-  buttons: "↗",
-  inputs: "⌨",
-  navigation: "⌘",
-  typography: "Aa",
-  feedback: "◌",
-  overlays: "▱",
-  data: "▥",
-  media: "◈",
-  layout: "▦",
-  commerce: "⌑",
-  social: "◉",
-  lists: "☷",
-  motion: "✳",
+const categoryIcons: Record<string, ProsIconName> = {
+  cards: "cards",
+  buttons: "arrow",
+  inputs: "inputs",
+  navigation: "navigation",
+  typography: "typography",
+  feedback: "feedback",
+  overlays: "overlays",
+  data: "data",
+  media: "media",
+  layout: "grid",
+  commerce: "commerce",
+  social: "social",
+  lists: "list",
+  motion: "motion",
 };
 const featured = [
   "EditorialCard",
@@ -87,74 +89,6 @@ function currentRoute() {
 function routeTo(path: string) {
   window.location.hash = path;
 }
-function Icon({
-  name,
-  size = 18,
-}: {
-  name:
-    | "search"
-    | "grid"
-    | "list"
-    | "code"
-    | "heart"
-    | "arrow"
-    | "github"
-    | "close";
-  size?: number;
-}) {
-  const paths = {
-    search: (
-      <>
-        <circle cx="10.5" cy="10.5" r="6.5" />
-        <path d="m16 16 5 5" />
-      </>
-    ),
-    grid: (
-      <>
-        <rect x="3" y="3" width="7" height="7" rx="2" />
-        <rect x="14" y="3" width="7" height="7" rx="2" />
-        <rect x="3" y="14" width="7" height="7" rx="2" />
-        <rect x="14" y="14" width="7" height="7" rx="2" />
-      </>
-    ),
-    list: (
-      <>
-        <path d="M9 5h12M9 12h12M9 19h12M3 5h1M3 12h1M3 19h1" />
-      </>
-    ),
-    code: (
-      <>
-        <path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18" />
-      </>
-    ),
-    heart: (
-      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" />
-    ),
-    arrow: <path d="M5 19 19 5M5 5h14v14" />,
-    github: (
-      <>
-        <path d="M9 19c-4 1-4-2-6-2m12 5v-4c0-1 .1-1.5-.5-2 3-.3 6-1.4 6-6a5 5 0 0 0-1.3-3.5c.1-1 .1-2.1-.5-3.5 0 0-1.1-.3-3.7 1.4a12 12 0 0 0-7 0C4.4 2.7 3.3 3 3.3 3c-.6 1.4-.6 2.5-.5 3.5A5 5 0 0 0 1.5 10c0 4.6 3 5.7 6 6-.6.5-.5 1-.5 2v4" />
-      </>
-    ),
-    close: <path d="m6 6 12 12M6 18 18 6" />,
-  };
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {paths[name]}
-    </svg>
-  );
-}
-
 function Hero({ notify }: { notify: (text: string) => void }) {
   const [flipped, setFlipped] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -162,7 +96,10 @@ function Hero({ notify }: { notify: (text: string) => void }) {
     <section className="hero">
       <div className="hero-copy">
         <div className="hero-eyebrow">
-          <span className="tiny-flower">✳</span> SMALL DETAILS. BIG PERSONALITY.
+          <span className="tiny-flower">
+            <Icon name="flower" />
+          </span>{" "}
+          SMALL DETAILS. BIG PERSONALITY.
         </div>
         <h1>
           A little motion.
@@ -196,7 +133,9 @@ function Hero({ notify }: { notify: (text: string) => void }) {
         <div className="hero-proof">
           <span className="hero-proof-avatars">
             <i>a</i>
-            <i>✳</i>
+            <i>
+              <Icon name="flower" />
+            </i>
             <i>d</i>
           </span>
           <span>
@@ -232,7 +171,9 @@ function Hero({ notify }: { notify: (text: string) => void }) {
           </div>
           <span className="hero-card-bottom">
             <strong>{flipped ? "Another angle." : "Made to move."}</strong>
-            <span className="hero-card-arrow">↗</span>
+            <span className="hero-card-arrow">
+              <Icon name="arrow" />
+            </span>
           </span>
         </button>
         <div className="hero-count">
@@ -244,7 +185,9 @@ function Hero({ notify }: { notify: (text: string) => void }) {
             <br />
             SOMETHING FEEL.
           </small>
-          <i>✳</i>
+          <i>
+            <Icon name="flower" />
+          </i>
         </div>
         <button
           className={"hero-love " + (liked ? "is-liked" : "")}
@@ -261,7 +204,9 @@ function Hero({ notify }: { notify: (text: string) => void }) {
           onClick={() => notify("You made a move. Now make something yours.")}
         >
           <span>Make a move</span>
-          <b>↗</b>
+          <b>
+            <Icon name="arrow" />
+          </b>
         </button>
         <div className="hero-handnote">
           Go on. Touch something.
@@ -306,12 +251,12 @@ function PreviewTile({
             title="Replay entrance"
             onClick={() => setReplay(replay + 1)}
           >
-            ↻
+            <Icon name="refresh" />
           </button>
         </div>
         <div className="tile-component" key={replay}>
           <C
-            onAction={(action) => notify(humanize(entry.name) + " → " + action)}
+            onAction={(action) => notify(humanize(entry.name) + ": " + action)}
           />
         </div>
         <button
@@ -319,7 +264,10 @@ function PreviewTile({
           aria-label={"View " + humanize(entry.name) + " details"}
           onClick={() => routeTo("/component/" + entry.slug)}
         >
-          <Icon name="code" size={12} /> View code <span>↗</span>
+          <Icon name="code" size={12} /> View code{" "}
+          <span>
+            <Icon name="arrow" />
+          </span>
         </button>
       </div>
       <div className="tile-footer">
@@ -459,7 +407,9 @@ function Collection({
               setSavedOnly(false);
             }}
           >
-            <span className="category-symbol">✳</span>
+            <span className="category-symbol">
+              <Icon name="flower" />
+            </span>
             <span>All components</span>
             <small>210</small>
           </button>
@@ -474,13 +424,17 @@ function Collection({
                 setSavedOnly(false);
               }}
             >
-              <span className="category-symbol">{categoryIcons[id]}</span>
+              <span className="category-symbol">
+                <Icon name={categoryIcons[id]} />
+              </span>
               <span>{name}</span>
               <small>15</small>
             </button>
           ))}
           <div className="sidebar-note">
-            <span>↗</span>
+            <span>
+              <Icon name="arrow" />
+            </span>
             <p>
               Made to be
               <br />
@@ -592,7 +546,10 @@ function Collection({
                 details
               </span>
               <button onClick={() => setLimit(limit + 18)}>
-                A little more inspiration <span>+</span>
+                A little more inspiration{" "}
+                <span>
+                  <Icon name="plus" />
+                </span>
               </button>
             </div>
           )}
@@ -625,7 +582,10 @@ function CodeBlock({
             }
           }}
         >
-          {label} <span>⧉</span>
+          {label}{" "}
+          <span>
+            <Icon name="copy" />
+          </span>
         </button>
       </div>
       <pre tabIndex={0}>
@@ -669,9 +629,11 @@ function Detail({
     const key =
       sourceKind === "styles"
         ? "./library/styles.css"
-        : sourceKind === "core"
-          ? "./library/core.tsx"
-          : "./library/" + entry.category + ".tsx";
+        : sourceKind === "icons"
+          ? "./library/icons.tsx"
+          : sourceKind === "core"
+            ? "./library/core.tsx"
+            : "./library/" + entry.category + ".tsx";
     let active = true;
     sourceLoaders[key]?.()
       .then((text) => {
@@ -692,7 +654,7 @@ function Detail({
   return (
     <main className="detail-page">
       <button className="back-link" onClick={() => routeTo("/components")}>
-        ← Back to the collection
+        <Icon name="left" /> Back to the collection
       </button>
       <div className="detail-heading">
         <div>
@@ -741,7 +703,7 @@ function Detail({
               className="replay-button"
               onClick={() => setReplay(replay + 1)}
             >
-              ↻ Replay
+              <Icon name="refresh" /> Replay
             </button>
           </div>
           {tab === "preview" ? (
@@ -768,6 +730,7 @@ function Detail({
                 {[
                   ["component", entry.category + ".tsx"],
                   ["core", "core.tsx"],
+                  ["icons", "icons.tsx"],
                   ["styles", "styles.css"],
                 ].map(([key, label]) => (
                   <button
@@ -780,8 +743,8 @@ function Detail({
                 ))}
               </div>
               <p>
-                Full source module. Keep core.tsx and styles.css alongside your
-                copied components, or use the package import.
+                Full source module. Keep core.tsx, icons.tsx, and styles.css
+                alongside your copied components, or use the package import.
               </p>
               <CodeBlock
                 code={source || "Loading source…"}
@@ -1031,7 +994,7 @@ function Docs({ notify }: { notify: (s: string) => void }) {
                 target="_blank"
                 rel="noreferrer"
               >
-                Are.na ↗
+                Are.na <Icon name="arrow" />
               </a>
               , typographic references on{" "}
               <a
@@ -1039,7 +1002,7 @@ function Docs({ notify }: { notify: (s: string) => void }) {
                 target="_blank"
                 rel="noreferrer"
               >
-                Pinterest ↗
+                Pinterest <Icon name="arrow" />
               </a>
               , and physical objects. The implementations and geometric artwork
               are original; no existing component library was used as a design
@@ -1116,12 +1079,16 @@ export default function App() {
   }, [entry, isDocs]);
   return (
     <Library.ProsProvider motion={motion} className="site">
+      <SiteMotion route={route} />
       <a className="skip-link" href="#main">
         Skip to content
       </a>
       <header className="site-header">
         <a className="brand" href="#/" aria-label="Pros home">
-          pros<span className="brand-dot">✳</span>
+          pros
+          <span className="brand-dot">
+            <Icon name="flower" />
+          </span>
         </a>
         <nav
           className={mobileMenu ? "is-open" : ""}
@@ -1134,7 +1101,10 @@ export default function App() {
             Components <span>210</span>
           </a>
           <a href="#/motion" className={isMotion ? "is-current" : ""}>
-            Motion lab <i>✳</i>
+            Motion lab{" "}
+            <i>
+              <Icon name="flower" />
+            </i>
           </a>
           <a href="#/docs" className={isDocs ? "is-current" : ""}>
             Documentation
@@ -1164,7 +1134,10 @@ export default function App() {
             <Icon name="github" size={19} />
           </a>
           <button className="header-start" onClick={() => routeTo("/docs")}>
-            Get started <span>↗</span>
+            Get started{" "}
+            <span>
+              <Icon name="arrow" />
+            </span>
           </button>
           <button
             className="mobile-menu-button"
@@ -1172,11 +1145,19 @@ export default function App() {
             aria-expanded={mobileMenu}
             onClick={() => setMobileMenu(!mobileMenu)}
           >
-            {mobileMenu ? "×" : "☰"}
+            {mobileMenu ? (
+              <>
+                <Icon name="close" />
+              </>
+            ) : (
+              <>
+                <Icon name="menu" />
+              </>
+            )}
           </button>
         </div>
       </header>
-      <div id="main" tabIndex={-1}>
+      <div id="main" tabIndex={-1} key={route}>
         {entry ? (
           <Detail
             key={entry.name}
@@ -1194,7 +1175,7 @@ export default function App() {
               className="big-action"
               onClick={() => routeTo("/components")}
             >
-              Back to the collection ↗
+              Back to the collection <Icon name="arrow" />
             </button>
           </main>
         ) : (
@@ -1204,13 +1185,19 @@ export default function App() {
                 <Hero notify={notify} />
                 <div className="manifesto-strip">
                   <span>
-                    <i>✳</i> BUILT WITH CHARACTER
+                    <i>
+                      <Icon name="flower" />
+                    </i>{" "}
+                    BUILT WITH CHARACTER
                   </span>
                   <span>210 original components</span>
                   <span>14 considered collections</span>
                   <span>React + TypeScript</span>
                   <span>
-                    Motion in the details <i>↗</i>
+                    Motion in the details{" "}
+                    <i>
+                      <Icon name="arrow" />
+                    </i>
                   </span>
                 </div>
               </>
@@ -1250,22 +1237,27 @@ export default function App() {
       </div>
       <footer className="site-footer">
         <a href="#/" className="brand">
-          pros<span className="brand-dot">✳</span>
+          pros
+          <span className="brand-dot">
+            <Icon name="flower" />
+          </span>
         </a>
         <p>Small details. A different feeling.</p>
         <span>
           Made with intention by <b>draexon</b>
         </span>
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          Back to top ↑
+          Back to top <Icon name="up" />
         </button>
       </footer>
       {toast && (
         <div className="site-toast" role="status">
-          <span>✳</span>
+          <span>
+            <Icon name="flower" />
+          </span>
           <p>{toast}</p>
           <button aria-label="Dismiss message" onClick={() => setToast("")}>
-            ×
+            <Icon name="close" />
           </button>
         </div>
       )}

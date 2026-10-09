@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useState } from "react";
 import { type ProsProps, cx, useModel, Arrow } from "./core";
 /** A staggered word reveal that replays on demand. */
@@ -23,7 +24,7 @@ export function WordReveal(p: ProsProps) {
           ))}
       </h3>
       <button type="button" className="p-text-btn" onClick={() => set(key + 1)}>
-        Replay ↻
+        Replay <Icon name="refresh" />
       </button>
     </div>
   );
@@ -41,7 +42,10 @@ export function MarqueeText(p: ProsProps) {
       <div aria-hidden="true">
         {[0, 1, 2, 3].map((i) => (
           <span key={i}>
-            {text} <b>✳</b>{" "}
+            {text}{" "}
+            <b>
+              <Icon name="flower" />
+            </b>{" "}
           </span>
         ))}
       </div>
@@ -58,7 +62,9 @@ export function MonumentNumber(p: ProsProps) {
     >
       <span>
         {p.value ?? "210"}
-        <i>↗</i>
+        <i>
+          <Icon name="arrow" />
+        </i>
       </span>
       <p>{p.title ?? "Small details. Big difference."}</p>
     </div>
@@ -91,7 +97,9 @@ export function RotatingWord(p: ProsProps) {
           <span key={index} className="p-enter">
             {list[index]?.label ?? "alive."}
           </span>
-          <small>↻</small>
+          <small>
+            <Icon name="refresh" />
+          </small>
         </button>
       </h3>
     </div>
@@ -122,7 +130,7 @@ export function TypewriterText(p: ProsProps) {
       <small>TRANSMISSION 001</small>
       <p key={key}>{p.title ?? "A new idea is taking shape."}</p>
       <button type="button" className="p-text-btn" onClick={() => set(key + 1)}>
-        Read again ↻
+        Read again <Icon name="refresh" />
       </button>
     </div>
   );
@@ -197,7 +205,9 @@ export function CircularText(p: ProsProps) {
           </textPath>
         </text>
       </svg>
-      <b aria-hidden="true">✳</b>
+      <b aria-hidden="true">
+        <Icon name="flower" />
+      </b>
     </div>
   );
 }
@@ -237,7 +247,9 @@ export function StatusText(p: ProsProps) {
       <span key={value} className="p-enter">
         {p.title ?? value}
       </span>
-      <small>FOR GOOD IDEAS ↗</small>
+      <small>
+        FOR GOOD IDEAS <Icon name="arrow" />
+      </small>
     </button>
   );
 }
@@ -308,7 +320,15 @@ export function ReadMoreText(p: ProsProps) {
         onClick={() => set(!open)}
       >
         {open ? "A little less" : "Keep reading"}
-        <span>{open ? "−" : "+"}</span>
+        <span>
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
+        </span>
       </button>
     </div>
   );

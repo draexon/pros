@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useState } from "react";
 import { type ProsProps, cx, itemsOf, useModel } from "./core";
 /** A column chart with selectable bars and exact value readouts. */
@@ -212,7 +213,16 @@ export function SortableTable(p: ProsProps) {
             <th scope="col">Project</th>
             <th scope="col" aria-sort={asc ? "ascending" : "descending"}>
               <button type="button" onClick={() => set(!asc)}>
-                Activity {asc ? "↑" : "↓"}
+                Activity{" "}
+                {asc ? (
+                  <>
+                    <Icon name="up" />
+                  </>
+                ) : (
+                  <>
+                    <Icon name="down" />
+                  </>
+                )}
               </button>
             </th>
           </tr>
@@ -492,7 +502,16 @@ export function JsonInspector(p: ProsProps) {
       style={p.style}
     >
       <button type="button" aria-expanded={open} onClick={() => set(!open)}>
-        <span>{open ? "−" : "+"}</span> {p.title ?? "project"}{" "}
+        <span>
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
+        </span>{" "}
+        {p.title ?? "project"}{" "}
         <small>{"{ " + itemsOf(p).length + " fields }"}</small>
       </button>
       {open && (
@@ -564,7 +583,15 @@ export function TrendTicker(p: ProsProps) {
           <small>{s.label}</small>
           <b>{s.value}</b>
           <span aria-hidden="true">
-            {s.value?.startsWith("−") || s.value?.startsWith("-") ? "↘" : "↗"}
+            {s.value?.startsWith("−") || s.value?.startsWith("-") ? (
+              <>
+                <Icon name="southeast" />
+              </>
+            ) : (
+              <>
+                <Icon name="arrow" />
+              </>
+            )}
           </span>
         </div>
       ))}

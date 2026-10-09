@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useState } from "react";
 import { type ProsProps, cx, itemsOf, useModel, Arrow } from "./core";
 /** A prioritized checklist with computed completion and reset. */
@@ -20,7 +21,7 @@ export function Checklist(p: ProsProps) {
             p.onValueChange?.("");
           }}
         >
-          Reset ↻
+          Reset <Icon name="refresh" />
         </button>
       </div>
       {list.map((s, i) => (
@@ -77,7 +78,7 @@ export function ReorderList(p: ProsProps) {
               disabled={p.disabled || i === 0}
               onClick={() => move(i, -1)}
             >
-              ↑
+              <Icon name="up" />
             </button>
             <button
               type="button"
@@ -85,7 +86,7 @@ export function ReorderList(p: ProsProps) {
               disabled={p.disabled || i === list.length - 1}
               onClick={() => move(i, 1)}
             >
-              ↓
+              <Icon name="down" />
             </button>
           </span>
         </div>
@@ -164,7 +165,15 @@ export function SelectableList(p: ProsProps) {
             )
           }
         >
-          <span>{chosen.includes(s.label) ? "✓" : "+"}</span>
+          <span>
+            {chosen.includes(s.label) ? (
+              <>
+                <Icon name="check" />
+              </>
+            ) : (
+              <Icon name="plus" />
+            )}
+          </span>
           <b>{s.label}</b>
           <small>0{i + 1}</small>
         </button>
@@ -185,7 +194,9 @@ export function ExpandableRows(p: ProsProps) {
           <summary>
             <span>0{i + 1}</span>
             <b>{s.label}</b>
-            <i>↗</i>
+            <i>
+              <Icon name="arrow" />
+            </i>
           </summary>
           <p>{s.description ?? "A little more detail about this item."}</p>
         </details>
@@ -269,7 +280,7 @@ export function FileList(p: ProsProps) {
                 className="p-text-btn"
                 onClick={() => p.onAction?.("download:" + s.label)}
               >
-                Download ↓
+                Download <Icon name="down" />
               </button>
             </div>
           )}
@@ -307,7 +318,13 @@ export function DownloadQueue(p: ProsProps) {
                 p.onAction?.("cancel:" + s.label);
               }}
             >
-              {cancelled.includes(s.label) ? "Cancelled" : "×"}
+              {cancelled.includes(s.label) ? (
+                "Cancelled"
+              ) : (
+                <>
+                  <Icon name="close" />
+                </>
+              )}
             </button>
           </div>
           <progress
@@ -368,7 +385,17 @@ export function KanbanBoard(p: ProsProps) {
                 }}
               >
                 <b>{card.label}</b>
-                <span>{i === 2 ? "↻" : "→"}</span>
+                <span>
+                  {i === 2 ? (
+                    <>
+                      <Icon name="refresh" />
+                    </>
+                  ) : (
+                    <>
+                      <Icon name="right" />
+                    </>
+                  )}
+                </span>
               </button>
             ))}
         </section>
@@ -457,7 +484,17 @@ export function ScheduleList(p: ProsProps) {
             )
           }
         >
-          <span>{done.includes(value + s.label) ? "✓" : "○"}</span>
+          <span>
+            {done.includes(value + s.label) ? (
+              <>
+                <Icon name="check" />
+              </>
+            ) : (
+              <>
+                <Icon name="circle" />
+              </>
+            )}
+          </span>
           <div>
             <b>{s.label}</b>
             <small>{s.description}</small>
@@ -491,7 +528,15 @@ export function ContactList(p: ProsProps) {
           >
             <span className="p-avatar">{s.label[0]}</span>
             <b>{s.label}</b>
-            <span>{selected === s.label ? "−" : "+"}</span>
+            <span>
+              {selected === s.label ? (
+                <>
+                  <Icon name="minus" />
+                </>
+              ) : (
+                <Icon name="plus" />
+              )}
+            </span>
           </button>
           {selected === s.label && (
             <div className="p-enter">
@@ -501,7 +546,7 @@ export function ContactList(p: ProsProps) {
                 className="p-action"
                 onClick={() => p.onAction?.("contact:" + s.description)}
               >
-                Get in touch ↗
+                Get in touch <Icon name="arrow" />
               </button>
             </div>
           )}
@@ -544,7 +589,9 @@ export function DefinitionList(p: ProsProps) {
                 }}
               >
                 {s.value}
-                <span>⧉</span>
+                <span>
+                  <Icon name="copy" />
+                </span>
               </button>
             </dd>
           </div>
@@ -567,7 +614,7 @@ export function NotificationList(p: ProsProps) {
       <div className="p-between">
         <h3>{p.title ?? "A few new things."}</h3>
         <button type="button" className="p-text-btn" onClick={() => set([])}>
-          Restore ↻
+          Restore <Icon name="refresh" />
         </button>
       </div>
       {rows
@@ -587,7 +634,7 @@ export function NotificationList(p: ProsProps) {
                 p.onAction?.("dismiss:" + s.label);
               }}
             >
-              ×
+              <Icon name="close" />
             </button>
           </div>
         ))}
@@ -655,7 +702,13 @@ export function ReadingList(p: ProsProps) {
                 p.onAction?.(s.label);
               }}
             >
-              {read.includes(s.label) ? "✓" : "+"}
+              {read.includes(s.label) ? (
+                <>
+                  <Icon name="check" />
+                </>
+              ) : (
+                <Icon name="plus" />
+              )}
             </button>
           </article>
         ))}

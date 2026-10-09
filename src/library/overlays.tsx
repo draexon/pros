@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useState } from "react";
 import {
   type ProsProps,
@@ -23,7 +24,9 @@ export function CommandPalette(p: ProsProps) {
         className="p-command-trigger"
         onClick={() => set(true)}
       >
-        <span>⌕ {p.label ?? "Find your next move"}</span>
+        <span>
+          <Icon name="search" /> {p.label ?? "Find your next move"}
+        </span>
         <kbd>⌘ K</kbd>
       </button>
       <DialogSurface
@@ -68,7 +71,7 @@ export function SideDrawer(p: ProsProps) {
   return (
     <div data-pros="SideDrawer" className={p.className} style={p.style}>
       <button type="button" className="p-btn" onClick={() => set(true)}>
-        {p.label ?? "Open the details"} ↗
+        {p.label ?? "Open the details"} <Icon name="arrow" />
       </button>
       <DialogSurface
         open={open}
@@ -117,7 +120,9 @@ export function ConfirmDialog(p: ProsProps) {
         onClose={() => set(false)}
         title={p.title ?? "Make a little space?"}
       >
-        <span className="p-dialog-symbol">↘</span>
+        <span className="p-dialog-symbol">
+          <Icon name="southeast" />
+        </span>
         <p>
           {p.description ??
             "This project will move to your archive. You can bring it back whenever you like."}
@@ -160,7 +165,7 @@ export function SpotlightSearch(p: ProsProps) {
         className="p-spotlight-trigger"
         onClick={() => set(true)}
       >
-        ⌕ <span>{p.label ?? "Search the collection"}</span>
+        <Icon name="search" /> <span>{p.label ?? "Search the collection"}</span>
       </button>
       <DialogSurface
         open={open}
@@ -213,7 +218,9 @@ export function ImageLightbox(p: ProsProps) {
         ) : (
           <Mark variant={2} />
         )}
-        <span>VIEW FULL SIZE ↗</span>
+        <span>
+          VIEW FULL SIZE <Icon name="arrow" />
+        </span>
       </button>
       <DialogSurface
         open={open}
@@ -248,7 +255,7 @@ export function QuickView(p: ProsProps) {
   return (
     <div data-pros="QuickView" className={p.className} style={p.style}>
       <button type="button" className="p-btn" onClick={() => set(true)}>
-        {p.label ?? "Take a closer look"} ↗
+        {p.label ?? "Take a closer look"} <Icon name="arrow" />
       </button>
       <DialogSurface
         open={open}
@@ -347,7 +354,10 @@ export function PopoverMenu(p: ProsProps) {
       style={p.style}
     >
       <summary>
-        {p.label ?? "A few more options"} <span>+</span>
+        {p.label ?? "A few more options"}{" "}
+        <span>
+          <Icon name="plus" />
+        </span>
       </summary>
       <div className="p-menu p-enter">
         {itemsOf(p).map((s, i) => (
@@ -440,7 +450,10 @@ export function HelpPanel(p: ProsProps) {
           ]
         ).map((s, i) => (
           <details className="p-help-answer" key={i}>
-            <summary>{s.label} +</summary>
+            <summary>
+              {s.label}
+              <Icon name="plus" />
+            </summary>
             <p>{s.description}</p>
           </details>
         ))}
@@ -464,14 +477,16 @@ export function ToastStack(p: ProsProps) {
       <div aria-live="polite">
         {toasts.map((id) => (
           <div className="p-toast p-enter" key={id}>
-            <span>✓</span>
+            <span>
+              <Icon name="check" />
+            </span>
             <p>{p.title ?? "A small win, saved."}</p>
             <button
               type="button"
               aria-label={"Dismiss notification " + id}
               onClick={() => set(toasts.filter((x) => x !== id))}
             >
-              ×
+              <Icon name="close" />
             </button>
           </div>
         ))}
@@ -517,7 +532,7 @@ export function SpotlightTour(p: ProsProps) {
           set(true);
         }}
       >
-        {p.label ?? "Show me around"} ↗
+        {p.label ?? "Show me around"} <Icon name="arrow" />
       </button>
       <DialogSurface
         open={open}
@@ -533,7 +548,7 @@ export function SpotlightTour(p: ProsProps) {
             disabled={index === 0}
             onClick={() => setIndex(index - 1)}
           >
-            ← Back
+            <Icon name="left" /> Back
           </button>
           <small>
             {index + 1}/{list.length}
@@ -548,7 +563,13 @@ export function SpotlightTour(p: ProsProps) {
               } else setIndex(index + 1);
             }}
           >
-            {index >= list.length - 1 ? "Let’s go" : "Next →"}
+            {index >= list.length - 1 ? (
+              "Let’s go"
+            ) : (
+              <>
+                Next <Icon name="right" />
+              </>
+            )}
           </button>
         </div>
       </DialogSurface>
@@ -578,7 +599,7 @@ export function NotificationCenter(p: ProsProps) {
             p.onAction?.("read-all");
           }}
         >
-          Mark all as read ✓
+          Mark all as read <Icon name="check" />
         </button>
         {itemsOf(p).map((s, i) => (
           <div className="p-notification-row" key={i}>
@@ -602,7 +623,7 @@ export function ShareDialog(p: ProsProps) {
   return (
     <div data-pros="ShareDialog" className={p.className} style={p.style}>
       <button type="button" className="p-btn" onClick={() => set(true)}>
-        {p.label ?? "Pass it on"} ↗
+        {p.label ?? "Pass it on"} <Icon name="arrow" />
       </button>
       <DialogSurface
         open={open}
@@ -626,7 +647,7 @@ export function ShareDialog(p: ProsProps) {
           onClick={async () => {
             try {
               await navigator.clipboard.writeText(link);
-              setStatus("Link copied ✓");
+              setStatus("Link copied");
               p.onAction?.("copied");
             } catch {
               setStatus("Select the link and copy manually");
@@ -645,7 +666,7 @@ export function FullscreenMenu(p: ProsProps) {
   return (
     <div data-pros="FullscreenMenu" className={p.className} style={p.style}>
       <button type="button" className="p-btn p-soft" onClick={() => set(true)}>
-        {p.label ?? "Explore the studio"} ☰
+        {p.label ?? "Explore the studio"} <Icon name="menu" />
       </button>
       <DialogSurface
         open={open}

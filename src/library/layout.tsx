@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useState } from "react";
 import {
   type ProsProps,
@@ -67,7 +68,9 @@ export function AccordionPanel(p: ProsProps) {
           <summary>
             <small>0{i + 1}</small>
             <b>{s.label}</b>
-            <span>+</span>
+            <span>
+              <Icon name="plus" />
+            </span>
           </summary>
           <div>
             <p>
@@ -181,7 +184,17 @@ export function CollapsibleSidebar(p: ProsProps) {
         onClick={() => set(!collapsed)}
       >
         <b>p.</b>
-        <span>{collapsed ? "→" : "←"}</span>
+        <span>
+          {collapsed ? (
+            <>
+              <Icon name="right" />
+            </>
+          ) : (
+            <>
+              <Icon name="left" />
+            </>
+          )}
+        </span>
       </button>
       <nav aria-label={p.label ?? "Sidebar"}>
         {itemsOf(p).map((s, i) => (
@@ -196,7 +209,9 @@ export function CollapsibleSidebar(p: ProsProps) {
               p.onAction?.(s.label);
             }}
           >
-            <b aria-hidden="true">{["▦", "◈", "▤"][i % 3]}</b>
+            <b aria-hidden="true">
+              <Icon name={(["grid", "media", "list"] as const)[i % 3]} />
+            </b>
             <span>{s.label}</span>
           </button>
         ))}
@@ -255,7 +270,9 @@ export function StickyNote(p: ProsProps) {
         value={value}
         onChange={(e) => set(e.target.value)}
       />
-      <span>✳</span>
+      <span>
+        <Icon name="flower" />
+      </span>
     </div>
   );
 }
@@ -277,7 +294,13 @@ export function WindowFrame(p: ProsProps) {
           aria-expanded={!min}
           onClick={() => set(!min)}
         >
-          {min ? "+" : "−"}
+          {min ? (
+            <Icon name="plus" />
+          ) : (
+            <>
+              <Icon name="minus" />
+            </>
+          )}
         </button>
       </header>
       {!min && (
@@ -311,10 +334,12 @@ export function BrowserFrame(p: ProsProps) {
             p.onAction?.("reload");
           }}
         >
-          ↻
+          <Icon name="refresh" />
         </button>
         <span>{p.title ?? "your-next-idea.studio"}</span>
-        <b>↗</b>
+        <b>
+          <Icon name="arrow" />
+        </b>
       </header>
       <div key={key} className="p-browser-page p-enter">
         {p.children ?? (
@@ -363,7 +388,9 @@ export function FeatureGrid(p: ProsProps) {
     >
       {itemsOf(p).map((s, i) => (
         <section key={i}>
-          <span aria-hidden="true">{["✳", "◈", "↗"][i % 3]}</span>
+          <span aria-hidden="true">
+            <Icon name={(["flower", "media", "arrow"] as const)[i % 3]} />
+          </span>
           <h3>{s.label}</h3>
           <p>{s.description}</p>
         </section>
@@ -381,7 +408,9 @@ export function SectionDivider(p: ProsProps) {
     >
       <small>{p.value ?? "02"}</small>
       <span>{p.title ?? "A new chapter"}</span>
-      <i aria-hidden="true">✳</i>
+      <i aria-hidden="true">
+        <Icon name="flower" />
+      </i>
     </div>
   );
 }
@@ -402,7 +431,7 @@ export function PageFooter(p: ProsProps) {
       <nav aria-label="Footer">
         {itemsOf(p).map((s, i) => (
           <button type="button" key={i} onClick={() => p.onAction?.(s.label)}>
-            {s.label} ↗
+            {s.label} <Icon name="arrow" />
           </button>
         ))}
       </nav>

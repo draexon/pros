@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useRef, useState } from "react";
 import {
   type ProsProps,
@@ -68,7 +69,7 @@ export function Filmstrip(p: ProsProps) {
               ref.current?.scrollBy({ left: -230, behavior: "smooth" })
             }
           >
-            ←
+            <Icon name="left" />
           </button>
           <button
             type="button"
@@ -78,7 +79,7 @@ export function Filmstrip(p: ProsProps) {
               ref.current?.scrollBy({ left: 230, behavior: "smooth" })
             }
           >
-            →
+            <Icon name="right" />
           </button>
         </span>
       </div>
@@ -145,7 +146,7 @@ export function ZoomCanvas(p: ProsProps) {
           disabled={zoom <= 0.5}
           onClick={() => set(Math.max(0.5, zoom - 0.25))}
         >
-          −
+          <Icon name="minus" />
         </button>
         <button type="button" aria-label="Reset zoom" onClick={() => set(1)}>
           {Math.round(zoom * 100)}%
@@ -156,7 +157,7 @@ export function ZoomCanvas(p: ProsProps) {
           disabled={zoom >= 2}
           onClick={() => set(Math.min(2, zoom + 0.25))}
         >
-          +
+          <Icon name="plus" />
         </button>
       </div>
     </div>
@@ -195,7 +196,8 @@ export function GalleryGrid(p: ProsProps) {
         ))}
       </div>
       <p aria-live="polite">
-        <span>SELECTED STUDY</span> {list[Number(value)]?.label ?? "None"} ↗
+        <span>SELECTED STUDY</span> {list[Number(value)]?.label ?? "None"}{" "}
+        <Icon name="arrow" />
       </p>
     </div>
   );
@@ -253,7 +255,7 @@ export function VideoFrame(p: ProsProps) {
             aria-label="Request video playback"
             onClick={() => p.onAction?.("play")}
           >
-            ▶
+            <Icon name="play" />
           </button>
           <small>CONNECT A VIDEO SOURCE</small>
         </div>
@@ -400,7 +402,7 @@ export function Carousel(p: ProsProps) {
           disabled={!list.length || p.disabled}
           onClick={() => set(String((index - 1 + list.length) % list.length))}
         >
-          ←
+          <Icon name="left" />
         </button>
         <span aria-live="polite">
           {list.length ? index + 1 : 0} / {list.length}
@@ -412,7 +414,7 @@ export function Carousel(p: ProsProps) {
           disabled={!list.length || p.disabled}
           onClick={() => set(String((index + 1) % list.length))}
         >
-          →
+          <Icon name="right" />
         </button>
       </div>
     </div>
@@ -469,7 +471,13 @@ export function MediaCaption(p: ProsProps) {
           aria-expanded={open}
           onClick={() => set(!open)}
         >
-          {open ? "−" : "i"}
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            "i"
+          )}
         </button>
       </div>
       {open && (

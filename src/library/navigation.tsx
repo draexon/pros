@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useState } from "react";
 import {
   type ProsProps,
@@ -99,7 +100,11 @@ export function IconDock(p: ProsProps) {
             p.onAction?.(s.label);
           }}
         >
-          <span aria-hidden="true">{["⌂", "◈", "◇", "⚙"][i % 4]}</span>
+          <span aria-hidden="true">
+            <Icon
+              name={(["home", "media", "bookmark", "settings"] as const)[i % 4]}
+            />
+          </span>
           <small>{s.label}</small>
         </button>
       ))}
@@ -156,7 +161,7 @@ export function PageStepper(p: ProsProps) {
         disabled={p.disabled || page === 1}
         onClick={() => set(String(page - 1))}
       >
-        ←
+        <Icon name="left" />
       </button>
       {Array.from({ length: max }, (_, i) => (
         <button
@@ -176,7 +181,7 @@ export function PageStepper(p: ProsProps) {
         disabled={p.disabled || page === max}
         onClick={() => set(String(page + 1))}
       >
-        →
+        <Icon name="right" />
       </button>
     </nav>
   );
@@ -225,7 +230,13 @@ export function CompactHeader(p: ProsProps) {
           aria-label="Toggle navigation"
           onClick={() => set(!open)}
         >
-          {open ? "Close −" : "Menu +"}
+          {open ? (
+            <>
+              Close <Icon name="minus" />
+            </>
+          ) : (
+            "Menu +"
+          )}
         </button>
       </div>
       {open && (
@@ -272,7 +283,15 @@ export function ProgressSteps(p: ProsProps) {
           aria-current={i === Number(value) ? "step" : undefined}
           onClick={() => set(String(i))}
         >
-          <b>{i < Number(value) ? "✓" : String(i + 1).padStart(2, "0")}</b>
+          <b>
+            {i < Number(value) ? (
+              <>
+                <Icon name="check" />
+              </>
+            ) : (
+              String(i + 1).padStart(2, "0")
+            )}
+          </b>
           <span>{s.label}</span>
         </button>
       ))}
@@ -302,7 +321,16 @@ export function TreeNavigation(p: ProsProps) {
               )
             }
           >
-            <span>{expanded.includes(s.label) ? "−" : "+"}</span> {s.label}
+            <span>
+              {expanded.includes(s.label) ? (
+                <>
+                  <Icon name="minus" />
+                </>
+              ) : (
+                <Icon name="plus" />
+              )}
+            </span>{" "}
+            {s.label}
           </button>
           {expanded.includes(s.label) && (
             <div className="p-enter">
@@ -312,7 +340,7 @@ export function TreeNavigation(p: ProsProps) {
                   key={child}
                   onClick={() => p.onAction?.(s.label + "/" + child)}
                 >
-                  {child} ↗
+                  {child} <Icon name="arrow" />
                 </button>
               ))}
             </div>
@@ -346,7 +374,9 @@ export function BottomBar(p: ProsProps) {
           aria-current={value === String(i) ? "page" : undefined}
           onClick={() => set(String(i))}
         >
-          <b aria-hidden="true">{["◈", "▦", "+"][i % 3]}</b>
+          <b aria-hidden="true">
+            <Icon name={(["media", "grid", "plus"] as const)[i % 3]} />
+          </b>
           <span>{s.label}</span>
         </button>
       ))}
@@ -414,7 +444,15 @@ export function FilterChips(p: ProsProps) {
           }
         >
           {s.label}
-          <span>{selected.includes(itemValue(s)) ? "✓" : "+"}</span>
+          <span>
+            {selected.includes(itemValue(s)) ? (
+              <>
+                <Icon name="check" />
+              </>
+            ) : (
+              <Icon name="plus" />
+            )}
+          </span>
         </button>
       ))}
     </div>
@@ -443,7 +481,7 @@ export function SectionNavigator(p: ProsProps) {
         disabled={p.disabled || !list.length}
         onClick={() => set(String((i + 1) % list.length))}
       >
-        →
+        <Icon name="right" />
       </button>
     </div>
   );
@@ -519,7 +557,17 @@ export function StoryPager(p: ProsProps) {
           disabled={p.disabled}
           onClick={() => p.onAction?.(itemValue(s))}
         >
-          <small>{i === 0 ? "← PREVIOUS" : "UP NEXT →"}</small>
+          <small>
+            {i === 0 ? (
+              <>
+                <Icon name="left" /> PREVIOUS
+              </>
+            ) : (
+              <>
+                UP NEXT <Icon name="right" />
+              </>
+            )}
+          </small>
           <b>{s.label}</b>
         </button>
       ))}

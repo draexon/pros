@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import {
   createContext,
   useContext,
@@ -69,7 +70,7 @@ export function useToggle(p: ProsProps, fallback = false) {
 export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
     <span aria-hidden="true" className="p-arrow">
-      {diagonal ? "↗" : "→"}
+      <Icon name={diagonal ? "arrow" : "right"} />
     </span>
   );
 }
@@ -200,7 +201,7 @@ export function DialogSurface({
           aria-label="Close dialog"
           onClick={onClose}
         >
-          ×
+          <Icon name="close" />
         </button>
       </header>
       {children}

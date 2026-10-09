@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useEffect, useRef, useState } from "react";
 import { type ProsProps, cx, Arrow, useToggle, useModel } from "./core";
 /** A solid pill with a sliding arrow capsule. */
@@ -32,7 +33,9 @@ export function RollingButton(p: ProsProps) {
     >
       <span>
         <i>{label}</i>
-        <i aria-hidden="true">{label} ↗</i>
+        <i aria-hidden="true">
+          {label} <Icon name="arrow" />
+        </i>
       </span>
     </button>
   );
@@ -50,7 +53,9 @@ export function OrbitButton(p: ProsProps) {
       onClick={() => p.onAction?.("explore")}
     >
       <span aria-hidden="true">EXPLORE · EXPLORE ·</span>
-      <b>↗</b>
+      <b>
+        <Icon name="arrow" />
+      </b>
     </button>
   );
 }
@@ -132,7 +137,17 @@ export function BookmarkButton(p: ProsProps) {
       aria-pressed={saved}
       onClick={() => toggle()}
     >
-      <span>{saved ? "◆" : "◇"}</span>
+      <span>
+        {saved ? (
+          <>
+            <Icon name="bookmark-filled" />
+          </>
+        ) : (
+          <>
+            <Icon name="bookmark" />
+          </>
+        )}
+      </span>
       {saved ? "Saved to collection" : (p.label ?? "Save for later")}
     </button>
   );
@@ -150,7 +165,17 @@ export function LikeButton(p: ProsProps) {
       aria-pressed={liked}
       onClick={() => toggle()}
     >
-      <span aria-hidden="true">{liked ? "♥" : "♡"}</span>
+      <span aria-hidden="true">
+        {liked ? (
+          <>
+            <Icon name="heart-filled" />
+          </>
+        ) : (
+          <>
+            <Icon name="heart" />
+          </>
+        )}
+      </span>
       <b key={String(liked)}>{(p.min ?? 128) + (liked ? 1 : 0)}</b>
       <span className="p-sr">{p.label ?? "Like"}</span>
     </button>
@@ -164,7 +189,7 @@ export function CopyButton(p: ProsProps) {
       await navigator.clipboard.writeText(
         p.value ?? p.description ?? "Made with Pros.",
       );
-      set("Copied ✓");
+      set("Copied");
       p.onAction?.("copied");
     } catch {
       set("Copy unavailable");
@@ -179,7 +204,9 @@ export function CopyButton(p: ProsProps) {
       style={p.style}
       onClick={copy}
     >
-      <span aria-hidden="true">▣</span>
+      <span aria-hidden="true">
+        <Icon name="copy" />
+      </span>
       <span aria-live="polite">
         {status === "Copy" ? (p.label ?? status) : status}
       </span>
@@ -237,7 +264,13 @@ export function HoldButton(p: ProsProps) {
     >
       <i />
       <span aria-live="polite">
-        {state === "done" ? "Confirmed ✓" : (p.label ?? "Hold to confirm")}
+        {state === "done" ? (
+          <>
+            Confirmed <Icon name="check" />
+          </>
+        ) : (
+          (p.label ?? "Hold to confirm")
+        )}
       </span>
     </button>
   );
@@ -254,7 +287,9 @@ export function DownloadButton(p: ProsProps) {
       style={p.style}
       onClick={() => p.onAction?.("download")}
     >
-      <span aria-hidden="true">↓</span>
+      <span aria-hidden="true">
+        <Icon name="down" />
+      </span>
       {p.label ?? "Download asset"}
       {progress > 0 && <span>{progress}%</span>}
       <i style={{ width: progress + "%" }} />
@@ -338,7 +373,13 @@ export function ConfirmButton(p: ProsProps) {
       }}
     >
       <span key={String(done)} className="p-enter">
-        {done ? "✓ All set" : (p.label ?? "Count me in")}
+        {done ? (
+          <>
+            <Icon name="check" /> All set
+          </>
+        ) : (
+          (p.label ?? "Count me in")
+        )}
       </span>
     </button>
   );
@@ -369,7 +410,7 @@ export function FloatingButton(p: ProsProps) {
                 set(false);
               }}
             >
-              {s.label} ↗
+              {s.label} <Icon name="arrow" />
             </button>
           ))}
         </div>
@@ -382,7 +423,7 @@ export function FloatingButton(p: ProsProps) {
         aria-expanded={open}
         onClick={() => set(!open)}
       >
-        +
+        <Icon name="plus" />
       </button>
     </div>
   );
@@ -400,7 +441,9 @@ export function InvertButton(p: ProsProps) {
       aria-pressed={on}
       onClick={() => toggle()}
     >
-      <span aria-hidden="true">◐</span>
+      <span aria-hidden="true">
+        <Icon name="circle" />
+      </span>
       {on ? "Light side" : (p.label ?? "Dark side")}
     </button>
   );

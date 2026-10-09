@@ -45,6 +45,21 @@ export function Example() {
 
 The package provides ES modules, CommonJS, TypeScript declarations, and a separate stylesheet. React 18.3 or 19 and React DOM are peer dependencies. No existing UI or motion component library is used.
 
+## Original icons
+
+Pros includes its own bold SVG icon family, with curved directional arrows and solid, rounded silhouettes. Icons inherit the text color and need no icon font or external package.
+
+```tsx
+import { ProsIcon } from "@draexon/pros";
+
+<button type="button">
+  Explore <ProsIcon name="arrow" size={20} />
+</button>
+<ProsIcon name="motion" size={24} label="Motion enabled" />
+```
+
+Icons are decorative by default. Use `label` for a standalone meaningful icon; give icon-only buttons an accessible label. The component source viewer includes `icons.tsx` alongside the shared core and stylesheet.
+
 ## The collections
 
 Each collection contains 15 individually exported components:
@@ -91,7 +106,7 @@ Every component has an entrance; interactive elements add purpose-specific trans
 </ProsProvider>
 ```
 
-The provider switch and `prefers-reduced-motion` disable decorative animation while preserving state changes. Continuous animation can be paused from the gallery header. Native media playback remains user-controlled.
+The provider switch and `prefers-reduced-motion` disable decorative animation while preserving state changes. The gallery adds pointer-responsive hero layers, magnetic actions, scroll-triggered reveals, and animated arrow transitions. Continuous animation can be paused from the gallery header. Native media playback remains user-controlled.
 
 Core tokens:
 

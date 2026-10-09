@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useRef, useState } from "react";
 import {
   type ProsProps,
@@ -45,7 +46,9 @@ export function SearchInput(p: ProsProps) {
         p.onAction?.(value);
       }}
     >
-      <span aria-hidden="true">⌕</span>
+      <span aria-hidden="true">
+        <Icon name="search" />
+      </span>
       <input
         aria-label={p.label ?? "Search"}
         name={p.name}
@@ -56,7 +59,7 @@ export function SearchInput(p: ProsProps) {
       />
       {value ? (
         <button type="button" aria-label="Clear search" onClick={() => set("")}>
-          ×
+          <Icon name="close" />
         </button>
       ) : (
         <kbd>↵</kbd>
@@ -208,7 +211,13 @@ export function CheckboxTile(p: ProsProps) {
         onChange={() => toggle()}
       />
       <span className="p-tile-check" aria-hidden="true">
-        {on ? "✓" : "+"}
+        {on ? (
+          <>
+            <Icon name="check" />
+          </>
+        ) : (
+          <Icon name="plus" />
+        )}
       </span>
       <b>{p.label ?? p.title ?? "A little more experimental"}</b>
       <small>{p.description ?? "Leave room for the unexpected."}</small>
@@ -297,7 +306,7 @@ export function NumberStepper(p: ProsProps) {
             aria-label="Decrease quantity"
             onClick={() => change(Number(value) - (p.step ?? 1))}
           >
-            −
+            <Icon name="minus" />
           </button>
           <input
             id={id}
@@ -318,7 +327,7 @@ export function NumberStepper(p: ProsProps) {
             aria-label="Increase quantity"
             onClick={() => change(Number(value) + (p.step ?? 1))}
           >
-            +
+            <Icon name="plus" />
           </button>
         </div>
       )}
@@ -414,7 +423,7 @@ export function TagInput(p: ProsProps) {
                 aria-label={"Remove " + tag}
                 onClick={() => set(tags.filter((t) => t !== tag).join(","))}
               >
-                ×
+                <Icon name="close" />
               </button>
             </span>
           ))}
@@ -535,7 +544,7 @@ export function RatingInput(p: ProsProps) {
             className={Number(value) >= n ? "is-active" : ""}
             onClick={() => set(String(n))}
           >
-            ★
+            <Icon name="star" />
           </button>
         ))}
       </div>

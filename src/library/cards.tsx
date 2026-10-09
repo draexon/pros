@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useState } from "react";
 import {
   type ProsProps,
@@ -86,7 +87,16 @@ export function TicketCard(p: ProsProps) {
           aria-expanded={open}
           onClick={() => toggle()}
         >
-          Event details <span>{open ? "−" : "+"}</span>
+          Event details{" "}
+          <span>
+            {open ? (
+              <>
+                <Icon name="minus" />
+              </>
+            ) : (
+              <Icon name="plus" />
+            )}
+          </span>
         </button>
         {open && (
           <p className="p-enter">
@@ -121,7 +131,9 @@ export function FlipCard(p: ProsProps) {
           <small>THERE IS MORE TO THIS</small>
           <Mark variant={2} />
           <strong>{p.title ?? "A different side."}</strong>
-          <span>Click to turn ↗</span>
+          <span>
+            Click to turn <Icon name="arrow" />
+          </span>
         </span>
         <span className="p-card p-flip-back">
           <small>THE OTHER SIDE</small>
@@ -129,7 +141,9 @@ export function FlipCard(p: ProsProps) {
             {p.description ??
               "Good things reveal themselves with a little curiosity."}
           </strong>
-          <span>Turn back ↗</span>
+          <span>
+            Turn back <Icon name="arrow" />
+          </span>
         </span>
       </span>
     </button>
@@ -155,7 +169,9 @@ export function FoldCard(p: ProsProps) {
       <span className="p-fold-cover">
         <small>PROS / STUDIES</small>
         <strong>{p.title ?? "Open to possibility."}</strong>
-        <span>↗</span>
+        <span>
+          <Icon name="arrow" />
+        </span>
       </span>
     </button>
   );
@@ -182,7 +198,13 @@ export function ProfileCard(p: ProsProps) {
         disabled={p.disabled}
         onClick={() => toggle()}
       >
-        {following ? "Following ✓" : "Follow + "}
+        {following ? (
+          <>
+            Following <Icon name="check" />
+          </>
+        ) : (
+          "Follow + "
+        )}
       </button>
     </article>
   );
@@ -244,7 +266,9 @@ export function MetricCard(p: ProsProps) {
         <strong className="p-number">
           84.6<span>%</span>
         </strong>
-        <span className="p-pill">↗ 12.8%</span>
+        <span className="p-pill">
+          <Icon name="arrow" /> 12.8%
+        </span>
       </div>
       <div className="p-bars" aria-label="Seven-day activity">
         {[35, 52, 42, 70, 56, 84, 95].map((n, i) => (
@@ -260,7 +284,16 @@ export function MetricCard(p: ProsProps) {
         aria-expanded={show}
         onClick={() => toggle()}
       >
-        See breakdown <span>{show ? "−" : "+"}</span>
+        See breakdown{" "}
+        <span>
+          {show ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
+        </span>
       </button>
       {show && (
         <p className="p-enter">
@@ -294,7 +327,15 @@ export function EventCard(p: ProsProps) {
           aria-pressed={saved}
           onClick={() => toggle()}
         >
-          {saved ? "You’re on the list ✓" : "Save my place ↗"}
+          {saved ? (
+            <>
+              You’re on the list <Icon name="check" />
+            </>
+          ) : (
+            <>
+              Save my place <Icon name="arrow" />
+            </>
+          )}
         </button>
       </div>
     </article>
@@ -330,7 +371,15 @@ export function AudioCard(p: ProsProps) {
             p.onAction?.(playing ? "pause" : "play");
           }}
         >
-          {playing ? "Ⅱ" : "▶"}
+          {playing ? (
+            <>
+              <Icon name="pause" />
+            </>
+          ) : (
+            <>
+              <Icon name="play" />
+            </>
+          )}
         </button>
       </div>
       <div className="p-wave" aria-hidden="true">
@@ -371,7 +420,14 @@ export function FileCard(p: ProsProps) {
           aria-expanded={open}
           onClick={() => toggle()}
         >
-          Details {open ? "−" : "+"}
+          Details{" "}
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
         </button>
         <Action p={p} action="download">
           Download
@@ -436,7 +492,15 @@ export function ArticleCard(p: ProsProps) {
           aria-pressed={saved}
           onClick={() => toggle()}
         >
-          {saved ? "◆" : "◇"}
+          {saved ? (
+            <>
+              <Icon name="bookmark-filled" />
+            </>
+          ) : (
+            <>
+              <Icon name="bookmark" />
+            </>
+          )}
         </button>
       </div>
       <h3>{p.title ?? "A little less expected."}</h3>

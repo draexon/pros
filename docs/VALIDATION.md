@@ -33,3 +33,11 @@ Checked in Chromium at 1440 × 1050 and 390 × 844.
 ## Scope
 
 The previews use illustrative local data. Backend service integrations and native media playback with consumer-supplied URLs require testing in the consuming application. Browser checks do not constitute a full screen-reader or cross-browser accessibility audit.
+
+## Custom icon and motion update — 2026-10-10
+
+- Replaced font-symbol arrows and control icons across all 14 collections with original SVG drawings. Exported ProsIcon with typed names and decorative/labeled accessibility modes.
+- Production gallery, ESM/CJS library, and declarations build successfully; all 217 existing tests pass.
+- Desktop 1440 × 1050: verified pointer-responsive hero layers and running scroll-reveal animations, and checked all collections for unnamed icon-only buttons.
+- Mobile 390 × 844: all 14 collections render 15 previews each, with no page overflow or significantly overflowing preview stages. Navigation and the icon-source tab work.
+- Motion-off and system reduced-motion cancel gallery Web Animations, reset pointer movement, and disable CSS animation. No browser console errors.

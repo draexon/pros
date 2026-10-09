@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useRef, useState } from "react";
 import {
   type ProsProps,
@@ -118,7 +119,10 @@ export function SpringStack(p: ProsProps) {
           p.onValueChange?.(String((index + 1) % list.length));
         }}
       >
-        Shuffle the stack <span>↻</span>
+        Shuffle the stack{" "}
+        <span>
+          <Icon name="refresh" />
+        </span>
       </button>
     </div>
   );
@@ -149,7 +153,13 @@ export function RevealCurtain(p: ProsProps) {
         onClick={() => toggle()}
       >
         {open ? "Close the curtain" : "Reveal something good"}{" "}
-        {open ? "−" : "+"}
+        {open ? (
+          <>
+            <Icon name="minus" />
+          </>
+        ) : (
+          <Icon name="plus" />
+        )}
       </button>
     </div>
   );
@@ -177,7 +187,15 @@ export function PerspectiveGrid(p: ProsProps) {
         aria-pressed={flat}
         onClick={() => toggle()}
       >
-        {flat ? "Add perspective ↗" : "Bring it into view ↙"}
+        {flat ? (
+          <>
+            Add perspective <Icon name="arrow" />
+          </>
+        ) : (
+          <>
+            Bring it into view <Icon name="southwest" />
+          </>
+        )}
       </button>
     </div>
   );
@@ -205,7 +223,11 @@ export function OrbitGallery(p: ProsProps) {
             aria-label={s.label}
             onClick={() => p.onAction?.(s.label)}
           >
-            <span>{["◈", "✳", "◐", "↗"][i % 4]}</span>
+            <span>
+              <Icon
+                name={(["media", "flower", "circle", "arrow"] as const)[i % 4]}
+              />
+            </span>
           </button>
         ))}
       </div>
@@ -215,7 +237,15 @@ export function OrbitGallery(p: ProsProps) {
         aria-pressed={paused}
         onClick={() => toggle()}
       >
-        {paused ? "Keep moving ▶" : "A moment of stillness Ⅱ"}
+        {paused ? (
+          <>
+            Keep moving <Icon name="play" />
+          </>
+        ) : (
+          <>
+            A moment of stillness <Icon name="pause" />
+          </>
+        )}
       </button>
     </div>
   );
@@ -268,7 +298,10 @@ export function KineticRibbon(p: ProsProps) {
               tabIndex={i >= itemsOf(p).length ? -1 : 0}
               onClick={() => p.onAction?.(s.label)}
             >
-              {s.label} <span>✳</span>
+              {s.label}{" "}
+              <span>
+                <Icon name="flower" />
+              </span>
             </button>
           ))}
         </div>
@@ -279,7 +312,15 @@ export function KineticRibbon(p: ProsProps) {
         aria-pressed={paused}
         onClick={() => toggle()}
       >
-        {paused ? "Resume ribbon ▶" : "Pause ribbon Ⅱ"}
+        {paused ? (
+          <>
+            Resume ribbon <Icon name="play" />
+          </>
+        ) : (
+          <>
+            Pause ribbon <Icon name="pause" />
+          </>
+        )}
       </button>
     </div>
   );
@@ -305,12 +346,27 @@ export function StaggerGrid(p: ProsProps) {
             onClick={() => p.onAction?.(s.label)}
           >
             {s.label}
-            <span>{["✳", "◈", "◐", "↗", "▦", "○"][i % 6]}</span>
+            <span>
+              <Icon
+                name={
+                  (
+                    [
+                      "flower",
+                      "media",
+                      "circle",
+                      "arrow",
+                      "grid",
+                      "circle",
+                    ] as const
+                  )[i % 6]
+                }
+              />
+            </span>
           </button>
         ))}
       </div>
       <button type="button" className="p-text-btn" onClick={() => set(key + 1)}>
-        One more time ↻
+        One more time <Icon name="refresh" />
       </button>
     </div>
   );
@@ -549,7 +605,7 @@ export function SlideSwap(p: ProsProps) {
           disabled={!list.length}
           onClick={() => change(-1)}
         >
-          ←
+          <Icon name="left" />
         </button>
         <small>
           {list.length ? index + 1 : 0} / {list.length}
@@ -561,7 +617,7 @@ export function SlideSwap(p: ProsProps) {
           disabled={!list.length}
           onClick={() => change(1)}
         >
-          →
+          <Icon name="right" />
         </button>
       </div>
     </div>

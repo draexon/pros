@@ -2238,7 +2238,7 @@
   display: grid;
   place-items: center;
 }
-.p-circular-text svg {
+.p-circular-text > svg {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -7667,4 +7667,39 @@
     opacity: 1;
     translate: 0 0;
   }
+}
+
+/* The Pros icon family shares the same broad, rounded silhouette. */
+.pros .p-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  overflow: visible;
+  vertical-align: -0.16em;
+  stroke: none;
+  transform-origin: center;
+}
+.pros .p-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pros .p-icon--arrow,
+.pros .p-icon--right,
+.pros .p-icon--left,
+.pros .p-icon--up,
+.pros .p-icon--down,
+.pros .p-icon--refresh {
+  transition: transform 0.55s var(--pros-spring);
+}
+.pros :is(button, a):hover > .p-icon--arrow {
+  transform: translate(2px, -2px) rotate(-7deg);
+}
+.pros :is(button, a):hover > .p-icon--right {
+  transform: translateX(3px);
+}
+.pros :is(button, a):hover > .p-icon--refresh {
+  transform: rotate(65deg);
+}
+.pros :is(button, a):active > .p-icon {
+  transform: scale(0.82);
 }

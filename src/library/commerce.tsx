@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useState } from "react";
 import {
   type ProsProps,
@@ -60,7 +61,9 @@ export function PricingCard(p: ProsProps) {
     >
       <div className="p-between">
         <span className="p-pill">FOR THE INDEPENDENT</span>
-        <span>↗</span>
+        <span>
+          <Icon name="arrow" />
+        </span>
       </div>
       <h3>{p.title ?? "A little more room."}</h3>
       <div className="p-price">
@@ -85,7 +88,9 @@ export function PricingCard(p: ProsProps) {
             { label: "Room to collaborate" },
           ]
         ).map((x, i) => (
-          <li key={i}>✓ {x.label}</li>
+          <li key={i}>
+            <Icon name="check" /> {x.label}
+          </li>
         ))}
       </ul>
       <button
@@ -125,7 +130,7 @@ export function CartItem(p: ProsProps) {
               disabled={quantity <= 1}
               onClick={() => set(String(quantity - 1))}
             >
-              −
+              <Icon name="minus" />
             </button>
             <b aria-live="polite">{quantity}</b>
             <button
@@ -134,7 +139,7 @@ export function CartItem(p: ProsProps) {
               disabled={quantity >= 99}
               onClick={() => set(String(quantity + 1))}
             >
-              +
+              <Icon name="plus" />
             </button>
           </span>
           <b>${(quantity * price).toFixed(2)}</b>
@@ -215,7 +220,7 @@ export function CouponInput(p: ProsProps) {
             required
           />
           <button type="submit" className="p-btn" disabled={p.disabled}>
-            Apply ↗
+            Apply <Icon name="arrow" />
           </button>
         </span>
       </label>
@@ -259,7 +264,7 @@ export function ReceiptCard(p: ProsProps) {
         className="p-text-btn"
         onClick={() => p.onAction?.("print")}
       >
-        Keep this receipt ↓
+        Keep this receipt <Icon name="down" />
       </button>
     </article>
   );
@@ -279,7 +284,15 @@ export function ShippingTracker(p: ProsProps) {
       <div>
         {["Packed", "On the move", "At your door"].map((s, i) => (
           <span key={s} className={i <= current ? "is-active" : ""}>
-            <b>{i < current ? "✓" : i + 1}</b>
+            <b>
+              {i < current ? (
+                <>
+                  <Icon name="check" />
+                </>
+              ) : (
+                i + 1
+              )}
+            </b>
             <small>{s}</small>
           </span>
         ))}
@@ -290,7 +303,14 @@ export function ShippingTracker(p: ProsProps) {
         aria-expanded={details}
         onClick={() => set(!details)}
       >
-        Shipment details {details ? "−" : "+"}
+        Shipment details{" "}
+        {details ? (
+          <>
+            <Icon name="minus" />
+          </>
+        ) : (
+          <Icon name="plus" />
+        )}
       </button>
       {details && (
         <p className="p-enter">
@@ -319,7 +339,7 @@ export function SizeSelector(p: ProsProps) {
           aria-expanded={guide}
           onClick={() => show(!guide)}
         >
-          Size guide ↗
+          Size guide <Icon name="arrow" />
         </button>
       </div>
       <div role="group" aria-label={p.label ?? "Size"}>
@@ -398,7 +418,15 @@ export function GiftCard(p: ProsProps) {
           ? (p.description ?? "For your next good idea. With love.")
           : (p.title ?? "$100")}
       </b>
-      <span>{open ? "Close your note −" : "Open your note +"}</span>
+      <span>
+        {open ? (
+          <>
+            Close your note <Icon name="minus" />
+          </>
+        ) : (
+          "Open your note +"
+        )}
+      </span>
       <i aria-hidden="true" />
     </button>
   );
@@ -415,7 +443,9 @@ export function MembershipCard(p: ProsProps) {
       <small>THE INNER CIRCLE</small>
       <div className="p-between">
         <h3>{p.title ?? "Studio member."}</h3>
-        <span>✳</span>
+        <span>
+          <Icon name="flower" />
+        </span>
       </div>
       <div className="p-between">
         <small>MEMBER № {p.value ?? "00128"}</small>
@@ -425,7 +455,14 @@ export function MembershipCard(p: ProsProps) {
           aria-expanded={open}
           onClick={() => toggle()}
         >
-          Benefits {open ? "−" : "+"}
+          Benefits{" "}
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
         </button>
       </div>
       {open && (
@@ -529,7 +566,9 @@ export function ReviewSummary(p: ProsProps) {
             aria-pressed={value === String(n)}
             onClick={() => set(String(n))}
           >
-            <span>{n} ★</span>
+            <span>
+              {n} <Icon name="star" />
+            </span>
             <i>
               <b style={{ width: [86, 10, 3, 1, 0][i] + "%" }} />
             </i>
@@ -554,7 +593,9 @@ export function RestockNotice(p: ProsProps) {
         p.onAction?.(email);
       }}
     >
-      <span>↻</span>
+      <span>
+        <Icon name="refresh" />
+      </span>
       <h3>{p.title ?? "Worth the wait."}</h3>
       <p>
         {p.description ?? "Leave your email to request a restock notification."}

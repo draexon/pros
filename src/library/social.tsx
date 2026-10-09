@@ -1,3 +1,4 @@
+import { Icon } from "./icons";
 import { useId, useState } from "react";
 import {
   type ProsProps,
@@ -86,7 +87,7 @@ export function CommentThread(p: ProsProps) {
           aria-label="Post comment"
           disabled={p.disabled || !draft.trim()}
         >
-          ↑
+          <Icon name="up" />
         </button>
       </form>
     </div>
@@ -96,9 +97,9 @@ export function CommentThread(p: ProsProps) {
 export function ReactionBar(p: ProsProps) {
   const [selected, set] = useModel(p, "");
   const list = p.items ?? [
-    { label: "♥", value: "24" },
-    { label: "✳", value: "12" },
-    { label: "↗", value: "8" },
+    { label: "Love", value: "24" },
+    { label: "Inspired", value: "12" },
+    { label: "Support", value: "8" },
   ];
   return (
     <div
@@ -116,7 +117,13 @@ export function ReactionBar(p: ProsProps) {
           aria-pressed={selected === s.label}
           onClick={() => set(selected === s.label ? "" : s.label)}
         >
-          <span>{s.label}</span>
+          <span>
+            {p.items ? (
+              s.label
+            ) : (
+              <Icon name={(["heart", "flower", "arrow"] as const)[i % 3]} />
+            )}
+          </span>
           <b>{(Number(s.value) || 0) + (selected === s.label ? 1 : 0)}</b>
         </button>
       ))}
@@ -173,7 +180,7 @@ export function ChatPanel(p: ProsProps) {
           aria-label="Send message"
           disabled={p.disabled || !draft.trim()}
         >
-          ↑
+          <Icon name="up" />
         </button>
       </form>
     </div>
@@ -240,7 +247,7 @@ export function ShareBar(p: ProsProps) {
             key={s}
             onClick={() => p.onAction?.(s.toLowerCase())}
           >
-            {s} ↗
+            {s} <Icon name="arrow" />
           </button>
         ))}
         <button
@@ -257,7 +264,17 @@ export function ShareBar(p: ProsProps) {
             }
           }}
         >
-          {error ? "Copy unavailable" : copied ? "Copied ✓" : "Copy link ⧉"}
+          {error ? (
+            "Copy unavailable"
+          ) : copied ? (
+            <>
+              Copied <Icon name="check" />
+            </>
+          ) : (
+            <>
+              Copy link <Icon name="copy" />
+            </>
+          )}
         </button>
       </div>
     </div>
@@ -412,13 +429,17 @@ export function PollCard(p: ProsProps) {
           )}
           <span>{s.label}</span>
           <b>
-            {vote
-              ? Math.round(
-                  (((Number(s.value) || 0) + (vote === s.label ? 1 : 0)) /
-                    Math.max(1, total)) *
-                    100,
-                ) + "%"
-              : "↗"}
+            {vote ? (
+              Math.round(
+                (((Number(s.value) || 0) + (vote === s.label ? 1 : 0)) /
+                  Math.max(1, total)) *
+                  100,
+              ) + "%"
+            ) : (
+              <>
+                <Icon name="arrow" />
+              </>
+            )}
           </b>
         </button>
       ))}
@@ -457,9 +478,21 @@ export function CollectionPreview(p: ProsProps) {
             p.onAction?.(s.label);
           }}
         >
-          <span className="p-collection-thumb">{["◈", "✳", "◑"][i % 3]}</span>
+          <span className="p-collection-thumb">
+            <Icon name={(["media", "flower", "circle"] as const)[i % 3]} />
+          </span>
           <b>{s.label}</b>
-          <span>{saved.includes(s.label) ? "◆" : "◇"}</span>
+          <span>
+            {saved.includes(s.label) ? (
+              <>
+                <Icon name="bookmark-filled" />
+              </>
+            ) : (
+              <>
+                <Icon name="bookmark" />
+              </>
+            )}
+          </span>
         </button>
       ))}
     </div>
@@ -480,7 +513,15 @@ export function AuthorByline(p: ProsProps) {
           <small>WORDS BY</small>
           <b>{p.title ?? "Alex Morgan"}</b>
         </span>
-        <span>{open ? "−" : "+"}</span>
+        <span>
+          {open ? (
+            <>
+              <Icon name="minus" />
+            </>
+          ) : (
+            <Icon name="plus" />
+          )}
+        </span>
       </button>
       {open && (
         <p className="p-enter">
@@ -553,7 +594,14 @@ export function ContactCard(p: ProsProps) {
         aria-expanded={open}
         onClick={() => toggle()}
       >
-        A note on availability {open ? "−" : "+"}
+        A note on availability{" "}
+        {open ? (
+          <>
+            <Icon name="minus" />
+          </>
+        ) : (
+          <Icon name="plus" />
+        )}
       </button>
       {open && (
         <p className="p-enter">
@@ -570,7 +618,7 @@ export function ContactCard(p: ProsProps) {
         className="p-btn"
         onClick={() => p.onAction?.("contact")}
       >
-        {p.label ?? "Let’s talk"} ↗
+        {p.label ?? "Let’s talk"} <Icon name="arrow" />
       </button>
     );
   }
@@ -594,7 +642,13 @@ export function ActivityFeed(p: ProsProps) {
             p.onAction?.("read-all");
           }}
         >
-          {read ? "Caught up ✓" : "Mark read"}
+          {read ? (
+            <>
+              Caught up <Icon name="check" />
+            </>
+          ) : (
+            "Mark read"
+          )}
         </button>
       </div>
       {(

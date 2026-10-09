@@ -15,3 +15,6 @@ export * from "./commerce";
 export * from "./social";
 export * from "./lists";
 export * from "./motion";
+
+export { ProsIcon } from "./icons";
+export type { ProsIconName } from "./icons";
