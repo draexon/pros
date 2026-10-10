@@ -1,6 +1,13 @@
 import { Icon } from "./icons";
 import { useEffect, useRef, useState } from "react";
-import { type ProsProps, cx, Arrow, useToggle, useModel } from "./core";
+import {
+  type ProsProps,
+  cx,
+  Arrow,
+  useToggle,
+  useModel,
+  ActionMenu,
+} from "./core";
 /** A solid pill with a sliding arrow capsule. */
 export function ArrowButton(p: ProsProps) {
   return (
@@ -79,6 +86,7 @@ export function KeycapButton(p: ProsProps) {
 /** A two-part control that reveals additional actions. */
 export function SplitButton(p: ProsProps) {
   const [open, set] = useState(false);
+  const anchor = useRef<HTMLButtonElement>(null);
   return (
     <div
       data-pros="SplitButton"
@@ -95,32 +103,33 @@ export function SplitButton(p: ProsProps) {
           {p.label ?? "Publish"}
         </button>
         <button
+          ref={anchor}
           type="button"
           className="p-btn"
           disabled={p.disabled}
           aria-label="More publishing options"
           aria-expanded={open}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              set(true);
+            }
+          }}
           onClick={() => set(!open)}
         >
-          ⌄
+          <Icon name="down" />
         </button>
       </div>
-      {open && (
-        <div className="p-menu p-enter">
-          {["Save draft", "Schedule", "Export"].map((a) => (
-            <button
-              type="button"
-              key={a}
-              onClick={() => {
-                p.onAction?.(a);
-                set(false);
-              }}
-            >
-              {a}
-            </button>
-          ))}
-        </div>
-      )}
+      <ActionMenu
+        open={open && !p.disabled}
+        onClose={() => set(false)}
+        anchor={anchor}
+        items={
+          p.items ??
+          ["Save draft", "Schedule", "Export"].map((label) => ({ label }))
+        }
+        onAction={p.onAction}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   type ComponentType,
   type CSSProperties,
 } from "react";
+import { flushSync } from "react-dom";
 import * as Library from "./library";
 import { Mark, Arrow } from "./library/core";
 import { Icon, type ProsIconName } from "./library/icons";
@@ -118,7 +119,13 @@ function Hero({ notify }: { notify: (text: string) => void }) {
             onClick={() =>
               document
                 .getElementById("collection")
-                ?.scrollIntoView({ behavior: "smooth" })
+                ?.scrollIntoView({
+                  behavior:
+                    document.querySelector('.site[data-motion="off"]') ||
+                    matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "instant"
+                      : "smooth",
+                })
             }
           >
             Explore components{" "}
@@ -164,7 +171,7 @@ function Hero({ notify }: { notify: (text: string) => void }) {
         >
           <span className="hero-card-top">
             <span>OBJECTS IN MOTION</span>
-            <span>01 — 06</span>
+            <span>01 - 06</span>
           </span>
           <div className="hero-sculpture">
             <Mark variant={flipped ? 3 : 2} />
@@ -248,7 +255,7 @@ function PreviewTile({
           </span>
           <button
             aria-label={"Replay " + humanize(entry.name)}
-            title="Replay entrance"
+            title="Reset preview and replay entrance"
             onClick={() => setReplay(replay + 1)}
           >
             <Icon name="refresh" />
@@ -322,6 +329,7 @@ function Collection({
         !(e.target instanceof HTMLInputElement) &&
         !(e.target instanceof HTMLTextAreaElement) &&
         !(e.target instanceof HTMLSelectElement) &&
+        !(e.target instanceof HTMLElement && e.target.isContentEditable) &&
         !document.querySelector("dialog[open]")
       ) {
         e.preventDefault();
@@ -844,7 +852,13 @@ function Docs({ notify }: { notify: (s: string) => void }) {
             onClick={() =>
               document
                 .getElementById("installation")
-                ?.scrollIntoView({ behavior: "smooth" })
+                ?.scrollIntoView({
+                  behavior:
+                    document.querySelector('.site[data-motion="off"]') ||
+                    matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "instant"
+                      : "smooth",
+                })
             }
           >
             01 · Get started
@@ -853,7 +867,13 @@ function Docs({ notify }: { notify: (s: string) => void }) {
             onClick={() =>
               document
                 .getElementById("api")
-                ?.scrollIntoView({ behavior: "smooth" })
+                ?.scrollIntoView({
+                  behavior:
+                    document.querySelector('.site[data-motion="off"]') ||
+                    matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "instant"
+                      : "smooth",
+                })
             }
           >
             02 · Make it yours
@@ -862,7 +882,13 @@ function Docs({ notify }: { notify: (s: string) => void }) {
             onClick={() =>
               document
                 .getElementById("motion-guide")
-                ?.scrollIntoView({ behavior: "smooth" })
+                ?.scrollIntoView({
+                  behavior:
+                    document.querySelector('.site[data-motion="off"]') ||
+                    matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "instant"
+                      : "smooth",
+                })
             }
           >
             03 · Give it motion
@@ -871,7 +897,13 @@ function Docs({ notify }: { notify: (s: string) => void }) {
             onClick={() =>
               document
                 .getElementById("principles")
-                ?.scrollIntoView({ behavior: "smooth" })
+                ?.scrollIntoView({
+                  behavior:
+                    document.querySelector('.site[data-motion="off"]') ||
+                    matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? "instant"
+                      : "smooth",
+                })
             }
           >
             04 · A point of view
@@ -1017,6 +1049,18 @@ function Docs({ notify }: { notify: (s: string) => void }) {
 
 export default function App() {
   const [route, setRoute] = useState(currentRoute);
+  const [theme, setTheme] = useState<"light" | "dark">(() =>
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+  );
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#141713" : "#fafbf7");
+    try {
+      localStorage.setItem("pros.theme", theme);
+    } catch {}
+  }, [theme]);
   const [saved, setSaved] = useState(readSaved);
   const [motion, setMotion] = useState(() => {
     try {
@@ -1025,13 +1069,28 @@ export default function App() {
       return true;
     }
   });
+  const themeTransition = useRef<ViewTransition | null>(null);
+  const switchTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    const update = () => flushSync(() => setTheme(next));
+    themeTransition.current?.skipTransition();
+    if (
+      document.startViewTransition &&
+      motion &&
+      !matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      themeTransition.current = document.startViewTransition(update);
+    } else update();
+  };
   const [toast, setToast] = useState("");
+  const undo = useRef<(() => void) | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const notify = (text: string) => {
+    undo.current = null;
     setToast(text);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setToast(""), 3600);
+    timer.current = setTimeout(() => setToast(""), 6000);
   };
   useEffect(() => {
     const handle = () => {
@@ -1058,12 +1117,26 @@ export default function App() {
       localStorage.setItem("pros.motion", motion ? "on" : "off");
     } catch {}
   }, [motion]);
-  const toggleSave = (name: string) =>
+  const toggleSave = (name: string) => {
+    const wasSaved = saved.includes(name);
     setSaved((current) =>
-      current.includes(name)
-        ? current.filter((x) => x !== name)
-        : [...current, name],
+      wasSaved ? current.filter((x) => x !== name) : [...current, name],
     );
+    notify(
+      humanize(name) +
+        (wasSaved
+          ? " removed from your collection."
+          : " saved to your collection."),
+    );
+    undo.current = () => {
+      setSaved((current) =>
+        wasSaved
+          ? [...new Set([...current, name])]
+          : current.filter((x) => x !== name),
+      );
+      notify("Change undone.");
+    };
+  };
   const entry = route.startsWith("/component/")
     ? catalog.find((x) => x.slug === route.split("/")[2])
     : undefined;
@@ -1072,15 +1145,22 @@ export default function App() {
   const isMotion = route === "/motion";
   useEffect(() => {
     document.title = entry
-      ? humanize(entry.name) + " — Pros"
+      ? humanize(entry.name) + " - Pros"
       : isDocs
-        ? "A little guidance — Pros"
-        : "Pros — Interfaces with feeling.";
+        ? "A little guidance - Pros"
+        : "Pros - Interfaces with feeling.";
   }, [entry, isDocs]);
   return (
-    <Library.ProsProvider motion={motion} className="site">
+    <Library.ProsProvider motion={motion} theme={theme} className="site">
       <SiteMotion route={route} />
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
         Skip to content
       </a>
       <header className="site-header">
@@ -1111,6 +1191,20 @@ export default function App() {
           </a>
         </nav>
         <div className="header-actions">
+          <button
+            className="theme-control"
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            aria-pressed={theme === "dark"}
+            title={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            onClick={switchTheme}
+          >
+            <span className="theme-orb" aria-hidden="true" />
+            <span>{theme === "dark" ? "Dark" : "Light"}</span>
+          </button>
           <button
             className="motion-control"
             aria-pressed={motion}
@@ -1246,7 +1340,18 @@ export default function App() {
         <span>
           Made with intention by <b>draexon</b>
         </span>
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+        <button
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior:
+                document.querySelector('.site[data-motion="off"]') ||
+                matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "instant"
+                  : "smooth",
+            })
+          }
+        >
           Back to top <Icon name="up" />
         </button>
       </footer>
@@ -1256,6 +1361,11 @@ export default function App() {
             <Icon name="flower" />
           </span>
           <p>{toast}</p>
+          {undo.current && (
+            <button className="toast-undo" onClick={() => undo.current?.()}>
+              Undo
+            </button>
+          )}
           <button aria-label="Dismiss message" onClick={() => setToast("")}>
             <Icon name="close" />
           </button>

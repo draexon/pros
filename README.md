@@ -98,7 +98,7 @@ Components share the exported `ProsProps` and `ProsItem` types. Exact supported 
 
 ## Motion and accessibility
 
-Every component has an entrance; interactive elements add purpose-specific transitions. The library uses native CSS animation, pointer events, and native dialog behavior. Dialogs support Escape, focus containment, and focus return. Tabs support arrow keys, Home, and End. Keyboard focus remains visible.
+Every component has an entrance; interactive elements add purpose-specific transitions. Shared press and release feedback works for mouse, touch, keyboard, and reversed toggle actions. Action menus support arrows, Home, End, Escape, outside dismissal, and focus return, and stay within the viewport. Saved gallery items have an Undo action. The library uses native CSS animation, pointer events, and native dialog behavior. Dialogs support Escape, focus containment, and focus return. Tabs support arrow keys, Home, and End. Keyboard focus remains visible.
 
 ```tsx
 <ProsProvider motion={false}>
@@ -121,7 +121,7 @@ Core tokens:
 }
 ```
 
-Typography uses Manrope and DM Sans through Google Fonts, with system fallbacks. Self-host fonts or override the families for an offline-only application. Components are designed primarily for light surfaces with intentionally dark individual compositions; this is not an automatic dark-theme system.
+Typography uses Manrope and DM Sans through Google Fonts, with system fallbacks. Self-host fonts or override the families for an offline-only application. The gallery follows your system theme on the first visit and remembers your light or dark choice. Its header switch crossfades in both directions, with an immediate change when motion is disabled. Library consumers can use `<ProsProvider theme="dark">` or `theme="light"`; omitted themes inherit the surrounding palette.
 
 ## Validate
 
@@ -129,19 +129,20 @@ Typography uses Manrope and DM Sans through Google Fonts, with system fallbacks.
 npm run check
 npm run build
 npm test
+npm run test:browser
 ```
 
-`npm test` builds the library and checks every public component with server rendering, custom content, empty collections, safe button types, packaging compatibility, unique identifiers, controlled values, and calculations. Browser validation notes are recorded in [docs/VALIDATION.md](docs/VALIDATION.md).
+`npm test` builds the library and checks every public component with server rendering, custom content, empty collections, safe button types, packaging compatibility, unique identifiers, controlled values, and calculations. `npm run test:browser` checks all 210 previews at desktop and mobile widths in both themes, plus dropdown keyboard behavior, undo, dialogs, theme persistence, and reduced motion against the production build. Build the gallery first. The browser suite uses installed Edge on Windows; on other systems run `npx playwright install chromium` once, or choose an installed browser with `PLAYWRIGHT_CHANNEL`. Browser validation notes are recorded in [docs/VALIDATION.md](docs/VALIDATION.md).
 
 ## Project layout
 
-- `src/library/` — original component modules, shared primitives, and scoped styles.
-- `src/catalog.json` — complete searchable component metadata.
-- `src/App.tsx` — gallery, detail playground, and documentation.
-- `dist/` — generated reusable package.
-- `site/` — generated gallery website.
-- `tests/` — package and rendering tests.
-- `scripts/publish-private.ps1` — creates or verifies the private GitHub repository, then pushes the current commit.
+- `src/library/` - original component modules, shared primitives, and scoped styles.
+- `src/catalog.json` - complete searchable component metadata.
+- `src/App.tsx` - gallery, detail playground, and documentation.
+- `dist/` - generated reusable package.
+- `site/` - generated gallery website.
+- `tests/` - package and rendering tests.
+- `scripts/publish-private.ps1` - creates or verifies the private GitHub repository, then pushes the current commit.
 
 ## Design research
 

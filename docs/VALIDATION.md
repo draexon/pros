@@ -34,10 +34,23 @@ Checked in Chromium at 1440 × 1050 and 390 × 844.
 
 The previews use illustrative local data. Backend service integrations and native media playback with consumer-supplied URLs require testing in the consuming application. Browser checks do not constitute a full screen-reader or cross-browser accessibility audit.
 
-## Custom icon and motion update — 2026-10-10
+## Custom icon and motion update - 2026-10-10
 
 - Replaced font-symbol arrows and control icons across all 14 collections with original SVG drawings. Exported ProsIcon with typed names and decorative/labeled accessibility modes.
 - Production gallery, ESM/CJS library, and declarations build successfully; all 217 existing tests pass.
 - Desktop 1440 × 1050: verified pointer-responsive hero layers and running scroll-reveal animations, and checked all collections for unnamed icon-only buttons.
 - Mobile 390 × 844: all 14 collections render 15 previews each, with no page overflow or significantly overflowing preview stages. Navigation and the icon-source tab work.
 - Motion-off and system reduced-motion cancel gallery Web Animations, reset pointer movement, and disable CSS animation. No browser console errors.
+
+## Theme, dropdown and interaction update - 2026-10-10
+
+- Production gallery, ESM/CJS library, and TypeScript declarations build successfully.
+- All 221 Node tests pass, including all 210 component markers, both provider themes, disabled dropdowns, and the em dash scan.
+- All 11 repeatable Playwright tests pass against the production build in Chromium (Microsoft Edge).
+- All 210 previews render at 390px and 1440px in light and dark themes without document overflow.
+- Popover, split-button, and context menus support Arrow/Home/End navigation, Escape, selection, outside dismissal, focus return, and viewport positioning.
+- Confirm/undo events, saved-item Undo, dialog exit motion, and skip-link focus are verified.
+- Theme choice persists and switches both directions; motion-off and system reduced-motion leave no running animations after settling.
+- Browser checks report no runtime exceptions. A desktop dark-theme preview is saved in dark-mode.png.
+
+Run npm run build, npm test, and npm run test:browser to repeat the checks.

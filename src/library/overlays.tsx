@@ -1,9 +1,10 @@
 import { Icon } from "./icons";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import {
   type ProsProps,
   cx,
   DialogSurface,
+  ActionMenu,
   itemsOf,
   itemValue,
   Mark,
@@ -294,87 +295,87 @@ export function QuickView(p: ProsProps) {
 /** A right-click context surface with an accessible button alternative. */
 export function ContextMenu(p: ProsProps) {
   const [open, set] = useState(false);
+  const anchor = useRef<HTMLButtonElement>(null);
   return (
     <div
       data-pros="ContextMenu"
       className={cx("p-context-surface", p.className)}
       style={p.style}
       onContextMenu={(e) => {
-        e.preventDefault();
-        set(true);
+        if (!p.disabled) {
+          e.preventDefault();
+          set(true);
+        }
       }}
     >
       <Mark variant={0} />
       <p>{p.title ?? "Every object has options."}</p>
       <button
+        ref={anchor}
         type="button"
         className="p-text-btn"
+        disabled={p.disabled}
         aria-expanded={open}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            set(true);
+          }
+        }}
         onClick={() => set(!open)}
       >
-        Object options ···
+        Object options <Icon name="plus" />
       </button>
-      {open && (
-        <div
-          className="p-menu p-enter"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") set(false);
-          }}
-        >
-          {(
-            p.items ?? [
-              { label: "Open" },
-              { label: "Duplicate" },
-              { label: "Archive" },
-            ]
-          ).map((s, i) => (
-            <button
-              type="button"
-              key={i}
-              onClick={() => {
-                p.onAction?.(itemValue(s));
-                set(false);
-              }}
-            >
-              {s.label}
-              <Arrow />
-            </button>
-          ))}
-        </div>
-      )}
+      <ActionMenu
+        open={open && !p.disabled}
+        onClose={() => set(false)}
+        anchor={anchor}
+        items={
+          p.items ??
+          ["Open", "Duplicate", "Archive"].map((label) => ({ label }))
+        }
+        onAction={p.onAction}
+      />
     </div>
   );
 }
-/** A compact action popover built on native disclosure semantics. */
+/** A keyboard-accessible action popover with outside dismissal. */
 export function PopoverMenu(p: ProsProps) {
+  const [open, set] = useState(false);
+  const anchor = useRef<HTMLButtonElement>(null);
   return (
-    <details
+    <div
       data-pros="PopoverMenu"
       className={cx("p-popover-menu", p.className)}
       style={p.style}
     >
-      <summary>
-        {p.label ?? "A few more options"}{" "}
+      <button
+        ref={anchor}
+        type="button"
+        className="p-popover-trigger"
+        disabled={p.disabled}
+        aria-expanded={open}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            set(true);
+          }
+        }}
+        onClick={() => set(!open)}
+      >
+        {p.label ?? "A few more options"}
         <span>
           <Icon name="plus" />
         </span>
-      </summary>
-      <div className="p-menu p-enter">
-        {itemsOf(p).map((s, i) => (
-          <button
-            type="button"
-            key={i}
-            onClick={(e) => {
-              p.onAction?.(itemValue(s));
-              e.currentTarget.closest("details")?.removeAttribute("open");
-            }}
-          >
-            {s.label}
-            <Arrow />
-          </button>
-        ))}
-      </div>
-    </details>
+      </button>
+      <ActionMenu
+        open={open && !p.disabled}
+        onClose={() => set(false)}
+        anchor={anchor}
+        items={itemsOf(p)}
+        onAction={p.onAction}
+      />
+    </div>
   );
 }
 /** A contextual tooltip available on hover, focus, and click. */

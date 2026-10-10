@@ -8,7 +8,9 @@ import {
   useState,
   type CSSProperties,
   type ReactNode,
+  type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 export type ProsItem = {
   label: string;
   value?: string;
@@ -117,20 +119,226 @@ export function ProsProvider({
   children,
   motion = true,
   className,
+  theme,
 }: {
   children: ReactNode;
   motion?: boolean;
   className?: string;
+  theme?: "light" | "dark";
 }) {
   return (
     <MotionContext.Provider value={motion}>
       <div
         className={cx("pros", className)}
         data-motion={motion ? "on" : "off"}
+        data-theme={theme}
       >
+        <InteractionMotion />
         {children}
       </div>
     </MotionContext.Provider>
+  );
+}
+
+/** Delegated feedback covers mouse, touch and keyboard activation in every collection. */
+function InteractionMotion() {
+  const marker = useRef<HTMLSpanElement>(null);
+  const enabled = useMotionAllowed();
+  useEffect(() => {
+    const root = marker.current?.parentElement;
+    if (!root || !enabled) return;
+    const running = new Map<Element, Animation>();
+    const click = (event: MouseEvent) => {
+      const control =
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>(
+              "button, a[href], summary, label:has(input)",
+            )
+          : null;
+      if (
+        !control ||
+        !root.contains(control) ||
+        control.matches(':disabled, [aria-disabled="true"]') ||
+        control.closest('[data-motion="off"]')
+      )
+        return;
+      running.get(control)?.cancel();
+      const animation = control.animate(
+        [{ scale: "0.96" }, { scale: "1.015", offset: 0.65 }, { scale: "1" }],
+        { duration: 280, easing: "cubic-bezier(.22,1,.36,1)" },
+      );
+      running.set(control, animation);
+      animation.finished.then(
+        () => {
+          if (running.get(control) === animation) running.delete(control);
+        },
+        () => {},
+      );
+    };
+    root.addEventListener("click", click);
+    return () => {
+      root.removeEventListener("click", click);
+      running.forEach((animation) => animation.cancel());
+    };
+  }, [enabled]);
+  return <span ref={marker} hidden aria-hidden="true" />;
+}
+
+/** A viewport-positioned menu with reversible motion and native button navigation. */
+export function ActionMenu({
+  open,
+  onClose,
+  anchor,
+  items,
+  onAction,
+}: {
+  open: boolean;
+  onClose: () => void;
+  anchor: RefObject<HTMLButtonElement | null>;
+  items: ProsItem[];
+  onAction?: (value: string) => void;
+}) {
+  const panel = useRef<HTMLDivElement>(null);
+  const close = useRef(onClose);
+  close.current = onClose;
+  const motion = useMotionAllowed();
+  const [present, setPresent] = useState(open);
+  const [position, setPosition] = useState<CSSProperties>({
+    visibility: "hidden",
+  });
+  const [theme, setTheme] = useState("light");
+  const id = useId();
+  useEffect(() => {
+    anchor.current?.setAttribute("aria-controls", id);
+    if (open) setPresent(true);
+    else {
+      const timer = setTimeout(() => setPresent(false), motion ? 180 : 0);
+      return () => clearTimeout(timer);
+    }
+  }, [open, motion, anchor, id]);
+  useEffect(() => {
+    if (!open || !present) return;
+    const trigger = anchor.current;
+    const menu = panel.current;
+    if (!trigger || !menu) return;
+    const place = () => {
+      const rect = trigger.getBoundingClientRect();
+      const width = Math.min(Math.max(220, rect.width), window.innerWidth - 24);
+      const below = window.innerHeight - rect.bottom - 20;
+      const above = rect.top - 20;
+      const up = below < Math.min(menu.scrollHeight, 260) && above > below;
+      setPosition({
+        width,
+        left: Math.max(12, Math.min(rect.left, window.innerWidth - width - 12)),
+        top: up ? undefined : rect.bottom + 8,
+        bottom: up ? window.innerHeight - rect.top + 8 : undefined,
+        maxHeight: Math.max(60, up ? above : below),
+        transformOrigin: up ? "bottom center" : "top center",
+      });
+      setTheme(
+        trigger.closest("[data-theme]")?.getAttribute("data-theme") ??
+          document.documentElement.dataset.theme ??
+          "light",
+      );
+    };
+    place();
+    const outside = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !menu.contains(event.target) &&
+        !trigger.contains(event.target)
+      )
+        close.current();
+    };
+    const blur = (event: FocusEvent) => {
+      if (
+        event.target instanceof Node &&
+        !menu.contains(event.target) &&
+        !trigger.contains(event.target)
+      )
+        close.current();
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("focusin", blur);
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("focusin", blur);
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open, present, anchor]);
+  useEffect(() => {
+    if (open && present && position.visibility !== "hidden") {
+      panel.current
+        ?.querySelector<HTMLButtonElement>("button")
+        ?.focus({ preventScroll: true });
+    }
+  }, [open, present, position.visibility]);
+  if (!present) return null;
+  return createPortal(
+    <div
+      ref={panel}
+      id={id}
+      className="pros p-menu p-action-menu"
+      data-theme={theme}
+      data-motion={motion ? "on" : "off"}
+      data-open={open}
+      style={position}
+      inert={!open}
+      onKeyDown={(event) => {
+        const buttons = Array.from(
+          panel.current?.querySelectorAll<HTMLButtonElement>("button") ?? [],
+        );
+        const index = buttons.indexOf(
+          document.activeElement as HTMLButtonElement,
+        );
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close.current();
+          anchor.current?.focus();
+        } else if (
+          ["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)
+        ) {
+          event.preventDefault();
+          const next =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? buttons.length - 1
+                : (index +
+                    (event.key === "ArrowDown" ? 1 : -1) +
+                    buttons.length) %
+                  buttons.length;
+          buttons[next]?.focus();
+        }
+      }}
+    >
+      <InteractionMotion />
+      {items.length ? (
+        items.map((item, index) => (
+          <button
+            type="button"
+            key={index}
+            onClick={() => {
+              close.current();
+              anchor.current?.focus();
+              onAction?.(itemValue(item));
+            }}
+          >
+            <span>
+              {item.label}
+              {item.description && <small>{item.description}</small>}
+            </span>
+            <Arrow />
+          </button>
+        ))
+      ) : (
+        <p className="p-menu-empty">No options available</p>
+      )}
+    </div>,
+    document.body,
   );
 }
 export function useMotionAllowed() {
@@ -160,19 +368,24 @@ export function DialogSurface({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
-  const motion = useContext(MotionContext);
+  const motion = useMotionAllowed();
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
-    return () => {
-      if (d.open) d.close();
-    };
-  }, [open]);
+    if (!open && d.open) {
+      if (!motion) d.close();
+      else {
+        const timer = setTimeout(() => d.close(), 180);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [open, motion]);
+  useEffect(() => () => ref.current?.close(), []);
   return (
     <dialog
       data-motion={motion ? "on" : "off"}
+      data-closing={!open}
       ref={ref}
       aria-labelledby={titleId}
       className={cx("pros p-dialog", className)}
@@ -212,14 +425,20 @@ export function FieldLabel({
   p,
   children,
   className,
+  "data-pros": component,
 }: {
   p: ProsProps;
   children: (id: string) => ReactNode;
   className?: string;
+  "data-pros"?: string;
 }) {
   const id = useId();
   return (
-    <div className={cx("p-field", className, p.className)} style={p.style}>
+    <div
+      data-pros={component}
+      className={cx("p-field", className, p.className)}
+      style={p.style}
+    >
       <label htmlFor={id}>
         {p.label ?? p.title ?? "Your details"}
         {p.required && <span aria-hidden="true"> *</span>}

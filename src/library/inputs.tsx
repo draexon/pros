@@ -58,7 +58,7 @@ export function SearchInput(p: ProsProps) {
         onChange={(e) => set(e.target.value)}
       />
       {value ? (
-        <button type="button" aria-label="Clear search" onClick={() => set("")}>
+        <button type="button" disabled={p.disabled} aria-label="Clear search" onClick={() => set("")}>
           <Icon name="close" />
         </button>
       ) : (
@@ -507,7 +507,7 @@ export function DateInput(p: ProsProps) {
       {(id) => (
         <div>
           <span className="p-number" aria-hidden="true">
-            {value.slice(-2) || "—"}
+            {value.slice(-2) || "-"}
           </span>
           <input
             id={id}

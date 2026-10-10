@@ -124,3 +124,57 @@ test("form submit controls retain submit behavior", () => {
   ])
     assert.match(render(Pros[name]), /type="submit"/, name);
 });
+
+test("every catalog component retains its inspection marker, including labeled fields", () => {
+  for (const entry of catalog)
+    assert.ok(
+      render(Pros[entry.name]).includes('data-pros="' + entry.name + '"'),
+      entry.name,
+    );
+});
+
+test("providers expose explicit dark and light themes without requiring browser globals", () => {
+  for (const theme of ["dark", "light"])
+    assert.match(
+      renderToStaticMarkup(
+        createElement(
+          Pros.ProsProvider,
+          { theme },
+          createElement(Pros.SelectInput),
+        ),
+      ),
+      new RegExp('data-theme="' + theme + '"'),
+    );
+});
+
+test("disabled dropdown triggers cannot be activated", () => {
+  for (const name of ["PopoverMenu", "SplitButton", "ContextMenu"])
+    for (const button of render(Pros[name], { disabled: true }).match(
+      /<button\b[^>]*>/g,
+    ) ?? [])
+      assert.match(button, /disabled=""/, name);
+});
+
+test("source, documentation and page metadata contain no em dash characters", async () => {
+  const { readdir } = await import("node:fs/promises");
+  async function inspect(url) {
+    for (const entry of await readdir(url, { withFileTypes: true })) {
+      const child = new URL(entry.name + (entry.isDirectory() ? "/" : ""), url);
+      if (entry.isDirectory()) await inspect(child);
+      else if (/\.(tsx?|css|json|md|html|mjs)$/.test(entry.name))
+        assert.ok(
+          !(await readFile(child, "utf8")).includes(String.fromCharCode(8212)),
+          child.pathname,
+        );
+    }
+  }
+  for (const directory of ["src", "docs", "tests"])
+    await inspect(new URL("../" + directory + "/", import.meta.url));
+  for (const file of ["README.md", "COMPONENTS.md", "index.html"])
+    assert.ok(
+      !(
+        await readFile(new URL("../" + file, import.meta.url), "utf8")
+      ).includes(String.fromCharCode(8212)),
+      file,
+    );
+});

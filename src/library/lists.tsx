@@ -447,8 +447,8 @@ export function ScheduleList(p: ProsProps) {
   const [value, set] = useModel(p, "Wed");
   const [done, setDone] = useState<string[]>([]);
   const rows = p.items ?? [
-    { label: "A little focus time", description: "09:00 — 10:30" },
-    { label: "Studio catch-up", description: "11:00 — 11:30" },
+    { label: "A little focus time", description: "09:00 - 10:30" },
+    { label: "Studio catch-up", description: "11:00 - 11:30" },
   ];
   return (
     <div
