@@ -13,14 +13,14 @@ const render = (C, props = {}) =>
   renderToStaticMarkup(
     createElement(Pros.ProsProvider, null, createElement(C, props)),
   );
-test("ships 210 distinct public components across 14 complete collections", () => {
-  assert.equal(catalog.length, 210);
-  assert.equal(new Set(catalog.map((x) => x.name)).size, 210);
-  assert.equal(new Set(catalog.map((x) => x.slug)).size, 210);
+test("ships 218 distinct public components across 15 collections", () => {
+  assert.equal(catalog.length, 218);
+  assert.equal(new Set(catalog.map((x) => x.name)).size, 218);
+  assert.equal(new Set(catalog.map((x) => x.slug)).size, 218);
   const groups = Object.groupBy(catalog, (x) => x.category);
-  assert.equal(Object.keys(groups).length, 14);
+  assert.equal(Object.keys(groups).length, 15);
   for (const [category, items] of Object.entries(groups))
-    assert.equal(items.length, 15, category);
+    assert.equal(items.length, category === "consumer" ? 8 : 15, category);
   for (const entry of catalog)
     assert.equal(typeof Pros[entry.name], "function", entry.name);
 });
@@ -177,4 +177,26 @@ test("source, documentation and page metadata contain no em dash characters", as
       ).includes(String.fromCharCode(8212)),
       file,
     );
+});
+
+test("consumer app monetary props use currency minor units and safe nonnegative totals", () => {
+  assert.match(
+    render(Pros.CheckoutPanel, { amount: 4800, currency: "JPY" }),
+    /¥4,800/,
+  );
+  assert.match(render(Pros.CheckoutPanel, { amount: -20 }), /\$0\.00/);
+  assert.match(render(Pros.CheckoutPanel, { amount: Number.NaN }), /\$0\.00/);
+  const custom = render(Pros.ShoppingBag, {
+    products: [{ id: "one", name: "One", detail: "Custom", price: 3250 }],
+    shipping: 500,
+    freeShippingAt: 4000,
+  });
+  assert.match(custom, /\$37\.50/);
+  assert.match(custom, /\$7\.50 away from free shipping/);
+});
+
+test("integrated checkout requires supplied methods and never falls back to a demo card", () => {
+  const html = render(Pros.CheckoutPanel, { onConfirm: async () => {} });
+  assert.match(html, /No payment methods available/);
+  assert.ok(!html.includes("4242"));
 });

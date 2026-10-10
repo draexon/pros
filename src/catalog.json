@@ -1258,5 +1258,53 @@
     "slug": "slide-swap",
     "category": "motion",
     "description": "A direction-aware panel transition with previous and next controls."
+  },
+  {
+    "name": "DiscoveryHub",
+    "slug": "discovery-hub",
+    "category": "consumer",
+    "description": "An editorial discovery hub with category transitions, original artwork, and saved finds."
+  },
+  {
+    "name": "TrendingBoard",
+    "slug": "trending-board",
+    "category": "consumer",
+    "description": "A ranked community feed with topic filters, staggered rows, and individual saves."
+  },
+  {
+    "name": "CollectionStudio",
+    "slug": "collection-studio",
+    "category": "consumer",
+    "description": "A searchable saved collection with a tactile edit mode and reversible removal."
+  },
+  {
+    "name": "ShoppingBag",
+    "slug": "shopping-bag",
+    "category": "consumer",
+    "description": "A full shopping bag with quantities, shipping progress, computed totals, and undo."
+  },
+  {
+    "name": "CheckoutPanel",
+    "slug": "checkout-panel",
+    "category": "consumer",
+    "description": "A complete payment selection and review flow with async confirmation, retry, and an explicit demo mode."
+  },
+  {
+    "name": "MembershipStudio",
+    "slug": "membership-studio",
+    "category": "consumer",
+    "description": "An interactive membership comparison with monthly and yearly pricing and plan selection."
+  },
+  {
+    "name": "OrderJourney",
+    "slug": "order-journey",
+    "category": "consumer",
+    "description": "A parcel tracking surface with an illustrated package and inspectable delivery milestones."
+  },
+  {
+    "name": "RewardsWallet",
+    "slug": "rewards-wallet",
+    "category": "consumer",
+    "description": "A rewards wallet with a points balance, eligibility checks, and redemption review."
   }
 ]

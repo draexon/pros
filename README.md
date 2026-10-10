@@ -1,6 +1,6 @@
 # Pros
 
-An original React component library by **draexon**. 210 components across 14 collections, built around rounded forms, a monochrome palette, and purposeful motion.
+An original React component library by **draexon**. 218 components across 15 collections, built around rounded forms, a monochrome palette, and purposeful motion.
 
 ![Pros gallery](docs/preview.png)
 
@@ -62,10 +62,11 @@ Icons are decorative by default. Use `label` for a standalone meaningful icon; g
 
 ## The collections
 
-Each collection contains 15 individually exported components:
+The 14 original collections each contain 15 individually exported components. App blocks adds eight larger consumer app surfaces:
 
 | Collection   | Examples                                                  |
 | ------------ | --------------------------------------------------------- |
+| App blocks   | DiscoveryHub, TrendingBoard, ShoppingBag, CheckoutPanel   |
 | Cards        | EditorialCard, StackedCard, TicketCard, FoldCard          |
 | Buttons      | ArrowButton, HoldButton, RollingButton, OrbitButton       |
 | Inputs       | OtpInput, TagInput, FileDropzone, RatingInput             |
@@ -95,6 +96,29 @@ Components share the exported `ProsProps` and `ProsItem` types. Exact supported 
 - `onAction` delivers actions to your application. Checkout, file download, sharing, invite, email, and contact actions require your app's service integration. No backend or payment service is bundled.
 - `image` supplies images. `VideoFrame` and `AudioPlayer` use `href` for actual media sources and native playback controls. `AudioCard` is a playback-control surface with play/pause callbacks.
 - Default chart values, names, dates, amounts, and statistics are illustrative data.
+
+## Larger consumer app blocks
+
+![Consumer app blocks](docs/app-blocks.png)
+
+Eight reusable app surfaces are available in **App blocks**, with wider live previews and individual source and usage pages. Their motion includes sliding selections, staggered content, animated totals, expanding panels, reversible collection edits, and checkout confirmation. Provider motion settings and system reduced motion apply to all eight.
+
+| Component                                       | Data and integration props                                                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| DiscoveryHub / TrendingBoard / CollectionStudio | `stories: ConsumerStory[]`; unique IDs, title, category, creator, detail, optional image and popularity |
+| ShoppingBag                                     | `products: ConsumerProduct[]`, `currency`, `shipping`, `freeShippingAt`, `onCheckout(lines: BagLine[])` |
+| CheckoutPanel                                   | `amount`, `currency`, `methods`, async `onConfirm(request: CheckoutRequest)`                            |
+| MembershipStudio                                | `plans: MembershipPlan[]`, `currency`, `onSelectPlan(id, billing)`                                      |
+| OrderJourney                                    | `milestones: OrderMilestone[]`, zero-based `currentStep`, `arrival`, `orderNumber`                      |
+| RewardsWallet                                   | `points`, `rewards: ConsumerReward[]`, `onSelectReward(reward)`                                         |
+
+All these types are exported. Pass an empty array to show an empty state. Pass `disabled` to disable every control in the block. Discovery, trending, checkout, and memberships accept controlled `value` / `onValueChange` for their primary selection. Saved items, cart quantities, and other demo state are local; connect action events to your store or adapt the source for persistence. Images can replace the built-in CSS artwork through each story or product's `image` field.
+
+Monetary inputs are nonnegative integer **minor units**: 4800 is $48.00 for USD, while 4800 is ¥4,800 for JPY. Membership `yearly` is the entire annual price, not a monthly equivalent. Cart totals exclude taxes and calculate shipping against the subtotal.
+
+`CheckoutPanel` performs no payment by default. Its preview is clearly labeled and never collects card details. For an integrated checkout, supply your provider's actual method IDs and `onConfirm`; the component waits for the returned promise, prevents repeated submissions while pending, and shows retry on rejection. Resolve only after confirmation by your integration. Validate the amount, order, and method on your server and use the payment provider's idempotency mechanism. No payment credentials belong in component props.
+
+`onAction` events include `open:<id>`, `save:<id>`, `unsave:<id>`, `remove:<id>`, `restore:<id>`, `quantity:<id>:<count>`, `checkout`, `preview-complete`, `confirmed`, `subscribe:<plan>:monthly|yearly`, `milestone:<index>`, `support:<order>`, and `redeem:<reward>`. Membership and reward callbacks represent a selection, not a completed subscription or redemption. Viewing a future delivery milestone does not change the actual order status.
 
 ## Motion and accessibility
 
@@ -132,7 +156,7 @@ npm test
 npm run test:browser
 ```
 
-`npm test` builds the library and checks every public component with server rendering, custom content, empty collections, safe button types, packaging compatibility, unique identifiers, controlled values, and calculations. `npm run test:browser` checks all 210 previews at desktop and mobile widths in both themes, plus dropdown keyboard behavior, undo, dialogs, theme persistence, and reduced motion against the production build. Build the gallery first. The browser suite uses installed Edge on Windows; on other systems run `npx playwright install chromium` once, or choose an installed browser with `PLAYWRIGHT_CHANNEL`. Browser validation notes are recorded in [docs/VALIDATION.md](docs/VALIDATION.md).
+`npm test` builds the library and checks every public component with server rendering, custom content, empty collections, safe button types, packaging compatibility, unique identifiers, controlled values, and calculations. `npm run test:browser` checks all 218 previews at desktop and mobile widths in both themes, plus dropdown keyboard behavior, undo, dialogs, theme persistence, and reduced motion against the production build. Build the gallery first. The browser suite uses installed Edge on Windows; on other systems run `npx playwright install chromium` once, or choose an installed browser with `PLAYWRIGHT_CHANNEL`. Browser validation notes are recorded in [docs/VALIDATION.md](docs/VALIDATION.md).
 
 ## Project layout
 

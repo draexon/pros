@@ -79,3 +79,14 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Replaced the native sort dropdown with a styled, viewport-positioned radio menu, descriptive rows, checked selection, animated entrance/exit, and arrow/Home/End/Escape navigation.
 - All 221 library tests and 18 production browser tests pass. Both desktop and mobile theme paths, search typing/focus, sorting results, selected-option focus, and animation frames are covered.
 - Visually inspected the sort menu and stepped theme transition midpoint. Production build passes.
+
+## Consumer app blocks
+
+- Added eight exported consumer app blocks: DiscoveryHub, TrendingBoard, CollectionStudio, ShoppingBag, CheckoutPanel, MembershipStudio, OrderJourney, and RewardsWallet. The catalog now contains 218 components across 15 collections.
+- Gallery cards and playgrounds give large blocks room at desktop widths and collapse cleanly for phones. Reviewed all eight rendered blocks, including light and dark surfaces, with a gallery screenshot at `docs/app-blocks.png`.
+- Typed data props support application content, images, payment methods, products, memberships, delivery milestones, and rewards. Monetary values use currency minor units. Integrated checkout waits for the caller's promise and requires actual supplied payment methods; default checkout is a clearly labeled preview.
+- Added panel height transitions in both directions, staggered content entrances, animated counts, selection feedback, reversible collection/cart edits, and checkout confirmation. Reduced motion and the provider motion switch disable these effects. Undo retains keyboard focus.
+- `npm run build` and the ESM/CommonJS/declaration builds pass. All 231 library tests pass, including custom currencies, invalid monetary amounts, empty render cases, and the em dash scan.
+- Nine new browser checks cover filtering/saving, search/removal/undo, cart totals/shipping, checkout review/focus/demo mode, membership prices, order inspection, reward eligibility, 360px/1440px control bounds, reverse height motion, reduced motion, empty/disabled data, and integrated checkout pending/failure/retry/success. The test fixture bundles in memory and is not shipped with the gallery.
+- Full preview coverage includes all 218 components at 390px and 1440px in both themes. An existing selection animation assertion now waits for fonts and compares against the current target, so a late one-pixel layout correction does not cause a false failure.
+- All 27 browser scenarios pass, including three repeat runs each of the corrected PillTabs and SegmentButton animation checks.

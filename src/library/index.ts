@@ -18,3 +18,5 @@ export * from "./motion";
 
 export { ProsIcon } from "./icons";
 export type { ProsIconName } from "./icons";
+
+export * from "./consumer";

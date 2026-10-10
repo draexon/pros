@@ -3844,3 +3844,49 @@ html[data-theme-changing] *::details-content {
     font-size: 11px;
   }
 }
+
+/* App blocks need room to behave like real app surfaces. */
+.site .component-grid:has(.tile-consumer):not(.is-list) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.site .stage-consumer {
+  padding: 50px 16px 44px;
+  min-height: 0;
+}
+.site .stage-consumer .tile-component {
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  transform: none;
+}
+.site .detail-consumer .detail-component {
+  max-width: 700px;
+}
+.site .detail-consumer .detail-canvas {
+  padding: 30px 24px 60px;
+}
+.site .component-grid.is-list .tile-consumer {
+  grid-template-columns: minmax(0, 1fr);
+}
+.site .component-grid.is-list .tile-consumer .tile-stage {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+}
+.site .component-grid.is-list .tile-consumer .tile-component {
+  max-width: 700px;
+  transform: none;
+}
+@media (max-width: 900px) {
+  .site .component-grid:has(.tile-consumer):not(.is-list) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .site .stage-consumer {
+    padding: 46px 8px 40px;
+  }
+  .site .detail-consumer .detail-canvas {
+    padding: 22px 8px 55px;
+  }
+}

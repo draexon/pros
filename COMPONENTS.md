@@ -1,6 +1,6 @@
 # The Pros collection
 
-210 original React components by draexon. Each category contains 15 exported components.
+218 original React components by draexon. The 14 original categories contain 15 components each. App blocks adds eight larger consumer app surfaces.
 
 ## Cards
 
@@ -253,3 +253,14 @@
 - **SpotlightReveal** - A filled spotlight reveals a patterned surface under the pointer.
 - **ElasticSlider** - An elastic range control with a readout that follows the thumb.
 - **SlideSwap** - A direction-aware panel transition with previous and next controls.
+
+## App blocks
+
+- **DiscoveryHub** - An editorial discovery hub with category transitions, original artwork, and saved finds.
+- **TrendingBoard** - A ranked community feed with topic filters, staggered rows, and individual saves.
+- **CollectionStudio** - A searchable saved collection with a tactile edit mode and reversible removal.
+- **ShoppingBag** - A full shopping bag with quantities, shipping progress, computed totals, and undo.
+- **CheckoutPanel** - A complete payment selection and review flow with async confirmation, retry, and an explicit demo mode.
+- **MembershipStudio** - An interactive membership comparison with monthly and yearly pricing and plan selection.
+- **OrderJourney** - A parcel tracking surface with an illustrated package and inspectable delivery milestones.
+- **RewardsWallet** - A rewards wallet with a points balance, eligibility checks, and redemption review.

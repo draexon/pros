@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 
 for (const theme of ["light", "dark"]) {
   for (const width of [390, 1440]) {
-    test(`all 210 previews fit at ${width}px in ${theme} mode`, async ({
+    test(`all 218 previews fit at ${width}px in ${theme} mode`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
@@ -24,9 +24,19 @@ for (const theme of ["light", "dark"]) {
       );
       await page.goto("/#/components");
       const seen = new Set<string>();
-      for (let i = 1; i <= 14; i++) {
+      for (
+        let i = 1;
+        i <= new Set(catalog.map((entry) => entry.category)).size;
+        i++
+      ) {
         await page.locator(".category-button").nth(i).click();
-        await expect(page.locator(".component-tile")).toHaveCount(15);
+        const category = [
+          ...new Set(catalog.map((entry) => entry.category)),
+        ].filter((id) => id !== "consumer");
+        category.splice(1, 0, "consumer");
+        await expect(page.locator(".component-tile")).toHaveCount(
+          catalog.filter((entry) => entry.category === category[i - 1]).length,
+        );
         const markers = await page
           .locator(".tile-component [data-pros]")
           .evaluateAll((elements) =>
@@ -228,6 +238,7 @@ test("image accordion animates width in both directions and supports keyboard se
 for (const slug of ["pill-tabs", "segment-button"]) {
   test(`${slug} selection highlight travels continuously`, async ({ page }) => {
     await page.goto("/#/component/" + slug);
+    await page.evaluate(() => document.fonts.ready);
     await page.getByRole("button", { name: "Motion off" }).click();
     const track = page.locator(".detail-component .p-selection-track");
     await expect(track).toHaveAttribute("data-selection-ready", "true");
@@ -247,9 +258,15 @@ for (const slug of ["pill-tabs", "segment-button"]) {
     expect(middle.actual).not.toBe(middle.target);
     await expect
       .poll(() =>
-        track.evaluate((el) => getComputedStyle(el, "::before").translate),
+        track.evaluate(
+          (el) =>
+            getComputedStyle(el, "::before").translate ===
+            el.style.getPropertyValue("--selection-x") +
+              " " +
+              el.style.getPropertyValue("--selection-y"),
+        ),
       )
-      .toBe(middle.target);
+      .toBe(true);
     await track.locator("button").first().click();
     await expect
       .poll(() =>

@@ -21,6 +21,7 @@ const components = Library as unknown as Record<
 >;
 const categoryNames: Record<string, string> = {
   cards: "Cards",
+  consumer: "App blocks",
   buttons: "Buttons",
   inputs: "Inputs",
   navigation: "Navigation",
@@ -37,6 +38,7 @@ const categoryNames: Record<string, string> = {
 };
 const categoryIcons: Record<string, ProsIconName> = {
   cards: "cards",
+  consumer: "grid",
   buttons: "arrow",
   inputs: "inputs",
   navigation: "navigation",
@@ -53,6 +55,14 @@ const categoryIcons: Record<string, ProsIconName> = {
 };
 const featured = [
   "EditorialCard",
+  "DiscoveryHub",
+  "CheckoutPanel",
+  "TrendingBoard",
+  "ShoppingBag",
+  "CollectionStudio",
+  "MembershipStudio",
+  "OrderJourney",
+  "RewardsWallet",
   "StackedCard",
   "ArrowButton",
   "ImageCard",
@@ -71,6 +81,40 @@ const featured = [
   "Polaroid",
   "QuoteCard",
 ];
+const consumerProps: Record<string, [string, string][]> = {
+  DiscoveryHub: [["stories", "ConsumerStory[]"]],
+  TrendingBoard: [["stories", "ConsumerStory[]"]],
+  CollectionStudio: [["stories", "ConsumerStory[]"]],
+  ShoppingBag: [
+    ["products", "ConsumerProduct[]"],
+    ["currency", "string"],
+    ["shipping", "minor units"],
+    ["freeShippingAt", "minor units"],
+    ["onCheckout", "(lines) => void"],
+  ],
+  CheckoutPanel: [
+    ["amount", "minor units"],
+    ["currency", "string"],
+    ["methods", "{ id, label, detail }[]"],
+    ["onConfirm", "(request) => Promise<void>"],
+  ],
+  MembershipStudio: [
+    ["plans", "MembershipPlan[]"],
+    ["currency", "string"],
+    ["onSelectPlan", "(id, billing) => void"],
+  ],
+  OrderJourney: [
+    ["milestones", "OrderMilestone[]"],
+    ["currentStep", "number"],
+    ["arrival", "string"],
+    ["orderNumber", "string"],
+  ],
+  RewardsWallet: [
+    ["points", "number"],
+    ["rewards", "ConsumerReward[]"],
+    ["onSelectReward", "(reward) => void"],
+  ],
+};
 const sourceLoaders = import.meta.glob<string>("./library/*.{tsx,css}", {
   query: "?raw",
   import: "default",
@@ -183,7 +227,7 @@ function Hero({ notify }: { notify: (text: string) => void }) {
         </button>
         <div className="hero-count">
           <b>
-            210<span>+</span>
+            218<span>+</span>
           </b>
           <small>
             WAYS TO MAKE
@@ -241,7 +285,7 @@ function PreviewTile({
   const [replay, setReplay] = useState(0);
   return (
     <article
-      className="component-tile"
+      className={"component-tile tile-" + entry.category}
       style={
         { "--tile-delay": Math.min(index % 18, 8) * 45 + "ms" } as CSSProperties
       }
@@ -471,7 +515,7 @@ function Collection({
               <Icon name="flower" />
             </span>
             <span>All components</span>
-            <small>210</small>
+            <small>218</small>
           </button>
           {Object.entries(categoryNames).map(([id, name]) => (
             <button
@@ -488,7 +532,9 @@ function Collection({
                 <Icon name={categoryIcons[id]} />
               </span>
               <span>{name}</span>
-              <small>15</small>
+              <small>
+                {catalog.filter((entry) => entry.category === id).length}
+              </small>
             </button>
           ))}
           <div className="sidebar-note">
@@ -738,7 +784,7 @@ function Detail({
     };
   }, [entry, sourceKind]);
   return (
-    <main className="detail-page">
+    <main className={"detail-page detail-" + entry.category}>
       <button className="back-link" onClick={() => routeTo("/components")}>
         <Icon name="left" /> Back to the collection
       </button>
@@ -881,7 +927,7 @@ function Detail({
             {[
               ["title", "string"],
               ["description", "string"],
-              ["items", "ProsItem[]"],
+              ...(consumerProps[entry.name] ?? [["items", "ProsItem[]"]]),
               ["value", "string"],
               ["onValueChange", "(value) => void"],
               ["onAction", "(action) => void"],
@@ -902,7 +948,7 @@ function Detail({
       <div className="related-heading">
         <h2>Keep the good ideas moving.</h2>
         <button className="quiet-action" onClick={() => routeTo("/components")}>
-          Back to all 210 <Arrow />
+          Back to all 218 <Arrow />
         </button>
       </div>
     </main>
@@ -920,8 +966,8 @@ function Docs({ notify }: { notify: (s: string) => void }) {
           <em>Your point of view.</em>
         </h1>
         <p>
-          Pros is an original React component library by draexon. 210 considered
-          details. Fourteen collections. One very movable system.
+          Pros is an original React component library by draexon. 218 considered
+          details. Fifteen collections. One very movable system.
         </p>
       </div>
       <div className="docs-layout">
@@ -1021,6 +1067,23 @@ function Docs({ notify }: { notify: (s: string) => void }) {
               }
               notify={notify}
             />
+            <div className="docs-note">
+              <b>Eight larger blocks for consumer apps.</b>
+              <p>
+                Open App blocks in the collection for discovery, trending, saved
+                collections, shopping, checkout, memberships, order tracking,
+                and rewards. Each block exports its own typed data props.
+                Monetary amounts use integer minor units, such as cents for USD.
+              </p>
+              <p>
+                CheckoutPanel runs an explicitly labeled preview until you
+                supply methods and an async onConfirm callback. Resolve that
+                callback after your provider confirms payment; reject it to show
+                the retry state. ShoppingBag, MembershipStudio, and
+                RewardsWallet provide typed callbacks for your application's
+                next step.
+              </p>
+            </div>
             <div className="docs-note">
               <b>Connect your own application.</b>
               <p>
@@ -1275,7 +1338,7 @@ export default function App() {
             href="#/components"
             className={route === "/components" || entry ? "is-current" : ""}
           >
-            Components <span>210</span>
+            Components <span>218</span>
           </a>
           <a href="#/motion" className={isMotion ? "is-current" : ""}>
             Motion lab{" "}
@@ -1381,8 +1444,8 @@ export default function App() {
                     </i>{" "}
                     BUILT WITH CHARACTER
                   </span>
-                  <span>210 original components</span>
-                  <span>14 considered collections</span>
+                  <span>218 original components</span>
+                  <span>15 considered collections</span>
                   <span>React + TypeScript</span>
                   <span>
                     Motion in the details{" "}
