@@ -71,3 +71,11 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Final component colors remain synchronized throughout both directions, including rapid-switch cancellation and reduced-motion behavior.
 - Visually inspected the midpoint on desktop and checked mobile reveal geometry.
 - All 16 browser regressions pass: the 15 existing interaction tests plus the desktop/mobile reveal-origin and corner-coverage test. Production build passes.
+
+## Paper sweep, shortcut search, and styled sorting - 2026-10-10
+
+- Replaced the circular theme reveal with three offset diagonal strips that sweep in opposing directions for light and dark. Final colors remain synchronized, and motion preferences are preserved.
+- Slash focuses and smoothly scrolls to search; text entry, modifier shortcuts, and open dialogs are protected. Escape clears the query, then returns focus.
+- Replaced the native sort dropdown with a styled, viewport-positioned radio menu, descriptive rows, checked selection, animated entrance/exit, and arrow/Home/End/Escape navigation.
+- All 221 library tests and 18 production browser tests pass. Both desktop and mobile theme paths, search typing/focus, sorting results, selected-option focus, and animation frames are covered.
+- Visually inspected the sort menu and stepped theme transition midpoint. Production build passes.

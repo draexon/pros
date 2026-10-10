@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. The gallery includes live interactive previews, full source modules, usage examples, search, saved components, adjustable preview surfaces, and a persistent motion switch.
+Open the local URL printed by Vite. The gallery includes live interactive previews, full source modules, usage examples, search, saved components, adjustable preview surfaces, and a persistent motion switch. Press `/` to smoothly focus search, then Escape to clear it or leave the field. The custom sort menu supports Curated order, A–Z, and Z–A with animated options and keyboard navigation.
 
 ## Use the library
 
@@ -121,7 +121,7 @@ Core tokens:
 }
 ```
 
-Typography uses Manrope and DM Sans through Google Fonts, with system fallbacks. Self-host fonts or override the families for an offline-only application. The gallery follows your system theme on the first visit and remembers your light or dark choice. Its header switch reveals the new theme in a circular sweep from the rotating theme icon in both directions, with an immediate change when motion is disabled. Library consumers can use `<ProsProvider theme="dark">` or `theme="light"`; omitted themes inherit the surrounding palette.
+Typography uses Manrope and DM Sans through Google Fonts, with system fallbacks. Self-host fonts or override the families for an offline-only application. The gallery follows your system theme on the first visit and remembers your light or dark choice. Its header switch reveals the new theme through three offset diagonal strips, reversing direction between light and dark, with an immediate change when motion is disabled. Library consumers can use `<ProsProvider theme="dark">` or `theme="light"`; omitted themes inherit the surrounding palette.
 
 ## Validate
 

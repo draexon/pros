@@ -8,7 +8,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import * as Library from "./library";
-import { Mark, Arrow, useSelectionIndicator } from "./library/core";
+import { Mark, Arrow, ActionMenu, useSelectionIndicator } from "./library/core";
 import { Icon, type ProsIconName } from "./library/icons";
 import { SiteMotion } from "./SiteMotion";
 import catalog from "./catalog.json";
@@ -313,6 +313,27 @@ function Collection({
   const [query, setQuery] = useState("");
   const [savedOnly, setSavedOnly] = useState(false);
   const [sort, setSort] = useState("curated");
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortAnchor = useRef<HTMLButtonElement>(null);
+  const sortOptions = [
+    {
+      label: "Curated order",
+      value: "curated",
+      description: "Our handpicked starting points",
+    },
+    {
+      label: "Name: A–Z",
+      value: "az",
+      description: "Find a component alphabetically",
+    },
+    {
+      label: "Name: Z–A",
+      value: "za",
+      description: "Explore the collection in reverse",
+    },
+  ];
+  const [searchFocused, setSearchFocused] = useState(false);
+  const searchReturn = useRef<HTMLElement | null>(null);
   const [view, setView] = useState("grid");
   const viewSelection = useSelectionIndicator(view);
   const [limit, setLimit] = useState(18);
@@ -325,6 +346,11 @@ function Collection({
     const handle = (e: KeyboardEvent) => {
       if (
         e.key === "/" &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey &&
+        !e.isComposing &&
+        !e.repeat &&
         !(e.target instanceof HTMLInputElement) &&
         !(e.target instanceof HTMLTextAreaElement) &&
         !(e.target instanceof HTMLSelectElement) &&
@@ -332,7 +358,16 @@ function Collection({
         !document.querySelector("dialog[open]")
       ) {
         e.preventDefault();
-        searchRef.current?.focus();
+        searchReturn.current = document.activeElement as HTMLElement;
+        searchRef.current?.focus({ preventScroll: true });
+        searchRef.current?.scrollIntoView({
+          block: "center",
+          behavior:
+            document.querySelector('.site[data-motion="off"]') ||
+            matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "instant"
+              : "smooth",
+        });
       }
     };
     window.addEventListener("keydown", handle);
@@ -346,7 +381,7 @@ function Collection({
         (!savedOnly || saved.includes(e.name)) &&
         (humanize(e.name) + " " + e.category + " " + e.description)
           .toLowerCase()
-          .includes(query.toLowerCase()),
+          .includes(query.trim().toLowerCase()),
     );
     if (sort === "az")
       result = result.sort((a, b) => a.name.localeCompare(b.name));
@@ -392,13 +427,31 @@ function Collection({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Find your next detail…"
             aria-label="Search components"
+            aria-keyshortcuts="/"
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            onKeyDown={(event) => {
+              if (event.key !== "Escape") return;
+              event.preventDefault();
+              if (query) setQuery("");
+              else {
+                searchRef.current?.blur();
+                searchReturn.current?.focus({ preventScroll: true });
+              }
+            }}
           />
           {query ? (
-            <button aria-label="Clear search" onClick={() => setQuery("")}>
+            <button
+              aria-label="Clear search"
+              onClick={() => {
+                setQuery("");
+                searchRef.current?.focus({ preventScroll: true });
+              }}
+            >
               <Icon name="close" size={15} />
             </button>
           ) : (
-            <kbd>/</kbd>
+            <kbd>{searchFocused ? "esc" : "/"}</kbd>
           )}
         </div>
       </div>
@@ -457,7 +510,7 @@ function Collection({
         </aside>
         <div className="collection-results">
           <div className="collection-toolbar">
-            <div className="result-label">
+            <div className="result-label" role="status" aria-live="polite">
               <b>
                 {savedOnly
                   ? "Your saved details"
@@ -478,15 +531,37 @@ function Collection({
                   Saved {saved.length > 0 && "(" + saved.length + ")"}
                 </span>
               </button>
-              <select
+              <button
+                type="button"
+                ref={sortAnchor}
+                className="sort-trigger"
                 aria-label="Sort components"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                aria-haspopup="menu"
+                aria-expanded={sortOpen}
+                onClick={() => setSortOpen(!sortOpen)}
+                onKeyDown={(event) => {
+                  if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+                    event.preventDefault();
+                    setSortOpen(true);
+                  }
+                }}
               >
-                <option value="curated">Curated order</option>
-                <option value="az">Name: A–Z</option>
-                <option value="za">Name: Z–A</option>
-              </select>
+                <Icon name="list" size={15} />
+                <span>
+                  {sortOptions.find((option) => option.value === sort)?.label}
+                </span>
+                <Icon name="down" size={14} />
+              </button>
+              <ActionMenu
+                open={sortOpen}
+                onClose={() => setSortOpen(false)}
+                anchor={sortAnchor}
+                items={sortOptions}
+                selectedValue={sort}
+                label="Sort components"
+                className="p-sort-menu"
+                onAction={setSort}
+              />
               <div
                 ref={viewSelection}
                 className="view-toggle p-selection-track"
@@ -1074,22 +1149,6 @@ export default function App() {
     const next = themeTarget.current === "dark" ? "light" : "dark";
     themeTarget.current = next;
     themeTransition.current?.skipTransition();
-    const trigger = document
-      .querySelector(".theme-orb")
-      ?.getBoundingClientRect();
-    const x = Math.min(
-      innerWidth,
-      Math.max(0, trigger ? trigger.left + trigger.width / 2 : innerWidth / 2),
-    );
-    const y = Math.min(
-      innerHeight,
-      Math.max(0, trigger ? trigger.top + trigger.height / 2 : innerHeight / 2),
-    );
-    const radius =
-      Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 2;
-    root.style.setProperty("--theme-reveal-x", x + "px");
-    root.style.setProperty("--theme-reveal-y", y + "px");
-    root.style.setProperty("--theme-reveal-radius", radius + "px");
     // Freeze local transitions before either snapshot. Both images contain a complete theme.
     root.dataset.themeChanging = "true";
     const update = () => {

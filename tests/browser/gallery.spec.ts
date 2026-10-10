@@ -89,12 +89,17 @@ test("mobile menus stay inside the viewport and sort remains usable", async ({
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(390);
   expect(bounds.y + bounds.height).toBeLessThanOrEqual(844);
   await page.goto("/#/components");
-  await page.getByLabel("Sort components").selectOption("az");
+  await page
+    .getByRole("button", { name: "Sort components", exact: true })
+    .click();
+  await page.getByRole("menuitemradio", { name: /Name: A–Z/ }).click();
   await expect(page.locator(".tile-title b").first()).toHaveText(
     "Accordion Panel",
   );
   expect(
-    (await page.getByLabel("Sort components").boundingBox())!.height,
+    (await page
+      .getByRole("button", { name: "Sort components", exact: true })
+      .boundingBox())!.height,
   ).toBeGreaterThanOrEqual(40);
 });
 
@@ -281,7 +286,7 @@ test("theme reveal contains final component colors without trailing transitions"
             .some(
               (animation) =>
                 "animationName" in animation &&
-                String(animation.animationName) === "theme-reveal",
+                String(animation.animationName).startsWith("theme-reveal"),
             ),
         ),
       )
@@ -317,58 +322,116 @@ test("theme reveal contains final component colors without trailing transitions"
   await expect(page.locator("html")).toHaveAttribute("data-theme", previous!);
 });
 
-test("theme reveal starts at the icon and reaches every viewport corner", async ({
+test("paper theme sweep uses opposing stepped paths on desktop and mobile", async ({
   page,
 }) => {
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await page.locator(".motion-control").click();
-    const icon = (await page.locator(".theme-orb").boundingBox())!;
-    await page.locator(".theme-control").click();
-    await page.waitForFunction(() =>
-      document
-        .getAnimations()
-        .some(
-          (animation) =>
-            "animationName" in animation &&
-            animation.animationName === "theme-reveal",
+    const paths: string[] = [];
+    for (let i = 0; i < 2; i++) {
+      await page.locator(".theme-control").click();
+      await page.waitForFunction(() =>
+        document
+          .getAnimations()
+          .some(
+            (animation) =>
+              "animationName" in animation &&
+              String(animation.animationName).startsWith("theme-reveal"),
+          ),
+      );
+      const reveal = await page.evaluate(() => {
+        const animation = document
+          .getAnimations()
+          .find(
+            (animation) =>
+              "animationName" in animation &&
+              String(animation.animationName).startsWith("theme-reveal"),
+          )!;
+        return {
+          frames: (animation.effect as KeyframeEffect)
+            .getKeyframes()
+            .map((frame) => String(frame.clipPath)),
+          duration: animation.effect!.getTiming().duration,
+        };
+      });
+      expect(reveal.frames).toHaveLength(3);
+      expect(reveal.frames[1]).toContain("polygon(");
+      expect(reveal.frames[1]).not.toBe(reveal.frames[0]);
+      expect(reveal.frames[1]).not.toBe(reveal.frames[2]);
+      paths.push(reveal.frames[1]);
+      expect(reveal.duration).toBe(700);
+      await expect(page.locator("html")).not.toHaveAttribute(
+        "data-theme-changing",
+      );
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
         ),
-    );
-    const reveal = await page.evaluate(() => {
-      const root = document.documentElement;
-      const animation = document
-        .getAnimations()
-        .find(
-          (animation) =>
-            "animationName" in animation &&
-            animation.animationName === "theme-reveal",
-        )!;
-      return {
-        x: parseFloat(root.style.getPropertyValue("--theme-reveal-x")),
-        y: parseFloat(root.style.getPropertyValue("--theme-reveal-y")),
-        radius: parseFloat(
-          root.style.getPropertyValue("--theme-reveal-radius"),
-        ),
-        frames: (animation.effect as KeyframeEffect)
-          .getKeyframes()
-          .map((frame) => frame.clipPath),
-        duration: animation.effect!.getTiming().duration,
-      };
-    });
-    expect(reveal.x).toBeCloseTo(icon.x + icon.width / 2, 0);
-    expect(reveal.y).toBeCloseTo(icon.y + icon.height / 2, 0);
-    expect(reveal.radius).toBeGreaterThan(
-      Math.hypot(
-        Math.max(reveal.x, width - reveal.x),
-        Math.max(reveal.y, 900 - reveal.y),
-      ),
-    );
-    expect(reveal.frames[0]).toContain("circle(0px");
-    expect(reveal.frames[1]).not.toBe(reveal.frames[0]);
-    expect(reveal.duration).toBe(700);
-    await expect(page.locator("html")).not.toHaveAttribute(
-      "data-theme-changing",
-    );
+      ).toBe(true);
+    }
+    expect(paths[0]).not.toBe(paths[1]);
   }
+});
+
+test("slash smoothly focuses search without hijacking typing and Escape clears then exits", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator(".motion-control").click();
+  await page.keyboard.press("/");
+  const search = page.getByRole("textbox", { name: "Search components" });
+  await expect(search).toBeFocused();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
+  await search.fill("toggle");
+  await expect(page.locator(".tile-title b").first()).toHaveText(
+    "Toggle Input",
+  );
+  await page.keyboard.press("/");
+  await expect(search).toHaveValue("toggle/");
+  await page.keyboard.press("Escape");
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(search).not.toBeFocused();
+  await expect(page.locator(".motion-control")).toBeFocused();
+});
+
+test("sort menu shows its selection, animates, and sorts through keyboard actions", async ({
+  page,
+}) => {
+  await page.goto("/#/components");
+  await page.locator(".motion-control").click();
+  const trigger = page.getByRole("button", {
+    name: "Sort components",
+    exact: true,
+  });
+  await trigger.click();
+  const curated = page.getByRole("menuitemradio", { name: /Curated order/ });
+  await expect(curated).toBeFocused();
+  await expect(curated).toHaveAttribute("aria-checked", "true");
+  expect(
+    await curated.evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe("sort-option-arrive");
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(trigger).toContainText("Name: Z–A");
+  await expect(page.locator(".tile-title b").first()).toHaveText("Zoom Canvas");
+  await trigger.click();
+  await expect(
+    page.getByRole("menuitemradio", { name: /Name: Z–A/ }),
+  ).toBeFocused();
+  await page.keyboard.press("Home");
+  await page.keyboard.press("Enter");
+  await expect(trigger).toContainText("Curated order");
+  await expect(page.locator(".tile-title b").first()).toHaveText(
+    "Editorial Card",
+  );
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu", { name: "Sort components" })).toHaveCount(
+    0,
+  );
+  await expect(trigger).toBeFocused();
 });

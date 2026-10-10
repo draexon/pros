@@ -195,12 +195,18 @@ export function ActionMenu({
   anchor,
   items,
   onAction,
+  selectedValue,
+  label,
+  className,
 }: {
   open: boolean;
   onClose: () => void;
   anchor: RefObject<HTMLButtonElement | null>;
   items: ProsItem[];
   onAction?: (value: string) => void;
+  selectedValue?: string;
+  label?: string;
+  className?: string;
 }) {
   const panel = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
@@ -275,9 +281,11 @@ export function ActionMenu({
   }, [open, present, anchor]);
   useEffect(() => {
     if (open && present && position.visibility !== "hidden") {
-      panel.current
-        ?.querySelector<HTMLButtonElement>("button")
-        ?.focus({ preventScroll: true });
+      (
+        panel.current?.querySelector<HTMLButtonElement>(
+          '[aria-checked="true"]',
+        ) ?? panel.current?.querySelector<HTMLButtonElement>("button")
+      )?.focus({ preventScroll: true });
     }
   }, [open, present, position.visibility]);
   if (!present) return null;
@@ -285,7 +293,9 @@ export function ActionMenu({
     <div
       ref={panel}
       id={id}
-      className="pros p-menu p-action-menu"
+      className={cx("pros p-menu p-action-menu", className)}
+      role={selectedValue !== undefined ? "menu" : undefined}
+      aria-label={label}
       data-theme={theme}
       data-motion={motion ? "on" : "off"}
       data-open={open}
@@ -320,11 +330,23 @@ export function ActionMenu({
       }}
     >
       <InteractionMotion />
+      {label && (
+        <div className="p-menu-heading" aria-hidden="true">
+          {label}
+        </div>
+      )}
       {items.length ? (
         items.map((item, index) => (
           <button
             type="button"
             key={index}
+            role={selectedValue !== undefined ? "menuitemradio" : undefined}
+            aria-checked={
+              selectedValue !== undefined
+                ? selectedValue === itemValue(item)
+                : undefined
+            }
+            style={{ "--option-delay": index * 35 + "ms" } as CSSProperties}
             onClick={() => {
               close.current();
               anchor.current?.focus();
@@ -335,7 +357,13 @@ export function ActionMenu({
               {item.label}
               {item.description && <small>{item.description}</small>}
             </span>
-            <Arrow />
+            {selectedValue !== undefined ? (
+              <span className="p-option-check" aria-hidden="true">
+                {selectedValue === itemValue(item) && <Icon name="check" />}
+              </span>
+            ) : (
+              <Arrow />
+            )}
           </button>
         ))
       ) : (
