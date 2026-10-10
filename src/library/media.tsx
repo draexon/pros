@@ -12,16 +12,37 @@ import {
 /** A horizontal image accordion with explicit panel selection. */
 export function ImageAccordion(p: ProsProps) {
   const [value, set] = useModel(p, "0");
+  const list = itemsOf(p);
   return (
     <div
       data-pros="ImageAccordion"
       className={cx("p-image-accordion", p.className)}
       style={p.style}
     >
-      {itemsOf(p).map((s, i) => (
+      {list.map((s, i) => (
         <button
           type="button"
           key={i}
+          disabled={p.disabled}
+          aria-label={s.label}
+          onKeyDown={(event) => {
+            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+              return;
+            event.preventDefault();
+            const next =
+              event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? list.length - 1
+                  : (i + (event.key === "ArrowRight" ? 1 : -1) + list.length) %
+                    list.length;
+            set(String(next));
+            (
+              event.currentTarget.parentElement?.children[
+                next
+              ] as HTMLButtonElement
+            )?.focus();
+          }}
           className={value === String(i) ? "is-active" : ""}
           aria-expanded={value === String(i)}
           onClick={() => set(String(i))}

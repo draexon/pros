@@ -8,7 +8,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import * as Library from "./library";
-import { Mark, Arrow } from "./library/core";
+import { Mark, Arrow, useSelectionIndicator } from "./library/core";
 import { Icon, type ProsIconName } from "./library/icons";
 import { SiteMotion } from "./SiteMotion";
 import catalog from "./catalog.json";
@@ -117,15 +117,13 @@ function Hero({ notify }: { notify: (text: string) => void }) {
           <button
             className="big-action"
             onClick={() =>
-              document
-                .getElementById("collection")
-                ?.scrollIntoView({
-                  behavior:
-                    document.querySelector('.site[data-motion="off"]') ||
-                    matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "instant"
-                      : "smooth",
-                })
+              document.getElementById("collection")?.scrollIntoView({
+                behavior:
+                  document.querySelector('.site[data-motion="off"]') ||
+                  matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "instant"
+                    : "smooth",
+              })
             }
           >
             Explore components{" "}
@@ -316,6 +314,7 @@ function Collection({
   const [savedOnly, setSavedOnly] = useState(false);
   const [sort, setSort] = useState("curated");
   const [view, setView] = useState("grid");
+  const viewSelection = useSelectionIndicator(view);
   const [limit, setLimit] = useState(18);
   const searchRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -488,7 +487,10 @@ function Collection({
                 <option value="az">Name: A–Z</option>
                 <option value="za">Name: Z–A</option>
               </select>
-              <div className="view-toggle">
+              <div
+                ref={viewSelection}
+                className="view-toggle p-selection-track"
+              >
                 <button
                   aria-label="Grid view"
                   aria-pressed={view === "grid"}
@@ -624,6 +626,7 @@ function Detail({
 }) {
   const C = components[entry.name];
   const [tab, setTab] = useState("preview");
+  const tabSelection = useSelectionIndicator(tab);
   const [replay, setReplay] = useState(0);
   const [canvas, setCanvas] = useState("paper");
   const [title, setTitle] = useState("");
@@ -689,7 +692,8 @@ function Detail({
         <section className="detail-main">
           <div className="detail-toolbar">
             <div
-              className="detail-tabs"
+              ref={tabSelection}
+              className="detail-tabs p-selection-track"
               role="group"
               aria-label="Component documentation"
             >
@@ -850,60 +854,52 @@ function Docs({ notify }: { notify: (s: string) => void }) {
           <a
             href="#/docs"
             onClick={() =>
-              document
-                .getElementById("installation")
-                ?.scrollIntoView({
-                  behavior:
-                    document.querySelector('.site[data-motion="off"]') ||
-                    matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "instant"
-                      : "smooth",
-                })
+              document.getElementById("installation")?.scrollIntoView({
+                behavior:
+                  document.querySelector('.site[data-motion="off"]') ||
+                  matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "instant"
+                    : "smooth",
+              })
             }
           >
             01 · Get started
           </a>
           <button
             onClick={() =>
-              document
-                .getElementById("api")
-                ?.scrollIntoView({
-                  behavior:
-                    document.querySelector('.site[data-motion="off"]') ||
-                    matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "instant"
-                      : "smooth",
-                })
+              document.getElementById("api")?.scrollIntoView({
+                behavior:
+                  document.querySelector('.site[data-motion="off"]') ||
+                  matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "instant"
+                    : "smooth",
+              })
             }
           >
             02 · Make it yours
           </button>
           <button
             onClick={() =>
-              document
-                .getElementById("motion-guide")
-                ?.scrollIntoView({
-                  behavior:
-                    document.querySelector('.site[data-motion="off"]') ||
-                    matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "instant"
-                      : "smooth",
-                })
+              document.getElementById("motion-guide")?.scrollIntoView({
+                behavior:
+                  document.querySelector('.site[data-motion="off"]') ||
+                  matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "instant"
+                    : "smooth",
+              })
             }
           >
             03 · Give it motion
           </button>
           <button
             onClick={() =>
-              document
-                .getElementById("principles")
-                ?.scrollIntoView({
-                  behavior:
-                    document.querySelector('.site[data-motion="off"]') ||
-                    matchMedia("(prefers-reduced-motion: reduce)").matches
-                      ? "instant"
-                      : "smooth",
-                })
+              document.getElementById("principles")?.scrollIntoView({
+                behavior:
+                  document.querySelector('.site[data-motion="off"]') ||
+                  matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "instant"
+                    : "smooth",
+              })
             }
           >
             04 · A point of view
@@ -1070,17 +1066,43 @@ export default function App() {
     }
   });
   const themeTransition = useRef<ViewTransition | null>(null);
+  const themeRequest = useRef(0);
+  const themeTarget = useRef(theme);
   const switchTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    const update = () => flushSync(() => setTheme(next));
+    const request = ++themeRequest.current;
+    const root = document.documentElement;
+    const next = themeTarget.current === "dark" ? "light" : "dark";
+    themeTarget.current = next;
     themeTransition.current?.skipTransition();
+    // Freeze local transitions before either snapshot. Both images contain a complete theme.
+    root.dataset.themeChanging = "true";
+    const update = () => {
+      if (themeRequest.current !== request) return;
+      root.dataset.theme = next;
+      flushSync(() => setTheme(next));
+    };
+    const finish = () => {
+      if (themeRequest.current === request) {
+        delete root.dataset.themeChanging;
+        themeTransition.current = null;
+      }
+    };
     if (
       document.startViewTransition &&
       motion &&
       !matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
-      themeTransition.current = document.startViewTransition(update);
-    } else update();
+      const transition = document.startViewTransition(update);
+      themeTransition.current = transition;
+      // Superseded snapshots reject ready; rapid switching is an expected cancellation.
+      void transition.ready.catch(() => {});
+      transition.finished.then(finish, finish);
+    } else {
+      update();
+      // Commit the new colors before restoring normal control transitions.
+      void root.offsetWidth;
+      finish();
+    }
   };
   const [toast, setToast] = useState("");
   const undo = useRef<(() => void) | null>(null);

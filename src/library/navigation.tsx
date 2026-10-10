@@ -6,6 +6,7 @@ import {
   itemsOf,
   itemValue,
   useModel,
+  useSelectionIndicator,
   Arrow,
 } from "./core";
 /** Floating tab pills with keyboard arrow navigation. */
@@ -13,13 +14,19 @@ export function PillTabs(p: ProsProps) {
   const list = itemsOf(p);
   const [value, set] = useModel(p, itemValue(list[0] ?? { label: "" }));
   const id = useId();
+  const selection = useSelectionIndicator(value);
   return (
     <div
       data-pros="PillTabs"
       className={cx("p-pill-tabs", p.className)}
       style={p.style}
     >
-      <div role="tablist" aria-label={p.label ?? "Sections"}>
+      <div
+        ref={selection}
+        className="p-selection-track"
+        role="tablist"
+        aria-label={p.label ?? "Sections"}
+      >
         {list.map((s, i) => (
           <button
             type="button"
@@ -63,7 +70,7 @@ export function PillTabs(p: ProsProps) {
         }
         tabIndex={0}
         key={value}
-        className="p-enter"
+        className="p-panel-change"
       >
         {p.children ??
           list.find((s) => itemValue(s) === value)?.description ??

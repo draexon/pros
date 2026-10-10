@@ -44,6 +44,10 @@
 .pros summary {
   transition:
     transform var(--pros-duration) var(--pros-spring),
+    translate 320ms var(--pros-ease),
+    scale 240ms var(--pros-ease),
+    border-radius 320ms var(--pros-ease),
+    border-color 280ms ease,
     background 0.25s,
     color 0.25s,
     box-shadow 0.25s,
@@ -7741,12 +7745,18 @@
   transform: scale(0.82);
 }
 /* Shared feedback uses scale independently, preserving each component's transform. */
-.pros :is(button, a[href], summary) {
-  transition-property:
-    transform, translate, scale, background-color, color, border-color,
-    box-shadow, opacity;
-  transition-duration: 280ms;
-  transition-timing-function: var(--pros-ease);
+/* Low specificity lets individual controls retain layout and shape transitions. */
+:where(.pros) :where(button, a[href], summary) {
+  transition:
+    transform 320ms var(--pros-ease),
+    translate 320ms var(--pros-ease),
+    scale 240ms var(--pros-ease),
+    background-color 280ms ease,
+    color 280ms ease,
+    border-color 280ms ease,
+    border-radius 320ms var(--pros-ease),
+    box-shadow 280ms ease,
+    opacity 220ms ease;
 }
 .pros button:active:not(:disabled),
 .pros a:active {
@@ -7760,7 +7770,7 @@
 .pros :is(button, input, select, textarea):focus-visible {
   outline-color: var(--pros-focus, var(--pros-tone-secondary, #577838));
 }
-.pros :is(.p-icon, .p-arrow, [aria-pressed], [aria-expanded]) {
+:where(.pros) :where(.p-icon, .p-arrow) {
   transition:
     transform 280ms var(--pros-spring),
     scale 280ms var(--pros-spring),
@@ -7935,4 +7945,102 @@
   --pros-soft: #efefeb;
   --pros-muted: #737570;
   color-scheme: light;
+}
+/* Selection motion is continuous in both directions, including interrupted clicks. */
+.pros .p-selection-track {
+  position: relative;
+  isolation: isolate;
+}
+.p-selection-track::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+  width: var(--selection-width, 0px);
+  height: var(--selection-height, 0px);
+  translate: var(--selection-x, 0px) var(--selection-y, 0px);
+  border-radius: inherit;
+  background: var(--selection-color, var(--pros-ink));
+  transition:
+    translate 340ms var(--pros-ease),
+    width 340ms var(--pros-ease),
+    height 340ms var(--pros-ease);
+  visibility: hidden;
+}
+.p-selection-track[data-selection-ready]::before {
+  visibility: visible;
+}
+.pros .p-selection-track > button {
+  position: relative;
+  z-index: 1;
+}
+.pros
+  .p-selection-track[data-selection-ready]
+  > button:is([aria-selected="true"], [aria-pressed="true"]) {
+  background: transparent;
+  box-shadow: none;
+  animation: none;
+}
+.p-segment {
+  --selection-color: var(--pros-paper);
+}
+.p-panel-change {
+  animation: p-panel-change 260ms var(--pros-ease) both;
+}
+@keyframes p-panel-change {
+  from {
+    opacity: 0.2;
+    translate: 0 5px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.pros .p-image-accordion > button {
+  flex: 1 1 0%;
+  transition:
+    flex-grow 480ms var(--pros-ease),
+    background-color 280ms ease,
+    color 280ms ease;
+}
+.pros .p-image-accordion > button.is-active {
+  flex-grow: 3;
+}
+.pros .p-image-accordion > button:active {
+  scale: 1;
+}
+.p-image-accordion :is(img, .p-mark) {
+  transition:
+    scale 480ms var(--pros-ease),
+    opacity 280ms ease;
+  scale: 0.96;
+}
+.p-image-accordion .is-active :is(img, .p-mark) {
+  scale: 1;
+}
+.p-image-accordion b {
+  translate: 0 5px;
+  transition:
+    opacity 240ms ease,
+    translate 340ms var(--pros-ease);
+}
+.p-image-accordion .is-active b {
+  translate: 0 0;
+}
+:where(
+  .p-radio-cards label,
+  .p-checkbox-tile,
+  .p-progress-steps b,
+  .p-gallery-grid button,
+  .p-filter-chips button,
+  .p-selectable-list button
+) {
+  transition:
+    background-color 280ms ease,
+    color 280ms ease,
+    box-shadow 280ms ease,
+    transform 340ms var(--pros-ease);
 }

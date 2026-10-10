@@ -3565,3 +3565,41 @@ html:has(.site[data-motion="off"]) {
 html:has(.site[data-motion="off"]) body {
   transition: none !important;
 }
+/* Snapshot the final palette once; local component transitions must not trail it. */
+html[data-theme-changing] *,
+html[data-theme-changing] *::before,
+html[data-theme-changing] *::after,
+html[data-theme-changing] *::details-content {
+  transition: none !important;
+  transition-delay: 0s !important;
+}
+::view-transition-old(root) {
+  animation: theme-fade-out 320ms ease-in-out both;
+}
+::view-transition-new(root) {
+  animation: theme-fade-in 320ms ease-in-out both;
+}
+::view-transition-group(root) {
+  animation-duration: 320ms;
+}
+::view-transition {
+  pointer-events: none;
+}
+.site .view-toggle.p-selection-track {
+  --selection-color: var(--pros-paper);
+}
+.site .detail-tabs.p-selection-track {
+  --selection-color: var(--pros-ink);
+}
+.site .view-toggle.p-selection-track::before {
+  border-radius: 7px;
+}
+.site .detail-tabs.p-selection-track::before {
+  border-radius: 99px;
+}
+.site
+  :is(.view-toggle, .detail-tabs).p-selection-track[data-selection-ready]
+  > button[aria-pressed="true"] {
+  background: transparent;
+  box-shadow: none;
+}

@@ -6,6 +6,7 @@ import {
   Arrow,
   useToggle,
   useModel,
+  useSelectionIndicator,
   ActionMenu,
 } from "./core";
 /** A solid pill with a sliding arrow capsule. */
@@ -342,12 +343,14 @@ export function SegmentButton(p: ProsProps) {
     { label: "Month" },
   ];
   const [value, set] = useModel(p, list[0]?.label ?? "");
+  const selection = useSelectionIndicator(value);
   return (
     <div
       data-pros="SegmentButton"
+      ref={selection}
       role="group"
       aria-label={p.label ?? "Time range"}
-      className={cx("p-segment", p.className)}
+      className={cx("p-segment p-selection-track", p.className)}
       style={p.style}
     >
       {list.map((s, i) => (

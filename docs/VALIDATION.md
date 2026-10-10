@@ -54,3 +54,12 @@ The previews use illustrative local data. Backend service integrations and nativ
 - Browser checks report no runtime exceptions. A desktop dark-theme preview is saved in dark-mode.png.
 
 Run npm run build, npm test, and npm run test:browser to repeat the checks.
+
+## Smooth selection and synchronized themes - 2026-10-10
+
+- Restored component-specific layout transitions instead of overriding them with shared button rules.
+- Image accordion width, artwork, and captions animate in both directions and during rapid reversals; arrow keys, Home, End, and disabled controls are supported.
+- Pill tabs, segmented buttons, documentation tabs, and view controls use a measured sliding highlight.
+- Theme crossfades snapshot the final palette with local color transitions suspended, eliminating delayed component recoloring. Rapid repeated switches safely cancel obsolete snapshots.
+- All 221 library tests pass. The expanded browser suite checks intermediate accordion widths, moving tab highlights, reduced motion, exact colors during and after both theme transitions, and rapid-switch cancellation.
+- All 15 production browser tests pass in Chromium (Microsoft Edge).

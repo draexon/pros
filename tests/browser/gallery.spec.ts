@@ -5,12 +5,10 @@ test.beforeEach(async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.addInitScript(() => localStorage.setItem("pros.motion", "off"));
-  test
-    .info()
-    .annotations.push({
-      type: "coverage",
-      description: "Chromium interaction and layout regressions",
-    });
+  test.info().annotations.push({
+    type: "coverage",
+    description: "Chromium interaction and layout regressions",
+  });
   page.on("close", () => expect(errors).toEqual([]));
 });
 
@@ -182,4 +180,139 @@ test("theme changes in both directions persist and respect motion settings", asy
       ),
     )
     .toBe(0);
+});
+
+test("image accordion animates width in both directions and supports keyboard selection", async ({
+  page,
+}) => {
+  await page.goto("/#/component/image-accordion");
+  await page.getByRole("button", { name: "Motion off" }).click();
+  const panels = page.locator(".p-image-accordion > button");
+  await expect(panels.first()).toHaveAttribute("aria-expanded", "true");
+  await panels.nth(1).click();
+  await page.waitForTimeout(80);
+  const expanding = await panels
+    .nth(1)
+    .evaluate((el) => Number(getComputedStyle(el).flexGrow));
+  expect(expanding).toBeGreaterThan(1);
+  expect(expanding).toBeLessThan(3);
+  await panels.first().click();
+  await page.waitForTimeout(50);
+  const reversing = await panels
+    .nth(1)
+    .evaluate((el) => Number(getComputedStyle(el).flexGrow));
+  expect(reversing).toBeLessThan(3);
+  await expect
+    .poll(() =>
+      panels.first().evaluate((el) => Number(getComputedStyle(el).flexGrow)),
+    )
+    .toBe(3);
+  await panels.first().focus();
+  await page.keyboard.press("End");
+  await expect(panels.last()).toBeFocused();
+  await expect(panels.last()).toHaveAttribute("aria-expanded", "true");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await panels.first().click();
+  expect(
+    await panels
+      .first()
+      .evaluate((el) => Number(getComputedStyle(el).flexGrow)),
+  ).toBe(3);
+});
+
+for (const slug of ["pill-tabs", "segment-button"]) {
+  test(`${slug} selection highlight travels continuously`, async ({ page }) => {
+    await page.goto("/#/component/" + slug);
+    await page.getByRole("button", { name: "Motion off" }).click();
+    const track = page.locator(".detail-component .p-selection-track");
+    await expect(track).toHaveAttribute("data-selection-ready", "true");
+    const start = await track.evaluate(
+      (el) => getComputedStyle(el, "::before").translate,
+    );
+    await track.locator("button").last().click();
+    await page.waitForTimeout(70);
+    const middle = await track.evaluate((el) => ({
+      actual: getComputedStyle(el, "::before").translate,
+      target:
+        el.style.getPropertyValue("--selection-x") +
+        " " +
+        el.style.getPropertyValue("--selection-y"),
+    }));
+    expect(middle.actual).not.toBe(start);
+    expect(middle.actual).not.toBe(middle.target);
+    await expect
+      .poll(() =>
+        track.evaluate((el) => getComputedStyle(el, "::before").translate),
+      )
+      .toBe(middle.target);
+    await track.locator("button").first().click();
+    await expect
+      .poll(() =>
+        track.evaluate((el) => getComputedStyle(el, "::before").translate),
+      )
+      .toBe(start);
+  });
+}
+
+test("theme crossfade contains final component colors without trailing transitions", async ({
+  page,
+}) => {
+  await page.goto("/#/component/image-accordion");
+  await page.getByRole("button", { name: "Motion off" }).click();
+  const colors = () =>
+    page.evaluate(() =>
+      [
+        ".site",
+        ".detail-canvas",
+        ".p-image-accordion .is-active",
+        ".detail-tabs",
+      ].map((selector) => {
+        const style = getComputedStyle(document.querySelector(selector)!);
+        return [style.backgroundColor, style.color];
+      }),
+    );
+  for (let i = 0; i < 2; i++) {
+    await page.locator(".theme-control").click();
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          document
+            .getAnimations()
+            .some(
+              (animation) =>
+                "animationName" in animation &&
+                String(animation.animationName).startsWith("theme-fade"),
+            ),
+        ),
+      )
+      .toBe(true);
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme-changing",
+      "true",
+    );
+    const during = await colors();
+    expect(
+      await page.evaluate(
+        () =>
+          document
+            .getAnimations()
+            .filter(
+              (animation) =>
+                animation instanceof CSSTransition &&
+                animation.playState === "running",
+            ).length,
+      ),
+    ).toBe(0);
+    await expect(page.locator("html")).not.toHaveAttribute(
+      "data-theme-changing",
+    );
+    expect(await colors()).toEqual(during);
+  }
+  const previous = await page.locator("html").getAttribute("data-theme");
+  await page.locator(".theme-control").evaluate((button: HTMLButtonElement) => {
+    button.click();
+    button.click();
+  });
+  await expect(page.locator("html")).not.toHaveAttribute("data-theme-changing");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", previous!);
 });

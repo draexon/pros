@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -158,6 +159,9 @@ function InteractionMotion() {
       if (
         !control ||
         !root.contains(control) ||
+        control.closest(
+          ".p-selection-track, .p-image-accordion, .theme-control",
+        ) ||
         control.matches(':disabled, [aria-disabled="true"]') ||
         control.closest('[data-motion="off"]')
       )
@@ -341,6 +345,38 @@ export function ActionMenu({
     document.body,
   );
 }
+/** Measure the selected control so its highlight travels instead of blinking. */
+export function useSelectionIndicator(value: string) {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const track = ref.current;
+    if (!track) return;
+    const update = () => {
+      const selected = track.querySelector<HTMLElement>(
+        '[aria-selected="true"], [aria-pressed="true"]',
+      );
+      if (!selected) {
+        delete track.dataset.selectionReady;
+        return;
+      }
+      track.style.setProperty("--selection-x", selected.offsetLeft + "px");
+      track.style.setProperty("--selection-y", selected.offsetTop + "px");
+      track.style.setProperty("--selection-width", selected.offsetWidth + "px");
+      track.style.setProperty(
+        "--selection-height",
+        selected.offsetHeight + "px",
+      );
+      track.dataset.selectionReady = "true";
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(track);
+    for (const child of track.children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [value]);
+  return ref;
+}
+
 export function useMotionAllowed() {
   const enabled = useContext(MotionContext);
   const [reduced, setReduced] = useState(false);
