@@ -144,18 +144,19 @@ function Hero({ notify }: { notify: (text: string) => void }) {
           <span className="tiny-flower">
             <Icon name="flower" />
           </span>{" "}
-          SMALL DETAILS. BIG PERSONALITY.
+          REACT COMPONENTS BY DRAEXON
         </div>
         <h1>
-          A little motion.
-          <br />A lot of <em>feeling.</em>
+          Built to use.
+          <br />
+          Made to <em>move.</em>
           <svg viewBox="0 0 360 20" aria-hidden="true">
             <path d="M4 13Q170-3 351 7M35 18Q220 3 331 12" />
           </svg>
         </h1>
         <p>
-          Thoughtfully crafted components for interfaces that feel alive. Curvy,
-          tactile, and a little unexpected.
+          218 React components with editable source, keyboard controls, and
+          built-in motion. From inputs to complete app screens.
         </p>
         <div className="hero-actions">
           <button
@@ -188,9 +189,9 @@ function Hero({ notify }: { notify: (text: string) => void }) {
             <i>d</i>
           </span>
           <span>
-            For people who care
+            React + TypeScript
             <br />
-            <b>how the little things feel.</b>
+            <b>No animation library required.</b>
           </span>
         </div>
       </div>
@@ -449,18 +450,18 @@ function Collection({
           <h2>
             {motionOnly ? (
               <>
-                A little more <em>movement.</em>
+                Explore <em>motion.</em>
               </>
             ) : (
               <>
-                Your next great <em>detail.</em>
+                Find your next <em>component.</em>
               </>
             )}
           </h2>
           <p>
             {motionOnly
-              ? "Pull, tilt, drag, and explore. Fifteen studies in how an interface can feel."
-              : "A considered collection. An open invitation to play."}
+              ? "15 interactive components for dragging, tilting, and revealing content."
+              : "Browse live previews, test the controls, and copy the source."}
           </p>
         </div>
         <div className="collection-search">
@@ -469,7 +470,7 @@ function Collection({
             ref={searchRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Find your next detail…"
+            placeholder="Search components…"
             aria-label="Search components"
             aria-keyshortcuts="/"
             onFocus={() => setSearchFocused(true)}
@@ -673,11 +674,11 @@ function Collection({
           {limit < filtered.length && (
             <div className="load-more">
               <span>
-                {Math.min(limit, filtered.length)} of {filtered.length} little
-                details
+                {Math.min(limit, filtered.length)} of {filtered.length}{" "}
+                components
               </span>
               <button onClick={() => setLimit(limit + 18)}>
-                A little more inspiration{" "}
+                Load more components{" "}
                 <span>
                   <Icon name="plus" />
                 </span>
@@ -851,9 +852,7 @@ function Detail({
                   onValueChange={(v) => setEvent('onValueChange("' + v + '")')}
                 />
               </div>
-              <span className="canvas-caption">
-                GO ON. MAKE A LITTLE MOVEMENT.
-              </span>
+              <span className="canvas-caption">TRY THE CONTROLS.</span>
             </div>
           ) : tab === "usage" ? (
             <CodeBlock code={usageFor(entry)} notify={notify} />
@@ -946,7 +945,7 @@ function Detail({
         </aside>
       </div>
       <div className="related-heading">
-        <h2>Keep the good ideas moving.</h2>
+        <h2>Explore more components.</h2>
         <button className="quiet-action" onClick={() => routeTo("/components")}>
           Back to all 218 <Arrow />
         </button>
@@ -959,7 +958,7 @@ function Docs({ notify }: { notify: (s: string) => void }) {
   return (
     <main className="docs-page">
       <div className="docs-intro">
-        <span className="section-kicker">A LITTLE GUIDANCE</span>
+        <span className="section-kicker">DOCUMENTATION</span>
         <h1>
           A starting point.
           <br />
@@ -1029,11 +1028,11 @@ function Docs({ notify }: { notify: (s: string) => void }) {
         <div>
           <section id="installation">
             <span className="section-kicker">01 / GET STARTED</span>
-            <h2>Something good starts small.</h2>
+            <h2>Install and get started.</h2>
             <p>
-              Build the private package from this repository, then install its
-              tarball in your React project. React 18.3 or 19 and React DOM are
-              peer dependencies.
+              Build the package from this repository, then install its tarball
+              in your React project. React 18.3 or 19 and React DOM are peer
+              dependencies.
             </p>
             <CodeBlock
               code={
@@ -1245,6 +1244,33 @@ export default function App() {
   const [toast, setToast] = useState("");
   const undo = useRef<(() => void) | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  useEffect(() => {
+    setHeaderHidden(false);
+    let previous = window.scrollY;
+    let frame = 0;
+    const scroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const current = Math.max(0, window.scrollY);
+        const keyboardFocus = document.activeElement?.matches(
+          ".site-header :focus-visible",
+        );
+        if (current < 100 || mobileMenu || keyboardFocus)
+          setHeaderHidden(false);
+        else if (Math.abs(current - previous) > 8)
+          setHeaderHidden(current > previous);
+        if (Math.abs(current - previous) > 8 || current < 100)
+          previous = current;
+      });
+    };
+    window.addEventListener("scroll", scroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", scroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [route, mobileMenu]);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const notify = (text: string) => {
     undo.current = null;
@@ -1307,8 +1333,8 @@ export default function App() {
     document.title = entry
       ? humanize(entry.name) + " - Pros"
       : isDocs
-        ? "A little guidance - Pros"
-        : "Pros - Interfaces with feeling.";
+        ? "Documentation - Pros"
+        : "Pros - React components by draexon";
   }, [entry, isDocs]);
   return (
     <Library.ProsProvider motion={motion} theme={theme} className="site">
@@ -1323,7 +1349,11 @@ export default function App() {
       >
         Skip to content
       </a>
-      <header className="site-header">
+      <header
+        className="site-header"
+        data-hidden={headerHidden && !mobileMenu}
+        onFocusCapture={() => setHeaderHidden(false)}
+      >
         <a className="brand" href="#/" aria-label="Pros home">
           pros
           <span className="brand-dot">
@@ -1380,12 +1410,22 @@ export default function App() {
           </button>
           <a
             className="github-link"
+            href="https://github.com/draexon"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="draexon on GitHub"
+          >
+            <Icon name="github" size={19} />
+          </a>
+          <a
+            className="github-star"
             href="https://github.com/draexon/pros"
             target="_blank"
             rel="noreferrer"
-            aria-label="Pros private repository on GitHub"
+            aria-label="Star Pros on GitHub"
           >
-            <Icon name="github" size={19} />
+            <Icon name="star" size={14} />
+            <span>Star</span>
           </a>
           <button className="header-start" onClick={() => routeTo("/docs")}>
             Get started{" "}
@@ -1464,11 +1504,11 @@ export default function App() {
             />
             <section className="closing-note">
               <div>
-                <span className="section-kicker">A LITTLE LESS ORDINARY.</span>
+                <span className="section-kicker">BUILD WITH PROS</span>
                 <h2>
                   Make something
                   <br />
-                  <em>worth feeling.</em>
+                  <em>of your own.</em>
                 </h2>
                 <button className="big-action" onClick={() => routeTo("/docs")}>
                   Start with Pros{" "}
@@ -1496,9 +1536,9 @@ export default function App() {
             <Icon name="flower" />
           </span>
         </a>
-        <p>Small details. A different feeling.</p>
+        <p>React components. MIT licensed.</p>
         <span>
-          Made with intention by <b>draexon</b>
+          Built by <a href="https://github.com/draexon">draexon</a>
         </span>
         <button
           onClick={() =>

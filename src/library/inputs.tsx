@@ -34,6 +34,7 @@ export function FloatingInput(p: ProsProps) {
 }
 /** A command-like search field with clear and submit controls. */
 export function SearchInput(p: ProsProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [value, set] = useModel(p, "");
   return (
     <form
@@ -50,15 +51,24 @@ export function SearchInput(p: ProsProps) {
         <Icon name="search" />
       </span>
       <input
+        ref={inputRef}
         aria-label={p.label ?? "Search"}
         name={p.name}
         disabled={p.disabled}
-        placeholder={p.title ?? "Find something good…"}
+        placeholder={p.title ?? "Search…"}
         value={value}
         onChange={(e) => set(e.target.value)}
       />
       {value ? (
-        <button type="button" disabled={p.disabled} aria-label="Clear search" onClick={() => set("")}>
+        <button
+          type="button"
+          disabled={p.disabled}
+          aria-label="Clear search"
+          onClick={() => {
+            set("");
+            inputRef.current?.focus();
+          }}
+        >
           <Icon name="close" />
         </button>
       ) : (

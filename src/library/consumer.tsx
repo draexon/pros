@@ -252,9 +252,9 @@ export function DiscoveryHub(p: ConsumerContentProps) {
     <Block
       p={p}
       name="DiscoveryHub"
-      eyebrow="A LITTLE OUTSIDE YOUR ALGORITHM"
-      title="Your next good find."
-      description="Places, people, and ideas worth making time for."
+      eyebrow="DISCOVER"
+      title="Picked for your weekend."
+      description="Explore places, design, and food from independent creators."
       className="p-discovery-hub"
     >
       <Choices
@@ -318,7 +318,7 @@ export function DiscoveryHub(p: ConsumerContentProps) {
         <Empty>No discoveries in this category yet.</Empty>
       )}
       <footer className="p-app-footnote">
-        <span>GOOD THINGS TAKE CURIOSITY.</span>
+        <span>YOUR DISCOVERIES</span>
         <span role="status">
           {saved.length} saved <Icon name="heart" size={13} />
         </span>
@@ -340,8 +340,8 @@ export function TrendingBoard(p: ConsumerContentProps) {
     <Block
       p={p}
       name="TrendingBoard"
-      eyebrow="THE COMMUNITY EDIT"
-      title="Good things travel."
+      eyebrow="COMMUNITY"
+      title="Trending this week."
       description="What people are finding, sharing, and coming back to."
     >
       <div className="p-trending-banner">
@@ -349,8 +349,8 @@ export function TrendingBoard(p: ConsumerContentProps) {
           <Icon name="motion" size={32} />
         </span>
         <div>
-          <b>The pulse, without the noise.</b>
-          <p>Discover something outside your usual.</p>
+          <b>Most saved by the community</b>
+          <p>Ranked by saves. Filter by topic.</p>
         </div>
         <span className="p-app-tag">TRENDING</span>
       </div>
@@ -411,7 +411,7 @@ export function TrendingBoard(p: ConsumerContentProps) {
       <Status>
         {saved.length
           ? `${saved.length} ${saved.length === 1 ? "find" : "finds"} saved to your collection.`
-          : "A little inspiration for your next favourite thing."}
+          : "Save a story to add it to your collection."}
       </Status>
     </Block>
   );
@@ -440,9 +440,9 @@ export function CollectionStudio(p: ConsumerContentProps) {
     <Block
       p={p}
       name="CollectionStudio"
-      eyebrow="YOUR LITTLE CORNER"
-      title="Keep the good stuff."
-      description="A home for everything you want to come back to."
+      eyebrow="SAVED"
+      title="Your collection."
+      description="Search your saved stories or edit your collection."
     >
       <div className="p-collection-toolbar">
         <label className="p-app-search">
@@ -510,7 +510,7 @@ export function CollectionStudio(p: ConsumerContentProps) {
         <Status>
           {undo
             ? "Removed from your collection."
-            : `${data.filter((s) => !removed.includes(s.id)).length} things worth keeping.`}
+            : `${data.filter((s) => !removed.includes(s.id)).length} saved stories.`}
         </Status>
         {undo && (
           <button
@@ -586,8 +586,8 @@ export function ShoppingBag(p: ShoppingBagProps) {
       p={p}
       name="ShoppingBag"
       eyebrow="CHOSEN BY YOU"
-      title="A very good bag."
-      description="Useful things. Considered details. Yours to keep."
+      title="Your shopping bag."
+      description="Review items, adjust quantities, and check your total."
     >
       <div className="p-bag-goal">
         <div>
@@ -661,7 +661,7 @@ export function ShoppingBag(p: ShoppingBagProps) {
         ))}
       </div>
       {!lines.length && (
-        <Empty>Your bag is empty. Make room for something good.</Empty>
+        <Empty>Your bag is empty. Add an item to get started.</Empty>
       )}
       {undo && (
         <div className="p-app-inline-status p-app-scene">
@@ -784,10 +784,8 @@ export function CheckoutPanel(p: CheckoutPanelProps) {
     <Block
       p={p}
       name="CheckoutPanel"
-      eyebrow={
-        p.onConfirm ? "THE LAST LITTLE STEP" : "INTERACTIVE CHECKOUT PREVIEW"
-      }
-      title="Make it yours."
+      eyebrow={p.onConfirm ? "CHECKOUT" : "INTERACTIVE CHECKOUT PREVIEW"}
+      title="Complete your order."
       description="A clear total. Your preferred way to pay."
     >
       <div className="p-checkout-steps" aria-label="Checkout progress">
@@ -811,7 +809,7 @@ export function CheckoutPanel(p: CheckoutPanelProps) {
           <div className="p-app-scene">
             <div className="p-payment-card">
               <Icon name="commerce" size={28} />
-              <span>YOUR NEXT GOOD THING</span>
+              <span>ORDER TOTAL</span>
               <strong>{money(total, p.currency)}</strong>
               <small>
                 {p.onConfirm ? "Order total" : "Demo order / no charge"}
@@ -861,12 +859,12 @@ export function CheckoutPanel(p: CheckoutPanelProps) {
               <Icon name="check" size={32} />
             </span>
             <h4>
-              {p.onConfirm ? "Confirmation received." : "That feels better."}
+              {p.onConfirm ? "Confirmation received." : "Preview complete."}
             </h4>
             <p>
               {p.onConfirm
                 ? "Your payment is confirmed. You're all set."
-                : "A smooth finish, from choice to confirmation. This was a preview. No payment was taken."}
+                : "You reached the confirmation step. No payment was taken."}
             </p>
             <strong>{money(total, p.currency)}</strong>
             {!p.onConfirm && (
@@ -967,7 +965,7 @@ const plans: MembershipPlan[] = [
   },
   {
     id: "plus",
-    name: "A little extra",
+    name: "Plus",
     monthly: 1400,
     yearly: 12000,
     description: "More room for the things you love.",
@@ -989,9 +987,9 @@ export function MembershipStudio(p: MembershipStudioProps) {
     <Block
       p={p}
       name="MembershipStudio"
-      eyebrow="MAKE YOURSELF AT HOME"
-      title="A little more possibility."
-      description="Choose your space. Make it your own."
+      eyebrow="MEMBERSHIP"
+      title="Choose your membership."
+      description="Compare plans and choose monthly or annual billing."
     >
       <Choices
         options={["Monthly", "Yearly"]}
@@ -1069,7 +1067,7 @@ export function MembershipStudio(p: MembershipStudioProps) {
       <Status>
         {notice ||
           (billing === "Yearly"
-            ? "One payment for a full year of good things."
+            ? "Annual plans are billed once per year."
             : "Billed monthly. Clear pricing, always.")}
       </Status>
     </Block>
@@ -1119,8 +1117,8 @@ export function OrderJourney(p: OrderJourneyProps) {
       p={p}
       name="OrderJourney"
       eyebrow={"ORDER / " + (p.orderNumber ?? "PS-2048")}
-      title="Good things are on the way."
-      description="Every little step, from our place to yours."
+      title="Track your delivery."
+      description="View the latest status and delivery milestones."
     >
       <div className="p-order-hero">
         <div>
@@ -1217,7 +1215,7 @@ export function RewardsWallet(p: RewardsWalletProps) {
     {
       id: "credit",
       title: "A little thank you",
-      detail: "$10 off your next good find",
+      detail: "$10 off your next order",
       points: 1000,
     },
     {
@@ -1234,9 +1232,9 @@ export function RewardsWallet(p: RewardsWalletProps) {
     <Block
       p={p}
       name="RewardsWallet"
-      eyebrow="LITTLE THINGS ADD UP"
-      title="Good taste has its perks."
-      description="A little thank you for being part of the story."
+      eyebrow="MEMBER REWARDS"
+      title="Your rewards."
+      description="Use your points toward shipping, discounts, and member rewards."
     >
       <div className="p-rewards-balance">
         <div>
@@ -1245,7 +1243,7 @@ export function RewardsWallet(p: RewardsWalletProps) {
             {points.toLocaleString("en-US")}
             <small>pts</small>
           </strong>
-          <p>Ready for something good.</p>
+          <p>Available to redeem.</p>
         </div>
         <div className="p-rewards-medal" aria-hidden="true">
           <Icon name="flower" size={54} />

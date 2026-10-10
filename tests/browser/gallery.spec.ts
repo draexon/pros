@@ -452,3 +452,75 @@ test("sort menu shows its selection, animates, and sorts through keyboard action
   );
   await expect(trigger).toBeFocused();
 });
+
+test("compound inputs draw one outer focus ring and search clear retains focus", async ({
+  page,
+}) => {
+  for (const [slug, wrapper] of [
+    ["search-input", ".p-search-input"],
+    ["password-input", ".p-input-group"],
+    ["tag-input", ".p-tag-input > div"],
+    ["collection-studio", ".p-app-search"],
+  ]) {
+    await page.goto("/#/component/" + slug);
+    const field = page.locator(wrapper);
+    const input = field.locator("input");
+    await input.focus();
+    expect(
+      await input.evaluate((el) => getComputedStyle(el).outlineStyle),
+    ).toBe("none");
+    expect(
+      await field.evaluate((el) => getComputedStyle(el).outlineStyle),
+    ).toBe("solid");
+    expect(
+      await field.evaluate((el) =>
+        parseFloat(getComputedStyle(el).outlineOffset),
+      ),
+    ).toBeGreaterThan(0);
+  }
+  await page.goto("/#/component/search-input");
+  const input = page.locator(".p-search-input input");
+  await input.fill("hello");
+  await page.getByRole("button", { name: "Clear search", exact: true }).click();
+  await expect(input).toHaveValue("");
+  await expect(input).toBeFocused();
+});
+
+test("navigation hides downward, returns upward, and keeps keyboard and mobile access", async ({
+  page,
+}) => {
+  await page.goto("/#/components");
+  const header = page.locator(".site-header");
+  await expect(
+    header.getByRole("link", { name: "draexon on GitHub", exact: true }),
+  ).toHaveAttribute("href", "https://github.com/draexon");
+  await expect(
+    header.getByRole("link", { name: "Star Pros on GitHub", exact: true }),
+  ).toHaveAttribute("href", "https://github.com/draexon/pros");
+  await page.evaluate(() =>
+    window.scrollTo({ top: 1100, behavior: "instant" }),
+  );
+  await expect(header).toHaveAttribute("data-hidden", "true");
+  await page.evaluate(() => window.scrollTo({ top: 900, behavior: "instant" }));
+  await expect(header).toHaveAttribute("data-hidden", "false");
+  expect((await header.boundingBox())!.y).toBe(0);
+  await page.evaluate(() =>
+    window.scrollTo({ top: 1300, behavior: "instant" }),
+  );
+  await expect(header).toHaveAttribute("data-hidden", "true");
+  await header.getByRole("link", { name: "Pros home", exact: true }).focus();
+  await expect(header).toHaveAttribute("data-hidden", "false");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("button", { name: "Toggle navigation" }).click();
+  await page.evaluate(() => {
+    (document.activeElement as HTMLElement)?.blur();
+    window.scrollTo({ top: 1500, behavior: "instant" });
+  });
+  await expect(header).toHaveAttribute("data-hidden", "false");
+  await expect(header.getByRole("navigation")).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

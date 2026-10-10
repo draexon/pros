@@ -3890,3 +3890,74 @@ html[data-theme-changing] *::details-content {
     padding: 22px 8px 55px;
   }
 }
+
+/* Scroll direction navigation, with keyboard focus and mobile menu overrides. */
+.site .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--pros-paper) 96%, transparent);
+  backdrop-filter: blur(16px);
+  transition:
+    transform 260ms var(--pros-ease),
+    box-shadow 260ms ease;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--pros-ink) 8%, transparent);
+}
+.site .site-header[data-hidden="true"] {
+  transform: translateY(calc(-100% - 2px));
+}
+.site .site-header:has(:focus-visible) {
+  transform: translateY(0);
+}
+.site .github-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, var(--pros-ink) 18%, transparent);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 650;
+}
+.github-star svg {
+  transition: rotate 260ms var(--pros-spring);
+}
+.github-star:hover svg {
+  rotate: 25deg;
+}
+.site .collection-search:focus-within {
+  translate: none;
+  box-shadow: none;
+}
+.site .collection-search input {
+  font-size: 14px !important;
+  line-height: 1.5;
+}
+.site .collection-search > .p-icon {
+  flex-shrink: 0;
+}
+.site .collection-search:focus-within > .p-icon {
+  rotate: 0deg;
+  scale: 1;
+}
+@media (max-width: 1000px) and (min-width: 701px) {
+  .site .header-start {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .site .site-header {
+    padding-inline: 16px;
+    gap: 12px;
+  }
+  .site .github-star {
+    padding: 8px;
+    gap: 4px;
+    font-size: 10px;
+  }
+  .site .collection-search input {
+    font-size: 16px !important;
+  }
+}

@@ -172,4 +172,10 @@ npm run test:browser
 
 Editorial layouts and printed matter collected on [Are.na](https://www.are.na/rachel-steele/layout-editorial-kl3d-_flrj4), [Pinterest typography references](https://it.pinterest.com/pin/business-cards-design-inspiration-black-and-white-graphic-design-typography--814799757554549066/), and physical objects informed the direction. All component implementations and geometric artwork are original. No third-party reference artwork is redistributed.
 
-Private source. All rights reserved by draexon.
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Community participation follows our [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities using [SECURITY.md](SECURITY.md).
+
+## License
+
+[MIT](LICENSE), copyright 2026 draexon. Repository visibility remains private until the maintainer chooses to publish it.

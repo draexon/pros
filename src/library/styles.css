@@ -9467,3 +9467,48 @@
     border-radius: 22px;
   }
 }
+
+/* Compound fields own one outside focus ring; inner inputs stay visually flat. */
+.pros
+  :is(
+    .p-search-input,
+    .p-input-group,
+    .p-tag-input > div,
+    .p-number-stepper,
+    .p-app-search,
+    .collection-search
+  ):has(input:focus-visible) {
+  outline: 2px solid var(--pros-focus, var(--pros-tone-secondary, #577838));
+  outline-offset: 4px;
+}
+.pros
+  :is(
+    .p-search-input,
+    .p-input-group,
+    .p-tag-input > div,
+    .p-number-stepper,
+    .p-app-search,
+    .collection-search
+  )
+  input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.pros .p-search-input input {
+  border-radius: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+.pros .p-app-search:has(input:focus-visible) {
+  border-color: transparent;
+}
+@media (max-width: 600px) {
+  .pros input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  .pros textarea,
+  .pros select {
+    font-size: 16px;
+  }
+  .pros .p-app-search input {
+    font-size: 16px;
+  }
+}

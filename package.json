@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Original monochrome React components, made to move.",
   "author": "draexon",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "files": [
     "dist"
   ],
@@ -47,5 +47,13 @@
     "react-dom": "19.3.0",
     "typescript": "7.0.2",
     "vite": "8.3.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draexon/pros.git"
+  },
+  "bugs": {
+    "url": "https://github.com/draexon/pros/issues"
+  },
+  "homepage": "https://github.com/draexon/pros#readme"
 }

@@ -37,12 +37,12 @@ export function SiteMotion({ route }: { route: string }) {
           animate(
             entry.target,
             [
-              { opacity: 0.2, translate: "0 42px", scale: "0.96" },
-              { opacity: 1, translate: "0 0", scale: "1" },
+              { opacity: 0, translate: "0 16px" },
+              { opacity: 1, translate: "0 0" },
             ],
             {
-              duration: 780,
-              delay: index * 75,
+              duration: 520,
+              delay: index * 45,
               easing: "cubic-bezier(.16,1,.3,1)",
             },
           );

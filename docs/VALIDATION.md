@@ -90,3 +90,12 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Nine new browser checks cover filtering/saving, search/removal/undo, cart totals/shipping, checkout review/focus/demo mode, membership prices, order inspection, reward eligibility, 360px/1440px control bounds, reverse height motion, reduced motion, empty/disabled data, and integrated checkout pending/failure/retry/success. The test fixture bundles in memory and is not shipped with the gallery.
 - Full preview coverage includes all 218 components at 390px and 1440px in both themes. An existing selection animation assertion now waits for fonts and compares against the current target, so a late one-pixel layout correction does not cause a false failure.
 - All 27 browser scenarios pass, including three repeat runs each of the corrected PillTabs and SegmentButton animation checks.
+
+## Repository preparation and interface polish
+
+- Moved focus rings outside grouped search, password, tag, number, and collection fields. Search clear restores focus; mobile text fields use readable sizing.
+- Added scroll-direction sticky navigation, keyboard focus recovery, a persistent mobile menu, and separate draexon profile and repository Star links.
+- Shortened scroll reveals and removed their scale effect. Replaced promotional gallery/app-block copy with concrete descriptions and controls.
+- Added the MIT license and package metadata, Code of Conduct, contributing/security guidance, changelog, issue/PR templates, CODEOWNERS, and a read-only validation workflow.
+- Production build, 231 library tests, and all 29 browser tests pass. New checks verify the outer focus ring, search clear, scroll direction, keyboard recovery, and mobile navigation. Visually checked the original reported field at 390px.
+- Created issues #1, #2, and #3 under the verified draexon account for additional browser engines, automated accessibility checks, and controlled app-block state. Repository visibility remains PRIVATE.
