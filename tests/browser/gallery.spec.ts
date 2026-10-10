@@ -254,7 +254,7 @@ for (const slug of ["pill-tabs", "segment-button"]) {
   });
 }
 
-test("theme crossfade contains final component colors without trailing transitions", async ({
+test("theme reveal contains final component colors without trailing transitions", async ({
   page,
 }) => {
   await page.goto("/#/component/image-accordion");
@@ -281,7 +281,7 @@ test("theme crossfade contains final component colors without trailing transitio
             .some(
               (animation) =>
                 "animationName" in animation &&
-                String(animation.animationName).startsWith("theme-fade"),
+                String(animation.animationName) === "theme-reveal",
             ),
         ),
       )
@@ -315,4 +315,60 @@ test("theme crossfade contains final component colors without trailing transitio
   });
   await expect(page.locator("html")).not.toHaveAttribute("data-theme-changing");
   await expect(page.locator("html")).toHaveAttribute("data-theme", previous!);
+});
+
+test("theme reveal starts at the icon and reaches every viewport corner", async ({
+  page,
+}) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.locator(".motion-control").click();
+    const icon = (await page.locator(".theme-orb").boundingBox())!;
+    await page.locator(".theme-control").click();
+    await page.waitForFunction(() =>
+      document
+        .getAnimations()
+        .some(
+          (animation) =>
+            "animationName" in animation &&
+            animation.animationName === "theme-reveal",
+        ),
+    );
+    const reveal = await page.evaluate(() => {
+      const root = document.documentElement;
+      const animation = document
+        .getAnimations()
+        .find(
+          (animation) =>
+            "animationName" in animation &&
+            animation.animationName === "theme-reveal",
+        )!;
+      return {
+        x: parseFloat(root.style.getPropertyValue("--theme-reveal-x")),
+        y: parseFloat(root.style.getPropertyValue("--theme-reveal-y")),
+        radius: parseFloat(
+          root.style.getPropertyValue("--theme-reveal-radius"),
+        ),
+        frames: (animation.effect as KeyframeEffect)
+          .getKeyframes()
+          .map((frame) => frame.clipPath),
+        duration: animation.effect!.getTiming().duration,
+      };
+    });
+    expect(reveal.x).toBeCloseTo(icon.x + icon.width / 2, 0);
+    expect(reveal.y).toBeCloseTo(icon.y + icon.height / 2, 0);
+    expect(reveal.radius).toBeGreaterThan(
+      Math.hypot(
+        Math.max(reveal.x, width - reveal.x),
+        Math.max(reveal.y, 900 - reveal.y),
+      ),
+    );
+    expect(reveal.frames[0]).toContain("circle(0px");
+    expect(reveal.frames[1]).not.toBe(reveal.frames[0]);
+    expect(reveal.duration).toBe(700);
+    await expect(page.locator("html")).not.toHaveAttribute(
+      "data-theme-changing",
+    );
+  }
 });

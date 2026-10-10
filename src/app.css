@@ -3536,22 +3536,7 @@ body,
     background-color 360ms var(--pros-ease),
     color 360ms var(--pros-ease);
 }
-::view-transition-old(root) {
-  animation: theme-fade-out 380ms ease both;
-}
-::view-transition-new(root) {
-  animation: theme-fade-in 380ms ease both;
-}
-@keyframes theme-fade-out {
-  to {
-    opacity: 0;
-  }
-}
-@keyframes theme-fade-in {
-  from {
-    opacity: 0;
-  }
-}
+
 @media (prefers-reduced-motion: reduce) {
   body,
   .site,
@@ -3573,15 +3558,7 @@ html[data-theme-changing] *::details-content {
   transition: none !important;
   transition-delay: 0s !important;
 }
-::view-transition-old(root) {
-  animation: theme-fade-out 320ms ease-in-out both;
-}
-::view-transition-new(root) {
-  animation: theme-fade-in 320ms ease-in-out both;
-}
-::view-transition-group(root) {
-  animation-duration: 320ms;
-}
+
 ::view-transition {
   pointer-events: none;
 }
@@ -3602,4 +3579,85 @@ html[data-theme-changing] *::details-content {
   > button[aria-pressed="true"] {
   background: transparent;
   box-shadow: none;
+}
+
+/* The new palette opens from the switch, revealing the whole viewport in one sweep. */
+.theme-orb {
+  view-transition-name: theme-orb;
+}
+::view-transition-group(root) {
+  animation: none;
+  z-index: 1;
+}
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+  animation: theme-recede 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: var(--theme-reveal-x) var(--theme-reveal-y);
+}
+::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-reveal 700ms cubic-bezier(0.65, 0, 0.25, 1) both;
+}
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0px at var(--theme-reveal-x) var(--theme-reveal-y));
+  }
+  to {
+    clip-path: circle(
+      var(--theme-reveal-radius) at var(--theme-reveal-x) var(--theme-reveal-y)
+    );
+  }
+}
+@keyframes theme-recede {
+  to {
+    transform: scale(1.012);
+  }
+}
+::view-transition-group(theme-orb) {
+  z-index: 3;
+  animation-duration: 700ms;
+}
+::view-transition-image-pair(theme-orb) {
+  isolation: isolate;
+}
+::view-transition-old(theme-orb) {
+  animation: theme-orb-leave 150ms ease-out both;
+  mix-blend-mode: normal;
+}
+::view-transition-new(theme-orb) {
+  animation: theme-orb-arrive 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  mix-blend-mode: normal;
+}
+@keyframes theme-orb-leave {
+  to {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.65);
+  }
+}
+@keyframes theme-orb-arrive {
+  from {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.6);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+  }
 }

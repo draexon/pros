@@ -1074,6 +1074,22 @@ export default function App() {
     const next = themeTarget.current === "dark" ? "light" : "dark";
     themeTarget.current = next;
     themeTransition.current?.skipTransition();
+    const trigger = document
+      .querySelector(".theme-orb")
+      ?.getBoundingClientRect();
+    const x = Math.min(
+      innerWidth,
+      Math.max(0, trigger ? trigger.left + trigger.width / 2 : innerWidth / 2),
+    );
+    const y = Math.min(
+      innerHeight,
+      Math.max(0, trigger ? trigger.top + trigger.height / 2 : innerHeight / 2),
+    );
+    const radius =
+      Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 2;
+    root.style.setProperty("--theme-reveal-x", x + "px");
+    root.style.setProperty("--theme-reveal-y", y + "px");
+    root.style.setProperty("--theme-reveal-radius", radius + "px");
     // Freeze local transitions before either snapshot. Both images contain a complete theme.
     root.dataset.themeChanging = "true";
     const update = () => {

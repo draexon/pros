@@ -63,3 +63,11 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Theme crossfades snapshot the final palette with local color transitions suspended, eliminating delayed component recoloring. Rapid repeated switches safely cancel obsolete snapshots.
 - All 221 library tests pass. The expanded browser suite checks intermediate accordion widths, moving tab highlights, reduced motion, exact colors during and after both theme transitions, and rapid-switch cancellation.
 - All 15 production browser tests pass in Chromium (Microsoft Edge).
+
+## Animated theme reveal - 2026-10-10
+
+- Replaced the crossfade with a 700ms circular reveal originating at the theme icon, accompanied by icon rotation and subtle background zoom.
+- Reveal radius is calculated from the farthest viewport corner so desktop and mobile screens are fully covered.
+- Final component colors remain synchronized throughout both directions, including rapid-switch cancellation and reduced-motion behavior.
+- Visually inspected the midpoint on desktop and checked mobile reveal geometry.
+- All 16 browser regressions pass: the 15 existing interaction tests plus the desktop/mobile reveal-origin and corner-coverage test. Production build passes.
