@@ -98,7 +98,7 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Shortened scroll reveals and removed their scale effect. Replaced promotional gallery/app-block copy with concrete descriptions and controls.
 - Added the MIT license and package metadata, Code of Conduct, contributing/security guidance, changelog, issue/PR templates, CODEOWNERS, and a read-only validation workflow.
 - Production build, 231 library tests, and all 29 browser tests pass. New checks verify the outer focus ring, search clear, scroll direction, keyboard recovery, and mobile navigation. Visually checked the original reported field at 390px.
-- Created issues #1, #2, and #3 under the verified draexon account for additional browser engines, automated accessibility checks, and controlled app-block state. Repository visibility remains PRIVATE.
+- Created issues #1, #2, and #3 under the verified draexon account for additional browser engines, automated accessibility checks, and controlled app-block state. The repository was private at the time; it is now public.
 
 ## Hover restraint and repository stars
 

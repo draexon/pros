@@ -31,7 +31,7 @@
     "test": "node --test tests/library.test.mjs",
     "preview": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1",
     "pretest": "npm run build:lib",
-    "publish:private": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/publish-private.ps1",
+    "publish:repo": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/publish.ps1",
     "test:browser": "playwright test",
     "update:repo-stats": "node scripts/update-repo-stats.mjs"
   },

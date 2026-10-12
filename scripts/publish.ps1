@@ -24,12 +24,10 @@ if ($account.ToLowerInvariant() -ne 'draexon') { throw "Signed in as $account. S
 $repo = 'draexon/pros'
 $existing = Invoke-Probe -Command 'gh' -Arguments @('repo', 'view', $repo, '--json', 'visibility', '--jq', '.visibility')
 if ($existing.ExitCode -ne 0) {
-  Invoke-Gh -Arguments @('repo', 'create', $repo, '--private', '--description', 'Original monochrome React components, made to move. By draexon.') | Out-Host
-} elseif ($existing.Output -ne 'PRIVATE') {
-  throw 'The existing repository is not private. Nothing was pushed.'
+  Invoke-Gh -Arguments @('repo', 'create', $repo, '--public', '--description', 'Original monochrome React components, made to move. By draexon.') | Out-Host
 }
 $visibility = (Invoke-Gh -Arguments @('repo', 'view', $repo, '--json', 'visibility', '--jq', '.visibility')).Trim()
-if ($visibility -ne 'PRIVATE') { throw 'Private visibility could not be verified. Nothing was pushed.' }
+if ($visibility -ne 'PUBLIC' -and $visibility -ne 'PRIVATE') { throw "Repository $repo could not be verified. Nothing was pushed." }
 
 $author = (& git log -1 --format=%an).Trim()
 if ($LASTEXITCODE -ne 0 -or $author -ne 'draexon') { throw 'The current commit must be authored by draexon.' }

@@ -2,6 +2,8 @@
 
 An original React component library by **draexon**. 218 components across 15 collections, built around rounded forms, a monochrome palette, and purposeful motion.
 
+**Live gallery: [pros.draexon.dev](https://pros.draexon.dev)**
+
 ![Pros gallery](docs/preview.png)
 
 ## Run the gallery
@@ -166,7 +168,18 @@ npm run test:browser
 - `dist/` - generated reusable package.
 - `site/` - generated gallery website.
 - `tests/` - package and rendering tests.
-- `scripts/publish-private.ps1` - creates or verifies the private GitHub repository, then pushes the current commit.
+- `scripts/publish.ps1` - verifies the draexon GitHub account and repository, then pushes the current commit (`npm run publish:repo`).
+- `vercel.json` - Vercel build, output, cache, and security header configuration.
+
+## Deployment
+
+The gallery is a static site hosted on Vercel at [pros.draexon.dev](https://pros.draexon.dev), deployed from `main` through the Git integration. The settings live in `vercel.json`:
+
+- Install command: `npm ci`
+- Build command: `npm run build` (type check, then the Vite production build)
+- Output directory: `site`
+
+The gallery uses hash routes, so no rewrites are needed and every route is served from the domain root. Hashed files in `/assets` are cached as immutable, and all responses carry `nosniff`, referrer, frame, and permissions headers. The link preview image is `public/og.png`, served at `/og.png`.
 
 ## Design research
 
@@ -178,8 +191,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Community
 
 ## License
 
-[MIT](LICENSE), copyright 2026 draexon. Repository visibility remains private until the maintainer chooses to publish it.
+[MIT](LICENSE), copyright 2026 draexon.
 
 ## Repository star count
 
-The navbar displays the repository's GitHub star count. Public repositories refresh directly from GitHub without credentials; private repositories, rate limits, and offline sessions use `src/repo-stats.json`. Run `npm run update:repo-stats` with an authenticated GitHub CLI session before building to refresh that verified fallback. No GitHub token is included in the browser bundle.
+The navbar displays the repository's GitHub star count. The count loads live from GitHub without credentials; rate limits and offline sessions use the fallback in `src/repo-stats.json`. Run `npm run update:repo-stats` with an authenticated GitHub CLI session before building to refresh that verified fallback. No GitHub token is included in the browser bundle.
