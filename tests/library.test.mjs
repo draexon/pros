@@ -97,6 +97,8 @@ test("repeated instances use unique field and SVG identifiers", () => {
       createElement(Pros.FloatingInput),
       createElement(Pros.CircularText),
       createElement(Pros.CircularText),
+      createElement(Pros.OrbitButton),
+      createElement(Pros.OrbitButton),
       createElement(Pros.RestockNotice),
       createElement(Pros.RestockNotice),
     ),
@@ -199,4 +201,45 @@ test("integrated checkout requires supplied methods and never falls back to a de
   const html = render(Pros.CheckoutPanel, { onConfirm: async () => {} });
   assert.match(html, /No payment methods available/);
   assert.ok(!html.includes("4242"));
+});
+
+test("password strength and visibility controls retain accessible field relationships", () => {
+  const html = render(Pros.PasswordInput, { value: "GoodPass1!" });
+  const id = html.match(/<input[^>]*\bid="([^"]+)"/)[1];
+  assert.ok(html.includes('for="' + id + '"'));
+  assert.ok(html.includes('aria-controls="' + id + '"'));
+  assert.ok(html.includes('aria-describedby="' + id + '-strength"'));
+  assert.match(html, /type="password"/);
+  assert.match(html, /role="meter"/);
+  assert.match(html, /aria-valuenow="4"/);
+  assert.match(html, /Password strength: Strong/);
+  assert.match(render(Pros.PasswordInput), /Password strength: Not entered/);
+});
+
+test("date fields format controlled dates without duplicating the visible day", () => {
+  for (const [value, day, month, weekday] of [
+    ["2026-10-24", "24", "October 2026", "Saturday"],
+    ["2024-02-29", "29", "February 2024", "Thursday"],
+  ]) {
+    const html = render(Pros.DateInput, { value, name: "date", required: true });
+    assert.ok(html.includes('aria-hidden="true">' + day + "</span>"));
+    assert.ok(html.includes(month));
+    assert.ok(html.includes(weekday));
+    assert.ok(html.includes('value="' + value + '"'));
+    assert.match(html, /type="date"/);
+    assert.match(html, /name="date"/);
+    assert.match(html, /required=""/);
+  }
+  for (const value of ["", "invalid"])
+    assert.match(render(Pros.DateInput, { value }), /Choose a date/);
+});
+
+test("orbit text follows its own SVG path and sound retains controlled state", () => {
+  const html = render(Pros.OrbitButton, { label: "Explore objects" });
+  const id = html.match(/<path id="([^"]+)"/)[1];
+  assert.ok(html.includes('href="#' + id + '"'));
+  assert.match(html, /<textPath/);
+  assert.match(html, /aria-label="Explore objects"/);
+  assert.match(render(Pros.SoundButton, { value: "true" }), /Sound on/);
+  assert.match(render(Pros.SoundButton, { value: "false" }), /Sound off/);
 });

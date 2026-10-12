@@ -312,6 +312,7 @@ function PreviewTile({
         </div>
         <button
           className="tile-source"
+          type="button"
           aria-label={"View " + humanize(entry.name) + " details"}
           onClick={() => routeTo("/component/" + entry.slug)}
         >

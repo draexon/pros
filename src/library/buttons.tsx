@@ -1,5 +1,5 @@
 import { Icon } from "./icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   type ProsProps,
   cx,
@@ -50,6 +50,7 @@ export function RollingButton(p: ProsProps) {
 }
 /** A circular launch control with orbiting decorative text. */
 export function OrbitButton(p: ProsProps) {
+  const id = useId();
   return (
     <button
       data-pros="OrbitButton"
@@ -60,7 +61,24 @@ export function OrbitButton(p: ProsProps) {
       aria-label={p.label ?? p.title ?? "Explore the collection"}
       onClick={() => p.onAction?.("explore")}
     >
-      <span aria-hidden="true">EXPLORE · EXPLORE ·</span>
+      <svg viewBox="0 0 132 132" aria-hidden="true" focusable="false">
+        <defs>
+          <path
+            id={"orbit-" + id}
+            d="M66 20a46 46 0 1 1 0 92a46 46 0 1 1 0-92"
+          />
+        </defs>
+        <text>
+          <textPath
+            href={"#orbit-" + id}
+            textLength="276"
+            lengthAdjust="spacing"
+            startOffset="2%"
+          >
+            EXPLORE · EXPLORE ·
+          </textPath>
+        </text>
+      </svg>
       <b>
         <Icon name="arrow" />
       </b>
@@ -325,7 +343,7 @@ export function SoundButton(p: ProsProps) {
           <i
             key={i}
             style={{
-              height: 12 + (i % 3) * 6 + "px",
+              height: on ? 12 + (i % 3) * 6 + "px" : "2px",
               animationDelay: i * 90 + "ms",
             }}
           />

@@ -691,3 +691,193 @@ test("compact navbar matches the page background in both themes", async ({
     }
   }
 });
+
+for (const theme of ["light", "dark"]) {
+  for (const width of [390, 1440]) {
+    for (const motion of ["off", "on"]) {
+      test(`tile chrome and form controls work at ${width}px in ${theme} with motion ${motion}`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.emulateMedia({ reducedMotion: "no-preference" });
+        await page.addInitScript(
+          (theme) => localStorage.setItem("pros.theme", theme),
+          theme,
+        );
+        await page.goto("/#/components");
+        if (motion === "on") await page.locator(".motion-control").click();
+        await expect(page.locator(".site")).toHaveAttribute("data-motion", motion);
+        const choose = async (name: string) => {
+          await page
+            .locator(".category-button")
+            .filter({ hasText: name })
+            .click();
+          await page.locator(".component-grid").evaluate(async (el) => {
+            await Promise.all(
+              el
+                .getAnimations({ subtree: true })
+                .filter(
+                  (a) => a.effect?.getComputedTiming().iterations !== Infinity,
+                )
+                .map((a) => a.finished.catch(() => {})),
+            );
+          });
+        };
+        for (const category of [
+          "Inputs",
+          "Buttons",
+          "Feedback",
+          "Media",
+          "Commerce",
+        ]) {
+          await choose(category);
+          const tiles = await page.locator(".tile-stage").evaluateAll((stages) => {
+            const luminance = (color: string) => {
+              const [r, g, b] = (color.match(/[\d.]+/g) ?? [])
+                .slice(0, 3)
+                .map((n) => {
+                  const value = Number(n) / 255;
+                  return value <= 0.04045
+                    ? value / 12.92
+                    : ((value + 0.055) / 1.055) ** 2.4;
+                });
+              return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            };
+            return stages.map((stage) => {
+              const preview = stage.querySelector(".tile-component")!;
+              const source = stage.querySelector(".tile-source")!;
+              const bounds = source.getBoundingClientRect();
+              const style = getComputedStyle(source);
+              const foreground = luminance(style.color);
+              const background = luminance(style.backgroundColor);
+              return {
+                name: preview.firstElementChild?.getAttribute("data-pros"),
+                gap:
+                  bounds.top -
+                  Math.max(
+                    preview.getBoundingClientRect().bottom,
+                    preview.firstElementChild!.getBoundingClientRect().bottom,
+                  ),
+                inside: bounds.bottom <= stage.getBoundingClientRect().bottom,
+                font: parseFloat(style.fontSize),
+                contrast:
+                  (Math.max(foreground, background) + 0.05) /
+                  (Math.min(foreground, background) + 0.05),
+              };
+            });
+          });
+          for (const tile of tiles) {
+            expect(tile.gap, tile.name ?? category).toBeGreaterThanOrEqual(0);
+            expect(tile.inside).toBe(true);
+            expect(tile.font).toBeGreaterThanOrEqual(10);
+            expect(tile.contrast).toBeGreaterThanOrEqual(4.5);
+          }
+        }
+        await choose("Inputs");
+        const password = page.locator('[data-pros="PasswordInput"]');
+        await password.locator("input").fill("GoodPass1!");
+        await expect(password.getByRole("meter")).toHaveAttribute(
+          "aria-valuenow",
+          "4",
+        );
+        await expect(
+          password.getByText("Password strength: Strong"),
+        ).toBeVisible();
+        await expect(password.locator(".p-input-group")).toHaveCSS(
+          "border-top-width",
+          "1px",
+        );
+        await password.getByRole("button", { name: "Show password" }).click();
+        await expect(password.locator("input")).toHaveAttribute("type", "text");
+        await password.getByRole("button", { name: "Hide password" }).click();
+        await expect(password.locator("input")).toHaveAttribute(
+          "type",
+          "password",
+        );
+        await expect(password.locator("input")).toHaveValue("GoodPass1!");
+        const date = page.locator('[data-pros="DateInput"]');
+        await date.locator("input").fill("2024-02-29");
+        await expect(date.locator(".p-number")).toHaveText("29");
+        await expect(date.locator(".p-date-copy")).toHaveText(
+          "February 2024Thursday",
+        );
+        await date.locator("input").focus();
+        await expect(date.locator(":scope > div")).toHaveCSS(
+          "outline-style",
+          "solid",
+        );
+        await date.locator("input").clear();
+        await expect(date.locator(".p-date-copy")).toContainText("Choose a date");
+        const select = page.locator('[data-pros="SelectInput"] select');
+        await select.focus();
+        await select.press("Space");
+        await expect
+          .poll(() => select.evaluate((el) => el.matches(":open")))
+          .toBe(true);
+        await page.keyboard.press("Escape");
+        await select.selectOption("objects");
+        await expect(select).toHaveValue("objects");
+        await expect(select).toHaveCSS("border-top-width", "1px");
+        const slots = page.locator('[data-pros="OtpInput"] input');
+        await slots.first().fill("1");
+        await expect(slots.nth(1)).toBeFocused();
+        await expect(slots.first()).toHaveClass("is-filled");
+        await expect(slots.nth(1)).toHaveCSS("border-top-width", "1px");
+        expect(
+          await slots.nth(1).evaluate((el) => {
+            const style = getComputedStyle(el);
+            return style.caretColor === style.color;
+          }),
+        ).toBe(true);
+        await slots.first().evaluate((el) => {
+          const clipboardData = new DataTransfer();
+          clipboardData.setData("text", "12a34");
+          el.dispatchEvent(
+            new ClipboardEvent("paste", { clipboardData, bubbles: true }),
+          );
+        });
+        for (let i = 0; i < 4; i++)
+          await expect(slots.nth(i)).toHaveValue(String(i + 1));
+        await expect(slots.nth(3)).toBeFocused();
+        await slots.nth(3).press("ArrowLeft");
+        await expect(slots.nth(2)).toBeFocused();
+        const search = page.locator('[data-pros="SearchInput"]');
+        await expect(search.locator("kbd")).toHaveText("Enter");
+        await search.locator("input").fill("sage");
+        await search.getByRole("button", { name: "Clear search" }).click();
+        await expect(search.locator("input")).toBeFocused();
+        await expect(search.locator("input")).toHaveValue("");
+        await choose("Buttons");
+        const orbit = page.locator('[data-pros="OrbitButton"] > svg');
+        await expect(orbit.locator("textPath")).toHaveCount(1);
+        const running = () =>
+          orbit.evaluate((el) =>
+            el.getAnimations().some((a) => a.playState === "running"),
+          );
+        await expect.poll(running).toBe(motion === "on");
+        const sound = page.locator('[data-pros="SoundButton"]');
+        const bars = sound.locator(".p-wave i");
+        await expect(bars).toHaveCount(5);
+        for (const bar of await bars.all()) {
+          await expect(bar).toHaveCSS("height", "2px");
+          await expect(bar).toHaveCSS("animation-name", "none");
+        }
+        await sound.click();
+        await expect(sound).toHaveAttribute("aria-pressed", "true");
+        await expect(sound).toHaveAccessibleName("Mute sound");
+        await expect(bars.first()).toHaveCSS("height", "12px");
+        const playing = () =>
+          bars.first().evaluate((el) =>
+            el.getAnimations().some((a) => a.playState === "running"),
+          );
+        await expect.poll(playing).toBe(motion === "on");
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        await expect.poll(running).toBe(false);
+        await expect.poll(playing).toBe(false);
+        await sound.click();
+        await expect(sound).toHaveAccessibleName("Enable sound");
+        await expect(bars.first()).toHaveCSS("height", "2px");
+      });
+    }
+  }
+}

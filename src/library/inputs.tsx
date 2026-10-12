@@ -72,7 +72,7 @@ export function SearchInput(p: ProsProps) {
           <Icon name="close" />
         </button>
       ) : (
-        <kbd>↵</kbd>
+        <kbd aria-hidden="true">Enter</kbd>
       )}
     </form>
   );
@@ -87,6 +87,9 @@ export function PasswordInput(p: ProsProps) {
     /[0-9]/.test(value),
     /[^a-zA-Z0-9]/.test(value),
   ].filter(Boolean).length;
+  const strengthLabel = value
+    ? ["Very weak", "Weak", "Fair", "Good", "Strong"][strength]
+    : "Not entered";
   return (
     <FieldLabel
       data-pros="PasswordInput"
@@ -99,6 +102,7 @@ export function PasswordInput(p: ProsProps) {
               id={id}
               type={show ? "text" : "password"}
               autoComplete="new-password"
+              aria-describedby={id + "-strength"}
               required={p.required}
               disabled={p.disabled}
               name={p.name}
@@ -109,6 +113,8 @@ export function PasswordInput(p: ProsProps) {
               type="button"
               disabled={p.disabled}
               aria-label={show ? "Hide password" : "Show password"}
+              aria-controls={id}
+              aria-pressed={show}
               onClick={() => toggle(!show)}
             >
               {show ? "Hide" : "Show"}
@@ -116,12 +122,20 @@ export function PasswordInput(p: ProsProps) {
           </div>
           <div
             className="p-strength"
-            aria-label={"Password strength " + strength + " of 4"}
+            role="meter"
+            aria-label="Password strength"
+            aria-valuemin={0}
+            aria-valuemax={4}
+            aria-valuenow={strength}
+            aria-valuetext={strengthLabel}
           >
             {[1, 2, 3, 4].map((n) => (
               <i key={n} className={strength >= n ? "is-active" : ""} />
             ))}
           </div>
+          <small id={id + "-strength"} aria-live="polite">
+            Password strength: {strengthLabel}
+          </small>
         </>
       )}
     </FieldLabel>
@@ -147,6 +161,7 @@ export function OtpInput(p: ProsProps) {
               refs.current[i] = el;
             }}
             aria-label={"Digit " + (i + 1)}
+            className={value[i]?.trim() ? "is-filled" : undefined}
             inputMode="numeric"
             autoComplete={i === 0 ? "one-time-code" : "off"}
             value={value[i]?.trim() ?? ""}
@@ -355,20 +370,31 @@ export function SelectInput(p: ProsProps) {
       className="p-select-input"
     >
       {(id) => (
-        <select
-          id={id}
-          name={p.name}
-          required={p.required}
-          disabled={p.disabled}
-          value={value}
-          onChange={(e) => set(e.target.value)}
-        >
-          {list.map((item, i) => (
-            <option key={i} value={itemValue(item)}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+        <div className="p-select-control">
+          <select
+            id={id}
+            name={p.name}
+            required={p.required}
+            disabled={p.disabled}
+            value={value}
+            onChange={(e) => set(e.target.value)}
+          >
+            {list.map((item, i) => (
+              <option key={i} value={itemValue(item)}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+            <path
+              d="m4 6 4 4 4-4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       )}
     </FieldLabel>
   );
@@ -508,6 +534,8 @@ export function FileDropzone(p: ProsProps) {
 /** A native date picker with a large day readout. */
 export function DateInput(p: ProsProps) {
   const [value, set] = useModel(p, "2026-10-24");
+  const date = new Date(value + "T00:00:00");
+  const hasDate = !Number.isNaN(date.getTime());
   return (
     <FieldLabel
       data-pros="DateInput"
@@ -517,8 +545,36 @@ export function DateInput(p: ProsProps) {
       {(id) => (
         <div>
           <span className="p-number" aria-hidden="true">
-            {value.slice(-2) || "-"}
+            {hasDate ? date.getDate() : "-"}
           </span>
+          <span className="p-date-copy" aria-hidden="true">
+            <b>
+              {hasDate
+                ? date.toLocaleDateString("en-GB", {
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "Choose a date"}
+            </b>
+            <small>
+              {hasDate
+                ? date.toLocaleDateString("en-GB", { weekday: "long" })
+                : "No date selected"}
+            </small>
+          </span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <rect x="4" y="5" width="16" height="16" rx="3" />
+            <path d="M8 3v4m8-4v4M4 11h16" />
+          </svg>
           <input
             id={id}
             type="date"
