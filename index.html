@@ -41,19 +41,12 @@
       content="Pros, a monochrome React component library with 218 original components."
     />
     <script>
+      // Light is the default; a saved choice of dark is kept.
       try {
-        const t = localStorage.getItem("pros.theme");
         document.documentElement.dataset.theme =
-          t === "dark" ||
-          (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)
-            ? "dark"
-            : "light";
+          localStorage.getItem("pros.theme") === "dark" ? "dark" : "light";
       } catch {
-        document.documentElement.dataset.theme = matchMedia(
-          "(prefers-color-scheme: dark)",
-        ).matches
-          ? "dark"
-          : "light";
+        document.documentElement.dataset.theme = "light";
       }
     </script>
   </head>
