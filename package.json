@@ -1,7 +1,6 @@
 {
   "name": "@draexon/pros",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "description": "Original monochrome React components, made to move.",
   "author": "draexon",
@@ -27,6 +26,7 @@
     "dev": "node node_modules/vite/bin/vite.js --host 127.0.0.1",
     "build": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/vite/bin/vite.js build",
     "build:lib": "node node_modules/vite/bin/vite.js build --config vite.lib.config.ts && node node_modules/typescript/bin/tsc -p tsconfig.lib.json",
+    "prepare": "npm run build:lib",
     "check": "node node_modules/typescript/bin/tsc --noEmit",
     "test": "node --test tests/library.test.mjs",
     "preview": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1",
@@ -56,5 +56,8 @@
   "bugs": {
     "url": "https://github.com/draexon/pros/issues"
   },
-  "homepage": "https://pros.draexon.dev"
+  "homepage": "https://pros.draexon.dev",
+  "publishConfig": {
+    "access": "public"
+  }
 }

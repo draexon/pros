@@ -13,5 +13,6 @@
 - Layout fixes for AvatarStack, GiftCard, BudgetCard, MasonryBoard, BentoGrid, KanbanBoard, ParallaxLayers, ScrollProgress, InkHeadline, DropcapText, and dark-theme commerce surfaces.
 - Gallery previews keep their source links clear of tall components, and the links stay legible in dark mode.
 - The gallery is live at [pros.draexon.dev](https://pros.draexon.dev) with link previews, a sitemap, and security headers.
+- Install directly from GitHub with `npm install github:draexon/pros`; the package builds itself on install. The library build no longer copies gallery assets into the package.
 
 No package release has been published. Changes are currently available from the repository.

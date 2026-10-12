@@ -1032,14 +1032,17 @@ function Docs({ notify }: { notify: (s: string) => void }) {
             <span className="section-kicker">01 / GET STARTED</span>
             <h2>Install and get started.</h2>
             <p>
-              Build the package from this repository, then install its tarball
-              in your React project. React 18.3 or 19 and React DOM are peer
-              dependencies.
+              Install straight from GitHub. The package builds itself during
+              install. React 18.3 or 19 and React DOM are peer dependencies.
+            </p>
+            <CodeBlock code="npm install github:draexon/pros" notify={notify} />
+            <p>
+              npm 12 and later block git dependencies by default. If you see
+              EALLOWGIT, add the flag below or set allow-git=root in your
+              .npmrc.
             </p>
             <CodeBlock
-              code={
-                "# In this repository\nnpm install\nnpm run build:lib\nnpm pack\n\n# In your application\nnpm install /path/to/draexon-pros-0.1.0.tgz"
-              }
+              code="npm install github:draexon/pros --allow-git=root"
               notify={notify}
             />
             <p>

@@ -822,6 +822,8 @@ for (const theme of ["light", "dark"]) {
         await expect(select).toHaveAttribute("aria-expanded", "false");
         await expect(select).toBeFocused();
         await select.press("Enter");
+        await expect(select).toHaveAttribute("aria-expanded", "true");
+        await expect(menu.locator('[role="menuitemradio"]:focus')).toHaveCount(1);
         await page.keyboard.press("o");
         await page.keyboard.press("Enter");
         await expect(select).toHaveText("Objects");

@@ -4,7 +4,7 @@ Pros is maintained by [draexon](https://github.com/draexon). Small, focused fixe
 
 ## Development
 
-Use Node.js 24 and npm. Run `npm ci`, then `npm run dev`. Components live in `src/library/`; exports and catalog entries must stay in sync. Do not edit generated `dist/` or `site/` files.
+Use Node.js 24 and npm. Run `npm ci`, then `npm run dev`. Components live in `src/library/`; exports and catalog entries must stay in sync. Do not edit generated `dist/` or `site/` files. `npm ci` also builds the library into `dist/` through the `prepare` script, which is what makes the GitHub install work.
 
 ## Before submitting
 

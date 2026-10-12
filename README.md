@@ -6,27 +6,17 @@ An original React component library by **draexon**. 218 components across 15 col
 
 ![Pros gallery](docs/preview.png)
 
-## Run the gallery
+## Install
+
+Install straight from GitHub. The package builds itself during install, so there is nothing to compile by hand:
 
 ```sh
-npm install
-npm run dev
+npm install github:draexon/pros
 ```
 
-Open the local URL printed by Vite. The gallery includes live interactive previews, full source modules, usage examples, search, saved components, adjustable preview surfaces, and a persistent motion switch. Press `/` to smoothly focus search, then Escape to clear it or leave the field. The custom sort menu supports Curated order, A–Z, and Z–A with animated options and keyboard navigation.
+npm 12 and later block git dependencies by default. If you see `EALLOWGIT`, run `npm install github:draexon/pros --allow-git=root` instead, or add `allow-git=root` to your project's `.npmrc`.
 
-## Use the library
-
-```sh
-npm run build:lib
-npm pack
-```
-
-Install the resulting `draexon-pros-0.1.0.tgz` from another React project:
-
-```sh
-npm install /path/to/draexon-pros-0.1.0.tgz
-```
+Then import the stylesheet once and use any component:
 
 ```tsx
 import { ProsProvider, EditorialCard, RangeInput } from "@draexon/pros";
@@ -46,6 +36,17 @@ export function Example() {
 ```
 
 The package provides ES modules, CommonJS, TypeScript declarations, and a separate stylesheet. React 18.3 or 19 and React DOM are peer dependencies. No existing UI or motion component library is used.
+
+A release on the npm registry (`npm i @draexon/pros`) is planned. Until then, the GitHub install above is the supported route.
+
+## Run the gallery
+
+```sh
+npm install
+npm run dev
+```
+
+Open the local URL printed by Vite. The gallery includes live interactive previews, full source modules, usage examples, search, saved components, adjustable preview surfaces, and a persistent motion switch. Press `/` to smoothly focus search, then Escape to clear it or leave the field. The custom sort menu supports Curated order, A–Z, and Z–A with animated options and keyboard navigation.
 
 ## Original icons
 
