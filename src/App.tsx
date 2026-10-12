@@ -1553,6 +1553,21 @@ export default function App() {
         <span>
           Built by <a href="https://github.com/draexon">draexon</a>
         </span>
+        <nav className="site-social" aria-label="draexon elsewhere">
+          <a href="https://x.com/draexon_" target="_blank" rel="noreferrer">
+            Twitter
+          </a>
+          <a
+            href="https://open.spotify.com/artist/7GKFjHvy6OY6nxsarRxBcn"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Spotify
+          </a>
+          <a href="https://github.com/draexon" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+        </nav>
         <button
           onClick={() =>
             window.scrollTo({

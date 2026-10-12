@@ -1364,6 +1364,19 @@ select {
   color: var(--pros-tone-muted, #65745a);
   font-weight: 600;
 }
+.site-social {
+  display: flex;
+  gap: 14px;
+  font-size: 9px;
+}
+.site-social a {
+  color: var(--pros-tone-muted, #6f7e63);
+  text-decoration: none;
+  transition: color 180ms;
+}
+.site-social a:is(:hover, :focus-visible) {
+  color: var(--pros-ink);
+}
 .site-footer > button {
   font-size: 9px !important;
   color: var(--pros-tone-muted, #6f7e63);
