@@ -890,3 +890,39 @@ for (const theme of ["light", "dark"]) {
     }
   }
 }
+
+test("category switches and scrolling reveal tiles without flashing them first", async ({
+  page,
+}) => {
+  await page.addInitScript(() => localStorage.setItem("pros.motion", "on"));
+  await page.goto("/#/components");
+  const flashes = await page.evaluate(async () => {
+    let count = 0;
+    let run = true;
+    const last = new WeakMap<Element, number>();
+    const loop = () => {
+      for (const tile of document.querySelectorAll(".component-tile")) {
+        const rect = tile.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > innerHeight) continue;
+        const opacity = parseFloat(getComputedStyle(tile).opacity);
+        if ((last.get(tile) ?? 0) > 0.9 && opacity < 0.5) count++;
+        last.set(tile, opacity);
+      }
+      if (run) requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".category-button");
+    for (const index of [3, 9, 1]) {
+      buttons[index].click();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    for (let y = 0; y < 2400; y += 120) {
+      scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 40));
+    }
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    run = false;
+    return count;
+  });
+  expect(flashes).toBe(0);
+});

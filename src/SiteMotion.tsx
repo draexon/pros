@@ -1,13 +1,18 @@
-import { useEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useMotionAllowed } from "./library";
 
 export function SiteMotion({ route }: { route: string }) {
   const enabled = useMotionAllowed();
-  useEffect(() => {
+  const revealedRoute = useRef<string | null>(null);
+  // Layout timing hides incoming elements before the browser paints them.
+  useLayoutEffect(() => {
     if (!enabled || matchMedia("(prefers-reduced-motion: reduce)").matches)
       return;
     const site = document.querySelector<HTMLElement>(".site");
     if (!site) return;
+    // Turning motion back on should not replay entrances already on screen.
+    const replay = revealedRoute.current !== route;
+    revealedRoute.current = route;
     const animations = new Set<Animation>();
     const seen = new WeakSet<Element>();
     const animate = (
@@ -22,45 +27,59 @@ export function SiteMotion({ route }: { route: string }) {
         () => animations.delete(animation),
       );
     };
+    const selector =
+      ".component-tile, .section-intro, .closing-note, .docs-layout section, .detail-heading, .principle-grid article";
+    const pending = new Set<HTMLElement>();
+    const reveal = (element: HTMLElement) => {
+      const index = element.parentElement?.classList.contains("component-grid")
+        ? Array.from(element.parentElement.children).indexOf(element) % 3
+        : 0;
+      pending.delete(element);
+      element.style.removeProperty("opacity");
+      // Backwards fill keeps staggered elements hidden through their delay.
+      animate(
+        element,
+        [
+          { opacity: 0, translate: "0 16px" },
+          { opacity: 1, translate: "0 0" },
+        ],
+        {
+          duration: 520,
+          delay: index * 45,
+          easing: "cubic-bezier(.16,1,.3,1)",
+          fill: "backwards",
+        },
+      );
+    };
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           observer.unobserve(entry.target);
-          const index = entry.target.parentElement?.classList.contains(
-            "component-grid",
-          )
-            ? Array.from(entry.target.parentElement.children).indexOf(
-                entry.target,
-              ) % 3
-            : 0;
-          animate(
-            entry.target,
-            [
-              { opacity: 0, translate: "0 16px" },
-              { opacity: 1, translate: "0 0" },
-            ],
-            {
-              duration: 520,
-              delay: index * 45,
-              easing: "cubic-bezier(.16,1,.3,1)",
-            },
-          );
+          reveal(entry.target as HTMLElement);
         });
       },
       { threshold: 0.08 },
     );
+    // Mutation callbacks run before paint, so new elements never flash at full opacity.
     const observe = () => {
       site
-        .querySelectorAll(
-          ".component-tile, .section-intro, .closing-note, .docs-layout section, .detail-heading, .principle-grid article",
-        )
+        .querySelectorAll<HTMLElement>(selector)
         .forEach((element) => {
           if (seen.has(element)) return;
           seen.add(element);
+          const rect = element.getBoundingClientRect();
+          if (rect.bottom > 0 && rect.top < innerHeight && rect.height > 0) {
+            reveal(element);
+            return;
+          }
+          element.style.opacity = "0";
+          pending.add(element);
           observer.observe(element);
         });
     };
+    if (!replay)
+      site.querySelectorAll(selector).forEach((element) => seen.add(element));
     observe();
     const mutations = new MutationObserver(observe);
     mutations.observe(site, { childList: true, subtree: true });
@@ -109,6 +128,7 @@ export function SiteMotion({ route }: { route: string }) {
       leave();
       mutations.disconnect();
       observer.disconnect();
+      pending.forEach((element) => element.style.removeProperty("opacity"));
       animations.forEach((animation) => animation.cancel());
       site.removeEventListener("pointermove", move);
       site.removeEventListener("pointerleave", leave);
