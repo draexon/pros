@@ -3,6 +3,7 @@ import { useId, useRef, useState } from "react";
 import {
   type ProsProps,
   cx,
+  Dropdown,
   FieldLabel,
   useModel,
   useToggle,
@@ -359,7 +360,7 @@ export function NumberStepper(p: ProsProps) {
     </FieldLabel>
   );
 }
-/** A native select framed as an editorial answer field. */
+/** A select field framed as an editorial answer, with a menu that matches the library. */
 export function SelectInput(p: ProsProps) {
   const list = itemsOf(p);
   const [value, set] = useModel(p, itemValue(list[0] ?? { label: "" }));
@@ -370,31 +371,15 @@ export function SelectInput(p: ProsProps) {
       className="p-select-input"
     >
       {(id) => (
-        <div className="p-select-control">
-          <select
-            id={id}
-            name={p.name}
-            required={p.required}
-            disabled={p.disabled}
-            value={value}
-            onChange={(e) => set(e.target.value)}
-          >
-            {list.map((item, i) => (
-              <option key={i} value={itemValue(item)}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
-            <path
-              d="m4 6 4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        <Dropdown
+          id={id}
+          name={p.name}
+          disabled={p.disabled}
+          value={value}
+          options={list}
+          onChange={set}
+          className="p-select-control"
+        />
       )}
     </FieldLabel>
   );

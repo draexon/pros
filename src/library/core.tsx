@@ -439,6 +439,15 @@ export function ActionMenu({
                     buttons.length) %
                   buttons.length;
           buttons[next]?.focus();
+        } else if (event.key.length === 1 && /\S/.test(event.key)) {
+          const key = event.key.toLowerCase();
+          const match = [
+            ...buttons.slice(index + 1),
+            ...buttons.slice(0, index + 1),
+          ].find((button) =>
+            button.textContent?.trim().toLowerCase().startsWith(key),
+          );
+          match?.focus();
         }
       }}
     >
@@ -484,6 +493,80 @@ export function ActionMenu({
       )}
     </div>,
     document.body,
+  );
+}
+/** A select-style trigger that opens the shared menu instead of the platform list. */
+export function Dropdown({
+  id,
+  value,
+  options,
+  onChange,
+  label,
+  heading,
+  name,
+  disabled,
+  compact,
+  className,
+}: {
+  id?: string;
+  value: string;
+  options: ProsItem[];
+  onChange: (value: string) => void;
+  label?: string;
+  heading?: string;
+  name?: string;
+  disabled?: boolean;
+  compact?: boolean;
+  className?: string;
+}) {
+  const anchor = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const current = options.find((item) => itemValue(item) === value);
+  return (
+    <span
+      className={cx("p-dropdown", compact && "is-compact", className)}
+      data-open={open}
+    >
+      <button
+        ref={anchor}
+        id={id}
+        type="button"
+        className="p-dropdown-trigger"
+        disabled={disabled}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+        onClick={() => setOpen(!open)}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault();
+            setOpen(true);
+          }
+        }}
+      >
+        <span>{current?.label ?? value}</span>
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+          <path
+            d="m4 6 4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {name && <input type="hidden" name={name} value={value} />}
+      <ActionMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchor={anchor}
+        items={options}
+        selectedValue={value}
+        label={heading}
+        className="p-dropdown-menu"
+        onAction={onChange}
+      />
+    </span>
   );
 }
 /** Measure the selected control so its highlight travels instead of blinking. */

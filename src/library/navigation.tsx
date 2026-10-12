@@ -9,6 +9,7 @@ import {
   useContentTransition,
   useSelectionIndicator,
   Arrow,
+  Dropdown,
 } from "./core";
 /** Floating tab pills with keyboard arrow navigation. */
 export function PillTabs(p: ProsProps) {
@@ -509,15 +510,14 @@ export function WorkspaceSwitcher(p: ProsProps) {
       </span>
       <span>
         <small>{p.label ?? "WORKSPACE"}</small>
-        <select
+        <Dropdown
           disabled={p.disabled}
           value={value}
-          onChange={(e) => set(e.target.value)}
-        >
-          {itemsOf(p).map((s, i) => (
-            <option key={i}>{s.label}</option>
-          ))}
-        </select>
+          options={itemsOf(p).map((s) => ({ label: s.label }))}
+          onChange={set}
+          label={(p.label ?? "Workspace") + ": " + value}
+          heading="Switch workspace"
+        />
       </span>
     </label>
   );

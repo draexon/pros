@@ -808,15 +808,24 @@ for (const theme of ["light", "dark"]) {
         );
         await date.locator("input").clear();
         await expect(date.locator(".p-date-copy")).toContainText("Choose a date");
-        const select = page.locator('[data-pros="SelectInput"] select');
+        const select = page.locator(
+          '[data-pros="SelectInput"] .p-dropdown-trigger',
+        );
         await select.focus();
-        await select.press("Space");
-        await expect
-          .poll(() => select.evaluate((el) => el.matches(":open")))
-          .toBe(true);
+        await select.press("ArrowDown");
+        await expect(select).toHaveAttribute("aria-expanded", "true");
+        const menu = page.locator(".p-dropdown-menu[data-open='true']");
+        await expect(
+          menu.locator('[role="menuitemradio"][aria-checked="true"]'),
+        ).toBeFocused();
         await page.keyboard.press("Escape");
-        await select.selectOption("objects");
-        await expect(select).toHaveValue("objects");
+        await expect(select).toHaveAttribute("aria-expanded", "false");
+        await expect(select).toBeFocused();
+        await select.press("Enter");
+        await page.keyboard.press("o");
+        await page.keyboard.press("Enter");
+        await expect(select).toHaveText("Objects");
+        await expect(select).toBeFocused();
         await expect(select).toHaveCSS("border-top-width", "1px");
         const slots = page.locator('[data-pros="OtpInput"] input');
         await slots.first().fill("1");

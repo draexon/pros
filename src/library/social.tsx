@@ -8,6 +8,7 @@ import {
   useContentTransition,
   useToggle,
   Arrow,
+  Dropdown,
 } from "./core";
 /** A compact person row with a stateful follow action. */
 export function FollowRow(p: ProsProps) {
@@ -299,18 +300,19 @@ export function TeamRoster(p: ProsProps) {
         <div key={i}>
           <span className="p-avatar">{s.label[0]}</span>
           <b>{s.label}</b>
-          <select
-            aria-label={"Role for " + s.label}
+          <Dropdown
+            compact
+            label={"Role for " + s.label}
+            heading="Role"
             value={roles[s.label] ?? s.description ?? "Viewer"}
-            onChange={(e) => {
-              set({ ...roles, [s.label]: e.target.value });
-              p.onAction?.(s.label + ":" + e.target.value);
+            options={["Designer", "Editor", "Viewer"].map((role) => ({
+              label: role,
+            }))}
+            onChange={(role) => {
+              set({ ...roles, [s.label]: role });
+              p.onAction?.(s.label + ":" + role);
             }}
-          >
-            {["Designer", "Editor", "Viewer"].map((role) => (
-              <option key={role}>{role}</option>
-            ))}
-          </select>
+          />
         </div>
       ))}
     </div>
@@ -344,10 +346,13 @@ export function InviteForm(p: ProsProps) {
       </label>
       <label>
         Role
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option>Editor</option>
-          <option>Viewer</option>
-        </select>
+        <Dropdown
+          name="role"
+          label={"Role: " + role}
+          value={role}
+          options={[{ label: "Editor" }, { label: "Viewer" }]}
+          onChange={setRole}
+        />
       </label>
       <button type="submit" className="p-btn" disabled={p.disabled}>
         {p.label ?? "Send invitation"} <Arrow />
@@ -370,15 +375,16 @@ export function PresenceIndicator(p: ProsProps) {
         </span>
         <div>
           <b>{p.title ?? "You, right now."}</b>
-          <select
-            aria-label="Your availability"
+          <Dropdown
+            compact
+            label={"Your availability: " + value}
+            heading="Availability"
             value={value}
-            onChange={(e) => set(e.target.value)}
-          >
-            {["Available", "Focused", "Away"].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
+            options={["Available", "Focused", "Away"].map((x) => ({
+              label: x,
+            }))}
+            onChange={set}
+          />
         </div>
       </div>
       <small>
