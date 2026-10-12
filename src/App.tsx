@@ -1557,8 +1557,13 @@ export default function App() {
           Built by <a href="https://github.com/draexon">draexon</a>
         </span>
         <nav className="site-social" aria-label="draexon elsewhere">
-          <a href="https://x.com/draexon_" target="_blank" rel="noreferrer">
-            Twitter
+          <a
+            href="https://x.com/draexon_"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="draexon on X"
+          >
+            X
           </a>
           <a
             href="https://open.spotify.com/artist/7GKFjHvy6OY6nxsarRxBcn"
