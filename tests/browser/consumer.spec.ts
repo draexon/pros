@@ -195,7 +195,9 @@ test("app block height, entrance motion, and reduced motion remain coordinated",
       ),
     )
     .toBe(true);
-  await expect(block.locator("h4")).toHaveText("Objects with a story.");
+  await expect(
+    block.getByRole("heading", { name: "Objects with a story.", exact: true }),
+  ).toBeVisible();
   await block.evaluate((el) =>
     Promise.all(
       el.getAnimations().map((animation) => animation.finished.catch(() => {})),

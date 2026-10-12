@@ -6,6 +6,7 @@ import {
   Mark,
   itemsOf,
   useModel,
+  useContentTransition,
   useToggle,
   useMotionAllowed,
   Arrow,
@@ -576,6 +577,7 @@ export function SlideSwap(p: ProsProps) {
   const list = itemsOf(p);
   const [index, set] = useState(0);
   const [direction, setDirection] = useState(1);
+  const panel = useContentTransition(index);
   const change = (d: number) => {
     setDirection(d);
     set((index + d + list.length) % list.length);
@@ -588,7 +590,7 @@ export function SlideSwap(p: ProsProps) {
       style={p.style}
     >
       <div
-        key={index}
+        ref={panel}
         className="p-slide-content"
         style={{ "--direction": direction } as React.CSSProperties}
       >

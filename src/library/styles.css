@@ -9512,3 +9512,18 @@
     font-size: 16px;
   }
 }
+
+/* The live panel owns its crossfade; snapshots are visual only. */
+.pros [data-content-transition],
+.pros .p-content-outgoing,
+.pros .p-content-outgoing * {
+  animation: none !important;
+}
+.pros .p-content-outgoing {
+  overflow: clip;
+  user-select: none;
+}
+.pros .p-content-outgoing * {
+  pointer-events: none !important;
+  caret-color: transparent;
+}

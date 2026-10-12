@@ -9,6 +9,7 @@ import {
 import {
   cx,
   useModel,
+  useContentTransition,
   useSelectionIndicator,
   useMotionAllowed,
   type ProsProps,
@@ -238,6 +239,7 @@ export function DiscoveryHub(p: ConsumerContentProps) {
   const data = p.stories ?? stories;
   const categories = ["For you", ...new Set(data.map((s) => s.category))];
   const [category, setCategory] = useModel(p, "For you");
+  const scene = useContentTransition(category);
   const [saved, setSaved] = useState<string[]>([]);
   const visible = data.filter(
     (s) => category === "For you" || s.category === category,
@@ -264,7 +266,7 @@ export function DiscoveryHub(p: ConsumerContentProps) {
         label="Discovery categories"
       />
       {hero ? (
-        <div className="p-app-scene" key={category}>
+        <div ref={scene}>
           <div className="p-discovery-feature">
             <Art variant={data.indexOf(hero)} image={hero.image} />
             <div className="p-discovery-overlay">
@@ -331,6 +333,7 @@ export function DiscoveryHub(p: ConsumerContentProps) {
 export function TrendingBoard(p: ConsumerContentProps) {
   const data = p.stories ?? stories;
   const [topic, setTopic] = useModel(p, "Everything");
+  const scene = useContentTransition(topic);
   const [saved, setSaved] = useState<string[]>([]);
   const ranked = data
     .filter((s) => topic === "Everything" || s.category === topic)
@@ -360,7 +363,7 @@ export function TrendingBoard(p: ConsumerContentProps) {
         onChange={setTopic}
         label="Trending topics"
       />
-      <div className="p-trending-list p-app-scene" key={topic}>
+      <div className="p-trending-list" ref={scene}>
         {ranked.map((s, i) => (
           <div
             className="p-trending-row"
@@ -753,6 +756,7 @@ export function CheckoutPanel(p: CheckoutPanelProps) {
   const total = amount(p.amount ?? 7800);
   const selected = methods.find((m) => m.id === method);
   const heading = useRef<HTMLDivElement>(null);
+  useContentTransition(state === "pending" ? "review" : state, heading);
   const go = (next: typeof state) => {
     setState(next);
     setError("");
@@ -976,6 +980,29 @@ const plans: MembershipPlan[] = [
     ],
   },
 ];
+function MembershipPrice({
+  plan,
+  billing,
+  currency,
+}: {
+  plan: MembershipPlan;
+  billing: "Monthly" | "Yearly";
+  currency?: string;
+}) {
+  const panel = useContentTransition<HTMLSpanElement>(billing);
+  return (
+    <span ref={panel} className="p-membership-price">
+      <strong>
+        {money(
+          billing === "Monthly" ? amount(plan.monthly) : amount(plan.yearly),
+          currency,
+        )}
+      </strong>
+      <small>/ {billing === "Monthly" ? "month" : "year"}</small>
+    </span>
+  );
+}
+
 /** Real monthly/yearly price comparison and explicit plan-selection callbacks. */
 export function MembershipStudio(p: MembershipStudioProps) {
   const data = p.plans ?? plans;
@@ -1020,17 +1047,11 @@ export function MembershipStudio(p: MembershipStudioProps) {
                   <Icon name="check" size={12} />
                 </span>
               </span>
-              <span className="p-membership-price" key={billing}>
-                <strong>
-                  {money(
-                    billing === "Monthly"
-                      ? amount(x.monthly)
-                      : amount(x.yearly),
-                    p.currency,
-                  )}
-                </strong>
-                <small>/ {billing === "Monthly" ? "month" : "year"}</small>
-              </span>
+              <MembershipPrice
+                plan={x}
+                billing={billing}
+                currency={p.currency}
+              />
               <span className="p-membership-description">{x.description}</span>
               <span className="p-membership-saving">
                 {billing === "Yearly" && saving > 0
@@ -1112,6 +1133,7 @@ export function OrderJourney(p: OrderJourneyProps) {
   );
   const [view, setView] = useState<number | null>(null);
   const active = Math.min(view ?? current, Math.max(0, data.length - 1));
+  const scene = useContentTransition(active);
   return (
     <Block
       p={p}
@@ -1171,7 +1193,7 @@ export function OrderJourney(p: OrderJourneyProps) {
         ))}
       </div>
       {data[active] ? (
-        <div className="p-order-detail p-app-scene" key={active}>
+        <div className="p-order-detail" ref={scene}>
           <small>{data[active].time}</small>
           <h4>{data[active].label}</h4>
           <p>{data[active].detail}</p>

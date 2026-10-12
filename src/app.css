@@ -4049,3 +4049,32 @@ html[data-theme-changing] *::details-content {
     padding-left: 5px;
   }
 }
+
+/* Match the page exactly, including the darker canvas in dark mode. */
+.site .site-header {
+  height: 72px;
+  background: var(--pros-tone-paper, #fafbf7);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.site[data-theme="dark"] .site-header {
+  background: #141713;
+}
+.site .site-header .brand {
+  font-size: 38px;
+}
+.site .header-start {
+  min-height: 38px;
+  padding-block: 9px;
+}
+@media (max-width: 700px) {
+  .site .site-header {
+    height: 64px;
+  }
+  .site .site-header .brand {
+    font-size: 32px;
+  }
+  .site .site-header > nav {
+    top: 60px;
+  }
+}

@@ -5,6 +5,7 @@ import {
   cx,
   itemsOf,
   useModel,
+  useContentTransition,
   useToggle,
   Arrow,
 } from "./core";
@@ -204,6 +205,7 @@ export function TestimonialSlider(p: ProsProps) {
   ];
   const [value, set] = useModel(p, "0");
   const i = Number(value) || 0;
+  const panel = useContentTransition<HTMLQuoteElement>(i);
   return (
     <figure
       data-pros="TestimonialSlider"
@@ -211,9 +213,7 @@ export function TestimonialSlider(p: ProsProps) {
       style={p.style}
     >
       <span>“</span>
-      <blockquote key={i} className="p-enter">
-        {list[i]?.description}
-      </blockquote>
+      <blockquote ref={panel}>{list[i]?.description}</blockquote>
       <figcaption>{list[i]?.label}</figcaption>
       <div className="p-row">
         {list.map((x, index) => (

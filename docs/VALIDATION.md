@@ -106,3 +106,11 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Component click feedback now settles without overshoot, with a lighter press for larger controls. Gallery controls no longer inherit the component click animation.
 - The navbar displays the actual verified repository star count and refreshes from GitHub's unauthenticated public API when accessible. Private/offline/rate-limited cases retain the verified snapshot; `npm run update:repo-stats` updates it using the authenticated CLI without exposing credentials.
 - Build and all 231 library tests pass. All 33 browser scenarios verified, including the new hover and live/fallback/invalid star-count checks. The hover assertion accepts both identity matrices and `none` as zero movement.
+
+## Continuous panel changes and compact navigation
+
+- Replaced abrupt panel remounts with a shared outgoing/incoming crossfade in PillTabs, TabbedPanel, Carousel, SlideSwap, SectionNavigator, BrowserFrame, TestimonialSlider, StatusText, discovery/trending filters, checkout, order details, and membership prices.
+- Live controls keep their DOM identity. Outgoing visual snapshots are inert and hidden from assistive technology; IDs, form names, component markers, and live-region attributes are removed. Rapid switches cancel obsolete snapshots. Reduced motion bypasses the transition and cleans up active snapshots.
+- Navbar uses the same opaque background as the page in light and dark mode, without blur or a contrasting strip. Height is 72px on desktop and 64px on mobile, with corresponding logo and mobile-menu adjustments.
+- Production and library builds pass, with all 231 library tests and 35 browser scenarios verified. Added checks for overlapping panel lifetimes, rapid reversals, reduced motion, exact background colors, and header dimensions. Updated the existing height-motion check to identify the accessible live heading rather than a temporary visual snapshot.
+- Visually reviewed a crossfade midpoint and the smaller matching navbar.

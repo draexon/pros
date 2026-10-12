@@ -603,3 +603,91 @@ for (const [status, response, expected] of [
     ).toBe(true);
   });
 }
+
+test("content switches crossfade outgoing panels and handle rapid reversals", async ({
+  page,
+}) => {
+  for (const [slug, next] of [
+    ["pill-tabs", "Objects"],
+    ["tabbed-panel", "Objects"],
+    ["carousel", "Next slide"],
+    ["slide-swap", "Next panel"],
+    ["section-navigator", "Next section"],
+    ["discovery-hub", "Design"],
+    ["trending-board", "Places"],
+    ["order-journey", "At your door"],
+  ]) {
+    await page.goto("/#/component/" + slug);
+    await page.evaluate(() => document.fonts.ready);
+    if (
+      (await page.locator(".motion-control").getAttribute("aria-pressed")) ===
+      "false"
+    )
+      await page.locator(".motion-control").click();
+    const root = page.locator(".detail-component > [data-pros]");
+    const control =
+      slug === "pill-tabs"
+        ? root.getByRole("tab", { name: next, exact: true })
+        : root.getByRole("button", { name: new RegExp(next) }).first();
+    await control.click();
+    const ghost = root.locator(".p-content-outgoing");
+    await expect(ghost).toHaveCount(1);
+    await expect(ghost).toHaveAttribute("aria-hidden", "true");
+    expect(await ghost.evaluate((el) => (el as HTMLElement).inert)).toBe(true);
+    expect(await ghost.locator("[id], [data-pros]").count()).toBe(0);
+    const live = root
+      .locator("[data-content-transition]:not(.p-content-outgoing)")
+      .first();
+    expect(
+      await live.evaluate((el) =>
+        el
+          .getAnimations()
+          .some(
+            (a) =>
+              a.effect instanceof KeyframeEffect &&
+              a.effect.getKeyframes().some((f) => f.opacity === "0"),
+          ),
+      ),
+    ).toBe(true);
+    await expect(ghost).toHaveCount(0);
+  }
+  await page.goto("/#/component/pill-tabs");
+  const tabs = page.getByRole("tab");
+  await tabs.nth(1).click();
+  await tabs.nth(2).click();
+  await tabs.nth(0).click();
+  await expect(page.getByRole("tabpanel")).toHaveText(
+    "A space for better ideas",
+  );
+  await expect(page.locator(".p-content-outgoing")).toHaveCount(0);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await tabs.nth(1).click();
+  await expect(page.locator(".p-content-outgoing")).toHaveCount(0);
+  await expect(page.getByRole("tabpanel")).toHaveText(
+    "Useful things, thoughtfully made",
+  );
+});
+
+test("compact navbar matches the page background in both themes", async ({
+  page,
+}) => {
+  for (const theme of ["light", "dark"]) {
+    await page.addInitScript(
+      (theme) => localStorage.setItem("pros.theme", theme),
+      theme,
+    );
+    await page.goto("/#/components");
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      const styles = await page
+        .locator(".site-header")
+        .evaluate((el) => ({
+          height: el.getBoundingClientRect().height,
+          color: getComputedStyle(el).backgroundColor,
+          page: getComputedStyle(el.closest(".site")!).backgroundColor,
+        }));
+      expect(styles.color).toBe(styles.page);
+      expect(styles.height).toBe(width === 390 ? 64 : 72);
+    }
+  }
+});

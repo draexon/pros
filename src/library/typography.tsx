@@ -1,6 +1,12 @@
 import { Icon } from "./icons";
 import { useId, useState } from "react";
-import { type ProsProps, cx, useModel, Arrow } from "./core";
+import {
+  type ProsProps,
+  cx,
+  useModel,
+  useContentTransition,
+  Arrow,
+} from "./core";
 /** A staggered word reveal that replays on demand. */
 export function WordReveal(p: ProsProps) {
   const [key, set] = useState(0);
@@ -230,6 +236,7 @@ export function SplitStatement(p: ProsProps) {
 /** An animated status word paired with an active indicator. */
 export function StatusText(p: ProsProps) {
   const [value, set] = useModel(p, "Available");
+  const panel = useContentTransition<HTMLSpanElement>(value);
   return (
     <button
       data-pros="StatusText"
@@ -244,9 +251,7 @@ export function StatusText(p: ProsProps) {
       onClick={() => set(value === "Available" ? "Focused" : "Available")}
     >
       <i />
-      <span key={value} className="p-enter">
-        {p.title ?? value}
-      </span>
+      <span ref={panel}>{p.title ?? value}</span>
       <small>
         FOR GOOD IDEAS <Icon name="arrow" />
       </small>

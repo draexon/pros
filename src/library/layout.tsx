@@ -7,6 +7,7 @@ import {
   Action,
   itemsOf,
   useModel,
+  useContentTransition,
   Arrow,
 } from "./core";
 /** A purpose-built asymmetric feature grid with actionable cells. */
@@ -87,6 +88,7 @@ export function AccordionPanel(p: ProsProps) {
 export function TabbedPanel(p: ProsProps) {
   const list = itemsOf(p);
   const [value, set] = useModel(p, "0");
+  const panel = useContentTransition<HTMLElement>(value);
   return (
     <div
       data-pros="TabbedPanel"
@@ -110,7 +112,7 @@ export function TabbedPanel(p: ProsProps) {
           </button>
         ))}
       </div>
-      <article key={value} className="p-enter">
+      <article ref={panel}>
         <small>WORKING DOCUMENT / 00{Number(value) + 1}</small>
         <h3>{list[Number(value)]?.label ?? p.title ?? "Untitled"}</h3>
         <p>
@@ -319,6 +321,7 @@ export function WindowFrame(p: ProsProps) {
 /** A browser preview frame with a replayable page transition. */
 export function BrowserFrame(p: ProsProps) {
   const [key, set] = useState(0);
+  const panel = useContentTransition(key);
   return (
     <div
       data-pros="BrowserFrame"
@@ -341,7 +344,7 @@ export function BrowserFrame(p: ProsProps) {
           <Icon name="arrow" />
         </b>
       </header>
-      <div key={key} className="p-browser-page p-enter">
+      <div ref={panel} className="p-browser-page">
         {p.children ?? (
           <>
             <small>INDEPENDENT BY DESIGN</small>

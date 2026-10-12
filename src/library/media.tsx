@@ -6,6 +6,7 @@ import {
   Mark,
   itemsOf,
   useModel,
+  useContentTransition,
   useToggle,
   Arrow,
 } from "./core";
@@ -398,6 +399,7 @@ export function Carousel(p: ProsProps) {
   const [value, set] = useModel(p, "0");
   const index = Math.max(0, Math.min(list.length - 1, Number(value) || 0));
   const s = list[index];
+  const panel = useContentTransition(index);
   return (
     <div
       data-pros="Carousel"
@@ -406,7 +408,7 @@ export function Carousel(p: ProsProps) {
       aria-roledescription="carousel"
       aria-label={p.label ?? "Object studies"}
     >
-      <div className="p-carousel-slide p-enter" key={index}>
+      <div className="p-carousel-slide" ref={panel}>
         {s?.image ? (
           <img src={s.image} alt={s.label} />
         ) : (

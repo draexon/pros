@@ -6,6 +6,7 @@ import {
   itemsOf,
   itemValue,
   useModel,
+  useContentTransition,
   useSelectionIndicator,
   Arrow,
 } from "./core";
@@ -15,6 +16,7 @@ export function PillTabs(p: ProsProps) {
   const [value, set] = useModel(p, itemValue(list[0] ?? { label: "" }));
   const id = useId();
   const selection = useSelectionIndicator(value);
+  const panel = useContentTransition<HTMLElement>(value);
   return (
     <div
       data-pros="PillTabs"
@@ -69,8 +71,7 @@ export function PillTabs(p: ProsProps) {
           )
         }
         tabIndex={0}
-        key={value}
-        className="p-panel-change"
+        ref={panel}
       >
         {p.children ??
           list.find((s) => itemValue(s) === value)?.description ??
@@ -470,6 +471,7 @@ export function SectionNavigator(p: ProsProps) {
   const list = itemsOf(p);
   const [value, set] = useModel(p, "0");
   const i = Math.max(0, Math.min(list.length - 1, Number(value) || 0));
+  const panel = useContentTransition(i);
   return (
     <div
       data-pros="SectionNavigator"
@@ -477,7 +479,7 @@ export function SectionNavigator(p: ProsProps) {
       style={p.style}
     >
       <span className="p-number">0{i + 1}</span>
-      <div key={i} className="p-enter">
+      <div ref={panel}>
         <small>YOU ARE EXPLORING</small>
         <h3>{list[i]?.label ?? "No sections"}</h3>
       </div>

@@ -70,6 +70,114 @@ export function useToggle(p: ProsProps, fallback = false) {
     (v?: boolean) => set(String(v ?? value !== "true")),
   ] as const;
 }
+
+/** Crossfade stable panels without remounting their controls or delaying state. */
+export function useContentTransition<T extends HTMLElement = HTMLDivElement>(
+  value: unknown,
+  target?: RefObject<T | null>,
+) {
+  const local = useRef<T>(null);
+  const ref = target ?? local;
+  const enabled = useMotionAllowed();
+  const previous = useRef<{
+    value: unknown;
+    image: HTMLElement;
+    height: number;
+  } | null>(null);
+  const stop = useRef<() => void>(() => {});
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    element.dataset.contentTransition = "true";
+    const old = previous.current;
+    const next = {
+      value,
+      image: element.cloneNode(true) as HTMLElement,
+      height: element.offsetHeight,
+    };
+    previous.current = next;
+    if (!enabled) {
+      stop.current();
+      return;
+    }
+    if (!old || Object.is(old.value, value)) return;
+    stop.current();
+    next.height = element.offsetHeight;
+    const parent = element.parentElement;
+    if (!parent || document.documentElement.dataset.themeChanging) return;
+    const position = parent.style.position;
+    if (getComputedStyle(parent).position === "static")
+      parent.style.position = "relative";
+    const ghost = old.image;
+    ghost.classList.add("p-content-outgoing");
+    ghost.setAttribute("aria-hidden", "true");
+    ghost.inert = true;
+    for (const node of [ghost, ...ghost.querySelectorAll<HTMLElement>("*")]) {
+      for (const attribute of [
+        "id",
+        "name",
+        "for",
+        "data-pros",
+        "aria-live",
+        "aria-labelledby",
+        "aria-describedby",
+        "aria-controls",
+      ])
+        node.removeAttribute(attribute);
+    }
+    Object.assign(ghost.style, {
+      position: "absolute",
+      left: element.offsetLeft + "px",
+      top: element.offsetTop + "px",
+      width: element.offsetWidth + "px",
+      height: old.height + "px",
+      margin: "0",
+      pointerEvents: "none",
+      zIndex: "2",
+    });
+    parent.appendChild(ghost);
+    const frames: Keyframe[] = [
+      { opacity: 0, translate: "0 5px" },
+      { opacity: 1, translate: "0 0" },
+    ];
+    if (
+      !element.closest(".p-app-block") &&
+      Math.abs(old.height - next.height) > 1
+    ) {
+      frames[0].height = old.height + "px";
+      frames[1].height = next.height + "px";
+    }
+    const incoming = element.animate(frames, {
+      duration: 320,
+      easing: "cubic-bezier(.22,1,.36,1)",
+    });
+    const outgoing = ghost.animate(
+      [
+        { opacity: 1, translate: "0 0" },
+        { opacity: 0, translate: "0 -4px" },
+      ],
+      { duration: 260, easing: "ease-out", fill: "forwards" },
+    );
+    const cleanup = () => {
+      incoming.cancel();
+      outgoing.cancel();
+      ghost.remove();
+      parent.style.position = position;
+    };
+    stop.current = cleanup;
+    incoming.finished.then(
+      () => {
+        if (stop.current === cleanup) {
+          cleanup();
+          stop.current = () => {};
+        }
+      },
+      () => {},
+    );
+  });
+  useLayoutEffect(() => () => stop.current(), [enabled]);
+  return ref;
+}
 export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
     <span aria-hidden="true" className="p-arrow">
