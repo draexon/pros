@@ -65,29 +65,13 @@ export function SiteMotion({ route }: { route: string }) {
     const mutations = new MutationObserver(observe);
     mutations.observe(site, { childList: true, subtree: true });
     const playground = site.querySelector<HTMLElement>(".hero-playground");
-    const magnets = new Set<HTMLElement>();
     let frame = 0;
-    let active: HTMLElement | null = null;
     let latestX = 0,
       latestY = 0;
-    const resetMagnet = () => {
-      active?.style.removeProperty("--magnet-x");
-      active?.style.removeProperty("--magnet-y");
-      active = null;
-    };
     const move = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
       latestX = event.clientX;
       latestY = event.clientY;
-      const target =
-        event.target instanceof Element
-          ? event.target.closest<HTMLElement>(
-              ".big-action, .header-start, .hero-mini-button",
-            )
-          : null;
-      if (target !== active) resetMagnet();
-      active = target;
-      if (target) magnets.add(target);
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
@@ -111,23 +95,11 @@ export function SiteMotion({ route }: { route: string }) {
               : "0px",
           );
         }
-        if (active) {
-          const r = active.getBoundingClientRect();
-          active.style.setProperty(
-            "--magnet-x",
-            (latestX - r.left - r.width / 2) * 0.12 + "px",
-          );
-          active.style.setProperty(
-            "--magnet-y",
-            (latestY - r.top - r.height / 2) * 0.22 + "px",
-          );
-        }
       });
     };
     const leave = () => {
       cancelAnimationFrame(frame);
       frame = 0;
-      resetMagnet();
       playground?.style.removeProperty("--drift-x");
       playground?.style.removeProperty("--drift-y");
     };
@@ -138,10 +110,6 @@ export function SiteMotion({ route }: { route: string }) {
       mutations.disconnect();
       observer.disconnect();
       animations.forEach((animation) => animation.cancel());
-      magnets.forEach((element) => {
-        element.style.removeProperty("--magnet-x");
-        element.style.removeProperty("--magnet-y");
-      });
       site.removeEventListener("pointermove", move);
       site.removeEventListener("pointerleave", leave);
     };

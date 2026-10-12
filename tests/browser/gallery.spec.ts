@@ -1,4 +1,5 @@
 ﻿import { test, expect } from "@playwright/test";
+import repoStats from "../../src/repo-stats.json" with { type: "json" };
 import catalog from "../../src/catalog.json" with { type: "json" };
 
 test.beforeEach(async ({ page }) => {
@@ -524,3 +525,81 @@ test("navigation hides downward, returns upward, and keeps keyboard and mobile a
     ),
   ).toBe(true);
 });
+
+test("gallery buttons stay stationary on hover while component presses settle smoothly", async ({
+  page,
+}) => {
+  await page.goto("/#/");
+  await page.evaluate(() => document.fonts.ready);
+  await page.locator(".motion-control").click();
+  for (const selector of [
+    ".hero-copy .big-action",
+    ".header-start",
+    ".github-star",
+    ".site-header nav a:first-child",
+  ]) {
+    const button = page.locator(selector);
+    await button.hover();
+    await expect
+      .poll(() =>
+        button.evaluate((el) => {
+          const style = getComputedStyle(el);
+          return (
+            (style.transform === "none" ||
+              new DOMMatrixReadOnly(style.transform).isIdentity) &&
+            (style.translate === "none" ||
+              style.translate
+                .split(" ")
+                .every((value) => parseFloat(value) === 0))
+          );
+        }),
+      )
+      .toBe(true);
+    expect(
+      await button.evaluate((el) => el.style.getPropertyValue("--magnet-x")),
+    ).toBe("");
+  }
+  await page.goto("/#/component/confirm-button");
+  const component = page.locator('[data-pros="ConfirmButton"]');
+  await component.click();
+  const frames = await component.evaluate((el) =>
+    el
+      .getAnimations()
+      .flatMap((a) =>
+        a.effect instanceof KeyframeEffect ? a.effect.getKeyframes() : [],
+      )
+      .filter((f) => f.scale),
+  );
+  expect(frames.length).toBeGreaterThan(0);
+  expect(frames.every((frame) => Number(frame.scale) <= 1)).toBe(true);
+  await expect(component).toHaveAttribute("aria-pressed", "true");
+});
+
+for (const [status, response, expected] of [
+  [200, { stargazers_count: 1234 }, "1,234"],
+  [404, { message: "Not Found" }, repoStats.stars.toLocaleString("en-US")],
+  [200, { stargazers_count: -1 }, repoStats.stars.toLocaleString("en-US")],
+] as const) {
+  test(`repository stars show a live count or verified fallback (${status}, ${expected})`, async ({
+    page,
+  }) => {
+    await page.route("https://api.github.com/repos/draexon/pros", (route) =>
+      route.fulfill({
+        status,
+        contentType: "application/json",
+        body: JSON.stringify(response),
+      }),
+    );
+    await page.goto("/#/components");
+    await expect(page.locator("#repo-star-count")).toHaveText(expected);
+    await expect(
+      page.getByRole("link", { name: "Star Pros on GitHub", exact: true }),
+    ).toHaveAttribute("href", "https://github.com/draexon/pros");
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  });
+}

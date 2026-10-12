@@ -99,3 +99,10 @@ Run npm run build, npm test, and npm run test:browser to repeat the checks.
 - Added the MIT license and package metadata, Code of Conduct, contributing/security guidance, changelog, issue/PR templates, CODEOWNERS, and a read-only validation workflow.
 - Production build, 231 library tests, and all 29 browser tests pass. New checks verify the outer focus ring, search clear, scroll direction, keyboard recovery, and mobile navigation. Visually checked the original reported field at 390px.
 - Created issues #1, #2, and #3 under the verified draexon account for additional browser engines, automated accessibility checks, and controlled app-block state. Repository visibility remains PRIVATE.
+
+## Hover restraint and repository stars
+
+- Removed magnetic pointer tracking from website buttons and hover movement from gallery controls. Color, shadow, and small arrow transitions provide feedback; component hover styles remain independent.
+- Component click feedback now settles without overshoot, with a lighter press for larger controls. Gallery controls no longer inherit the component click animation.
+- The navbar displays the actual verified repository star count and refreshes from GitHub's unauthenticated public API when accessible. Private/offline/rate-limited cases retain the verified snapshot; `npm run update:repo-stats` updates it using the authenticated CLI without exposing credentials.
+- Build and all 231 library tests pass. All 33 browser scenarios verified, including the new hover and live/fallback/invalid star-count checks. The hover assertion accepts both identity matrices and `none` as zero movement.

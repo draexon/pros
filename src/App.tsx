@@ -10,6 +10,7 @@ import { flushSync } from "react-dom";
 import * as Library from "./library";
 import { Mark, Arrow, ActionMenu, useSelectionIndicator } from "./library/core";
 import { Icon, type ProsIconName } from "./library/icons";
+import { useRepoStars } from "./useRepoStars";
 import { SiteMotion } from "./SiteMotion";
 import catalog from "./catalog.json";
 import type { ProsProps } from "./library";
@@ -1181,6 +1182,7 @@ function Docs({ notify }: { notify: (s: string) => void }) {
 }
 
 export default function App() {
+  const repoStars = useRepoStars();
   const [route, setRoute] = useState(currentRoute);
   const [theme, setTheme] = useState<"light" | "dark">(() =>
     document.documentElement.dataset.theme === "dark" ? "dark" : "light",
@@ -1423,9 +1425,19 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
             aria-label="Star Pros on GitHub"
+            aria-describedby="repo-star-count"
+            title={
+              repoStars.live
+                ? "Current GitHub star count"
+                : "Last verified GitHub count: " +
+                  repoStars.verifiedAt.slice(0, 10)
+            }
           >
             <Icon name="star" size={14} />
             <span>Star</span>
+            <b id="repo-star-count" aria-label={repoStars.stars + " stars"}>
+              {repoStars.stars.toLocaleString("en-US")}
+            </b>
           </a>
           <button className="header-start" onClick={() => routeTo("/docs")}>
             Get started{" "}

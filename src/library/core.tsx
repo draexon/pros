@@ -166,10 +166,15 @@ function InteractionMotion() {
         control.closest('[data-motion="off"]')
       )
         return;
+      if (root.classList.contains("site") && !control.closest("[data-pros]"))
+        return;
       running.get(control)?.cancel();
       const animation = control.animate(
-        [{ scale: "0.96" }, { scale: "1.015", offset: 0.65 }, { scale: "1" }],
-        { duration: 280, easing: "cubic-bezier(.22,1,.36,1)" },
+        [
+          { scale: control.offsetWidth > 220 ? "0.99" : "0.975" },
+          { scale: "1" },
+        ],
+        { duration: 240, easing: "cubic-bezier(.16,1,.3,1)" },
       );
       running.set(control, animation);
       animation.finished.then(

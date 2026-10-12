@@ -3961,3 +3961,91 @@ html[data-theme-changing] *::details-content {
     font-size: 16px !important;
   }
 }
+
+/* Gallery controls stay in place. Component previews keep their own motion. */
+.site
+  :is(
+    .big-action,
+    .header-start,
+    .hero-mini-button,
+    .quiet-action,
+    .category-button,
+    .tile-save,
+    .tile-title,
+    .back-link,
+    .github-star,
+    .site-header nav a,
+    .load-more > button
+  ) {
+  translate: none;
+  transform: none;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.site
+  :is(
+    .big-action,
+    .header-start,
+    .hero-mini-button,
+    .quiet-action,
+    .category-button,
+    .tile-save,
+    .tile-title,
+    .back-link,
+    .github-star,
+    .site-header nav a,
+    .load-more > button
+  ):hover {
+  transform: none;
+  translate: none;
+  scale: 1;
+}
+.site .big-action:hover {
+  box-shadow: 0 3px 12px #00000012;
+}
+.site .big-action:hover > span {
+  transform: none;
+}
+.site :is(.big-action, .header-start, .hero-mini-button):hover .p-icon--arrow {
+  animation: none;
+  translate: 2px 0;
+}
+.site :is(.big-action, .header-start, .hero-mini-button) .p-icon--arrow {
+  transition: translate 180ms ease;
+}
+.site .category-button:hover .p-icon {
+  transform: none;
+}
+.site .category-button.is-active .p-icon,
+.site .tile-save.is-saved .p-icon {
+  animation: none;
+}
+.site .tile-title:hover > b {
+  translate: none;
+}
+.site .component-tile:hover .tile-stage {
+  translate: none;
+  box-shadow: 0 8px 24px -18px #17181733;
+}
+.site .github-star:hover svg {
+  rotate: 0deg;
+}
+.site .site-header nav a:hover {
+  color: var(--pros-ink);
+}
+.site .github-star > b {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  padding-left: 7px;
+  border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+@media (max-width: 600px) {
+  .site .github-star {
+    gap: 4px;
+  }
+  .site .github-star > b {
+    padding-left: 5px;
+  }
+}

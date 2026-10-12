@@ -179,3 +179,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Community
 ## License
 
 [MIT](LICENSE), copyright 2026 draexon. Repository visibility remains private until the maintainer chooses to publish it.
+
+## Repository star count
+
+The navbar displays the repository's GitHub star count. Public repositories refresh directly from GitHub without credentials; private repositories, rate limits, and offline sessions use `src/repo-stats.json`. Run `npm run update:repo-stats` with an authenticated GitHub CLI session before building to refresh that verified fallback. No GitHub token is included in the browser bundle.
