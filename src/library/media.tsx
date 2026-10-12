@@ -324,29 +324,48 @@ export function AvatarStack(p: ProsProps) {
     { label: "Sam" },
     { label: "Jules" },
     { label: "Morgan" },
+    { label: "Riley" },
+    { label: "Quinn" },
+    { label: "Taylor" },
   ];
+  const shown = list.slice(0, Math.max(1, p.max ?? 4));
+  const extra = list.length - shown.length;
   return (
     <div
       data-pros="AvatarStack"
       className={cx("p-avatar-stack", p.className)}
       style={p.style}
     >
-      {list.map((s, i) => (
-        <button
-          type="button"
-          key={i}
-          aria-label={"View " + s.label}
-          onClick={() => p.onAction?.(s.label)}
-        >
-          {s.image ? (
-            <img src={s.image} alt="" />
-          ) : (
-            <span>{s.label.slice(0, 1)}</span>
-          )}
-          <small>{s.label}</small>
-        </button>
-      ))}
-      <b>{p.title ?? "Better together."}</b>
+      <div className="p-avatar-row">
+        {shown.map((s, i) => (
+          <button
+            type="button"
+            key={i}
+            aria-label={"View " + s.label}
+            onClick={() => p.onAction?.(s.label)}
+          >
+            {s.image ? (
+              <img src={s.image} alt="" />
+            ) : (
+              <span>{s.label.slice(0, 1)}</span>
+            )}
+            <small>{s.label}</small>
+          </button>
+        ))}
+        {extra > 0 && (
+          <i
+            className="p-avatar-more"
+            role="img"
+            aria-label={extra + " more people"}
+          >
+            +{extra}
+          </i>
+        )}
+      </div>
+      <p>
+        <b>{p.title ?? "Better together."}</b>
+        <small>{p.description ?? list.length + " people in the room"}</small>
+      </p>
     </div>
   );
 }

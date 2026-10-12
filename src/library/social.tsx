@@ -1,5 +1,5 @@
 import { Icon } from "./icons";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import {
   type ProsProps,
   cx,
@@ -534,8 +534,23 @@ export function AuthorByline(p: ProsProps) {
 }
 /** A mention composer that inserts a selected teammate. */
 export function MentionInput(p: ProsProps) {
-  const [value, set] = useModel(p, "");
-  const [show, setShow] = useState(false);
+  const [value, set] = useModel(p, "Great catch @Alex. Looping in @");
+  const [closed, setClosed] = useState(false);
+  const [active, setActive] = useState(0);
+  const mirror = useRef<HTMLSpanElement>(null);
+  const query = /@(\w*)$/.exec(value);
+  const people = (
+    p.items ?? [{ label: "Alex" }, { label: "Sam" }, { label: "Jules" }]
+  ).filter(
+    (s) =>
+      !value.includes("@" + s.label + " ") &&
+      s.label.toLowerCase().startsWith((query?.[1] ?? "").toLowerCase()),
+  );
+  const show = !!query && !closed && people.length > 0;
+  const pick = (label: string) => {
+    set(value.replace(/@\w*$/, "@" + label + " "));
+    setActive(0);
+  };
   return (
     <div
       data-pros="MentionInput"
@@ -544,31 +559,57 @@ export function MentionInput(p: ProsProps) {
     >
       <label>
         {p.title ?? "Bring someone into the conversation"}
-        <textarea
-          value={value}
-          onChange={(e) => {
-            set(e.target.value);
-            setShow(e.target.value.endsWith("@"));
-          }}
-          placeholder="Type @ to mention someone…"
-        />
+        <span className="p-mention-field">
+          <span ref={mirror} className="p-mention-mirror" aria-hidden="true">
+            {value.split(/(@\w+)/g).map((part, i) =>
+              i % 2 ? <mark key={i}>{part}</mark> : part,
+            )}
+            {"\u200b"}
+          </span>
+          <textarea
+            value={value}
+            onChange={(e) => {
+              set(e.target.value);
+              setClosed(false);
+              setActive(0);
+            }}
+            onScroll={(e) => {
+              if (mirror.current)
+                mirror.current.scrollTop = e.currentTarget.scrollTop;
+            }}
+            onKeyDown={(e) => {
+              if (!show) return;
+              if (e.key === "Escape") setClosed(true);
+              else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                e.preventDefault();
+                setActive(
+                  (active + (e.key === "ArrowDown" ? 1 : -1) + people.length) %
+                    people.length,
+                );
+              } else if (e.key === "Enter" || e.key === "Tab") {
+                e.preventDefault();
+                pick(people[Math.min(active, people.length - 1)].label);
+              }
+            }}
+            placeholder="Type @ to mention someone…"
+          />
+        </span>
       </label>
       {show && (
-        <div className="p-menu p-enter">
-          {(
-            p.items ?? [{ label: "Alex" }, { label: "Sam" }, { label: "Jules" }]
-          ).map((s, i) => (
+        <div className="p-menu p-mention-menu p-enter">
+          <small>People</small>
+          {people.map((s, i) => (
             <button
               type="button"
-              key={i}
-              onClick={() => {
-                set(value + s.label + " ");
-                setShow(false);
-              }}
+              key={s.label}
+              className={i === active ? "is-active" : ""}
+              onClick={() => pick(s.label)}
             >
-              {" "}
               <span className="p-avatar">{s.label[0]}</span>
-              {s.label}
+              <span>
+                {s.label}
+                <small>{s.description ?? "@" + s.label.toLowerCase()}</small>
+              </span>
             </button>
           ))}
         </div>

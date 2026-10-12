@@ -120,7 +120,7 @@ export function InkHeadline(p: ProsProps) {
       className={cx("p-ink-headline", p.className)}
       style={p.style}
     >
-      {p.title ?? "FEEL SOMETHING."}
+      <span>{p.title ?? "FEEL SOMETHING."}</span>
     </div>
   );
 }

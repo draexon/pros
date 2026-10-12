@@ -436,7 +436,15 @@ export function CommandList(p: ProsProps) {
             <b>{s.label}</b>
             <small>{s.description}</small>
           </div>
-          <kbd>{s.value}</kbd>
+          {s.value && (
+            <span
+              className="p-kbd-keys"
+              aria-label={"Shortcut: Command " + s.value}
+            >
+              <kbd>⌘</kbd>
+              <kbd>{s.value}</kbd>
+            </span>
+          )}
         </button>
       ))}
     </div>

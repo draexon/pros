@@ -1142,18 +1142,6 @@ select {
   font-size: 9px !important;
   gap: 5px;
 }
-.component-grid .p-avatar-stack > b {
-  font-size: 9px;
-  max-width: 60px;
-  margin-left: 9px;
-}
-.component-grid .p-avatar-stack button {
-  width: 40px;
-  height: 40px;
-}
-.component-grid .p-avatar-stack {
-  padding-right: 0;
-}
 .component-grid .p-split-panel .p-mark {
   transform: scale(0.55);
 }

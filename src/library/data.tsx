@@ -1,6 +1,27 @@
 import { Icon } from "./icons";
 import { useState } from "react";
 import { type ProsProps, cx, itemsOf, useModel } from "./core";
+/** One stroked arrow shared by sort headers and trend tiles; down turns it over. */
+function DirectionArrow({ down }: { down?: boolean }) {
+  return (
+    <svg
+      className={cx("p-direction", down && "is-down")}
+      viewBox="0 0 24 24"
+      width="1em"
+      height="1em"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M12 19V5" />
+      <path d="m6 11 6-6 6 6" />
+    </svg>
+  );
+}
 /** A column chart with selectable bars and exact value readouts. */
 export function BarChart(p: ProsProps) {
   const data = p.items ?? [
@@ -188,18 +209,45 @@ export function Heatmap(p: ProsProps) {
     </div>
   );
 }
-/** A sortable two-column table with clear sort direction. */
+/** A compact sortable table with a header row, aligned numbers and clear sort direction. */
 export function SortableTable(p: ProsProps) {
-  const [asc, set] = useState(true);
+  const [sort, set] = useState<{ key: "label" | "value"; asc: boolean }>({
+    key: "value",
+    asc: true,
+  });
   const rows = [
     ...(p.items ?? [
       { label: "Studio work", value: "42" },
       { label: "Side projects", value: "18" },
       { label: "Experiments", value: "64" },
     ]),
-  ].sort((a, b) =>
-    asc ? Number(a.value) - Number(b.value) : Number(b.value) - Number(a.value),
-  );
+  ].sort((a, b) => {
+    const order =
+      sort.key === "value"
+        ? Number(a.value) - Number(b.value)
+        : a.label.localeCompare(b.label);
+    return sort.asc ? order : -order;
+  });
+  const header = (key: "label" | "value", name: string) => {
+    const active = sort.key === key;
+    return (
+      <th
+        scope="col"
+        className={active ? "is-sorted" : undefined}
+        aria-sort={
+          active ? (sort.asc ? "ascending" : "descending") : undefined
+        }
+      >
+        <button
+          type="button"
+          onClick={() => set({ key, asc: active ? !sort.asc : true })}
+        >
+          {name}
+          <DirectionArrow down={active && !sort.asc} />
+        </button>
+      </th>
+    );
+  };
   return (
     <div
       data-pros="SortableTable"
@@ -210,25 +258,12 @@ export function SortableTable(p: ProsProps) {
         <caption>{p.title ?? "A working overview"}</caption>
         <thead>
           <tr>
-            <th scope="col">Project</th>
-            <th scope="col" aria-sort={asc ? "ascending" : "descending"}>
-              <button type="button" onClick={() => set(!asc)}>
-                Activity{" "}
-                {asc ? (
-                  <>
-                    <Icon name="up" />
-                  </>
-                ) : (
-                  <>
-                    <Icon name="down" />
-                  </>
-                )}
-              </button>
-            </th>
+            {header("label", "Project")}
+            {header("value", "Activity")}
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => (
+          {rows.map((row) => (
             <tr key={row.label}>
               <td>
                 <span className="p-table-dot" />
@@ -431,12 +466,28 @@ export function WaterfallChart(p: ProsProps) {
     { label: "Return", value: "18" },
   ];
   let sum = 0;
-  const points = data.map((x) => {
+  const steps = data.map((x, i) => {
+    const change = Number(x.value) || 0;
     const from = sum;
-    sum += Number(x.value) || 0;
-    return { ...x, from, to: sum };
+    sum += change;
+    return {
+      label: x.label,
+      from,
+      to: sum,
+      kind: i === 0 ? "start" : change < 0 ? "down" : "up",
+      text:
+        i === 0 ? String(change) : (change < 0 ? "−" : "+") + Math.abs(change),
+    };
   });
-  const max = Math.max(1, ...points.map((x) => Math.max(x.from, x.to)));
+  // Every bar shares one zero baseline, so the closing total reads against the steps.
+  const bars = [
+    ...steps,
+    { label: "Total", from: 0, to: sum, kind: "total", text: String(sum) },
+  ];
+  const high = Math.max(0, ...bars.map((x) => Math.max(x.from, x.to)));
+  const low = Math.min(0, ...bars.map((x) => Math.min(x.from, x.to)));
+  const span = Math.max(1, high - low);
+  const at = (n: number) => ((n - low) / span) * 100;
   return (
     <figure
       data-pros="WaterfallChart"
@@ -444,22 +495,36 @@ export function WaterfallChart(p: ProsProps) {
       style={p.style}
     >
       <figcaption>{p.title ?? "How we got here."}</figcaption>
-      <div>
-        {points.map((x, i) => (
-          <div key={i}>
-            <span
-              style={{
-                bottom: (Math.min(x.from, x.to) / max) * 100 + "%",
-                height: (Math.abs(x.to - x.from) / max) * 100 + "%",
-                background: x.to < x.from ? "#bbb" : "#171717",
-              }}
-            >
-              <small>{x.value}</small>
-            </span>
+      <ol className="p-waterfall-plot">
+        {bars.map((x, i) => (
+          <li key={i} className={"is-" + x.kind}>
+            <div className="p-waterfall-track">
+              <i
+                className="p-waterfall-base"
+                style={{ bottom: at(0) + "%" }}
+                aria-hidden="true"
+              />
+              {i < bars.length - 1 && (
+                <i
+                  className="p-waterfall-link"
+                  style={{ bottom: at(x.to) + "%" }}
+                  aria-hidden="true"
+                />
+              )}
+              <span
+                style={{
+                  bottom: at(Math.min(x.from, x.to)) + "%",
+                  height: (Math.abs(x.to - x.from) / span) * 100 + "%",
+                }}
+              />
+              <small style={{ bottom: at(Math.max(x.from, x.to)) + "%" }}>
+                {x.text}
+              </small>
+            </div>
             <b>{x.label}</b>
-          </div>
+          </li>
         ))}
-      </div>
+      </ol>
       <small>Net total: {sum}</small>
     </figure>
   );
@@ -535,6 +600,16 @@ export function TimelineChart(p: ProsProps) {
     { label: "Design", value: "60" },
     { label: "Build", value: "42" },
   ];
+  // Each lane starts partway through the one before it, so the chart reads as a plan.
+  let start = 0;
+  const lanes = list.map((s) => {
+    const length = Math.max(1, Number(s.value) || 40);
+    const lane = { label: s.label, from: start, to: start + length };
+    start += length * 0.6;
+    return lane;
+  });
+  const span = Math.max(1, ...lanes.map((x) => x.to));
+  const current = lanes[Number(value)];
   return (
     <div
       data-pros="TimelineChart"
@@ -542,24 +617,40 @@ export function TimelineChart(p: ProsProps) {
       style={p.style}
     >
       <b>{p.title ?? "One thing at a time."}</b>
-      {list.map((s, i) => (
+      <div className="p-timeline-axis" aria-hidden="true">
+        <div>
+          {[0, 1, 2, 3, 4].map((n) => (
+            <span key={n} style={{ left: n * 25 + "%" }}>
+              {"Wk " + Math.round((span * n) / 4)}
+            </span>
+          ))}
+        </div>
+      </div>
+      {lanes.map((s, i) => (
         <button
           type="button"
           key={i}
           aria-pressed={value === String(i)}
+          aria-label={
+            s.label + ", week " + Math.round(s.from) + " to " + Math.round(s.to)
+          }
           onClick={() => set(String(i))}
         >
           <span>{s.label}</span>
-          <i
-            style={{
-              marginLeft: i * 12 + "%",
-              width: Math.min(70, Number(s.value) || 40) + "%",
-            }}
-          />
+          <span className="p-timeline-track">
+            <i
+              style={{
+                left: (s.from / span) * 100 + "%",
+                width: ((s.to - s.from) / span) * 100 + "%",
+              }}
+            />
+          </span>
         </button>
       ))}
       <small aria-live="polite">
-        Selected: {list[Number(value)]?.label ?? "None"}
+        Selected: {current?.label ?? "None"}
+        {current &&
+          " · Wk " + Math.round(current.from) + " to " + Math.round(current.to)}
       </small>
     </div>
   );
@@ -578,23 +669,18 @@ export function TrendTicker(p: ProsProps) {
           { label: "Saves", value: "+8.4%" },
           { label: "Returns", value: "−2.1%" },
         ]
-      ).map((s, i) => (
-        <div key={i}>
-          <small>{s.label}</small>
-          <b>{s.value}</b>
-          <span aria-hidden="true">
-            {s.value?.startsWith("−") || s.value?.startsWith("-") ? (
-              <>
-                <Icon name="southeast" />
-              </>
-            ) : (
-              <>
-                <Icon name="arrow" />
-              </>
-            )}
-          </span>
-        </div>
-      ))}
+      ).map((s, i) => {
+        const down = !!s.value && /^[−-]/.test(s.value);
+        return (
+          <div key={i} className={down ? "is-down" : "is-up"}>
+            <small>{s.label}</small>
+            <b>{s.value}</b>
+            <span aria-hidden="true">
+              <DirectionArrow down={down} />
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
